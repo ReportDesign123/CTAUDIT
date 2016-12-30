@@ -1,0 +1,48 @@
+﻿  body,html{height:100%;}
+    body{ padding:0px; margin:0; }  
+
+.menuTop
+{
+    margin:0; padding:0; height:28px; 
+}
+
+.AuditPaperTab
+{
+    display:block;
+    margin:0;
+    padding:0;
+}
+.ReportsTab
+{
+    display:block;
+    margin:0;
+    padding:0;
+}
+.Content
+{
+   width:100%;
+    margin:0;
+    padding:0;
+    display:block;
+}
+
+.LeftZq
+{
+    display:block;
+    width:100%;
+    height:60px;
+    margin:4px;
+    
+}
+.LeftCompanies
+{
+    display:block;
+    width:100%;
+    height:100%;
+}
+
+.footer
+{
+    height:16px;
+    display:block;
+}

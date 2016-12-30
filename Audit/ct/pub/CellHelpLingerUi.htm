@@ -1,0 +1,264 @@
+﻿<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head id="Head1" >
+        <meta http-equiv="X-UA-Compatible" content="IE=10" />
+     <meta http-equiv="X-UA-Compatible" content="IE=9" />
+     <meta http-equiv="X-UA-Compatible" content="IE=8" />
+     <meta http-equiv="X-UA-Compatible" content="IE=7" />
+    <title>报表格式定义</title>
+
+     <link rel="stylesheet" href="../../lib/SpreadCSS/gcspread.sheets.excel2013white.9.40.20153.0.css" title="spread-theme" />
+      <script type="text/javascript" src="../../lib/jquery/jquery-1.11.1.min.js"></script>
+    <script src="../../lib/jquery/jquery-ui-1.10.3.custom.min.js" type="text/javascript"></script>
+     <script type="text/javascript" src="../../lib/SpreadJS/gcspread.sheets.all.9.40.20153.0.min.js"></script>
+     <script type="text/javascript" src="../../lib/SpreadJS/gcspread.sheets.print.9.40.20153.0.min.js"></script>
+      <script type="text/javascript" src="../../lib/SpreadJS/FileSaver.min.js"></script>
+    <script type="text/javascript" src="../../lib/SpreadJS/resources.js"></script>
+     <script type="text/javascript" src="../../lib/SpreadJS/bootstrap.min.js"></script>
+
+    <script src="../../lib/jquery/jquery-1.3.2.min.js" type="text/javascript"></script>
+         <link href="../../Styles/default.css" rel="stylesheet" type="text/css" />
+             <link href="../../Styles/FormatManager.css" rel="stylesheet" type="text/css" />
+
+    <script src="../../Scripts/AjaxTrigger.js" type="text/javascript"></script>
+    <script src="../../lib/json2.js" type="text/javascript"></script>
+    <script src="../../Scripts/FunctionMethodManager.js" type="text/javascript"></script>
+    <script src="../../lib/Base64.js" type="text/javascript"></script>
+    <script src="../../Scripts/ct/pub/PubHelp.js" type="text/javascript"></script>
+    <script type="text/javascript">
+        var spreadNS;
+        var spread;
+        var Grid1;
+        var urls = {
+            functionsUrl: "../../handler/FormatHandler.ashx",
+            newFormularUrl: "NewFormular.aspx"
+        };
+        var bdq = { Code: "", BdType: "", Offset: -1, SortRow: 2, DataCode: 2, DataName: 3, isOrNotMerge: false };
+        var BBData = { bbCode: "", bbName: "", bbData: {}, bdq: { bdNum: 0, BdRowNum: 0, BdColNum: 0, BdqMaps: {}, Bdqs: []} };
+        var FormularData = { formularMaps: {}, currentFormular: {}, currentIndex: "", curentSequence: "", reportId: "" };      //公式信息以数据和maps两大对形象
+        var rowColFormular = {}; //单元格与公式相互结合结构
+        var formular = { firstRow: "", firstCol: "", lastRow: "", lastCol: "", content: "", isOrNotTake: "", isOrNotBatch: "", isOrNotCaculate: "", option: "", sequence: "" };
+        var cellData = { FontName: "", FontSize: "" };
+        var cellNameValue = { FontName: "FontName", FontSize: "FontSize", FontBold: "FontBold", FontItalic: "FontItalic", FontUnderline: "FontUnderline ",
+            Alignment: "Alignment ", ForeColor: "ForeColor", BackColor: "BackColor", Border: "Border", CellCode: "CellCode", CellName: "CellName",
+            CellRow: "CellRow", CellCol: "CellCol", CellLogicalType: "CellLogicalType", CellType: "CellType", CellDataType: "CellDataType", CellMacro: "CellMacro", CellHelp: "CellHelp", CellLength: "CellLength",
+            CellThousand: "CellThousand", CellCurrence: "CellCurrence", CellSmbol: "CellSmbol", CellLock: "CellLock", CellZero: "CellZero"
+        };
+        var cellControls = { FontName: {}, FontSize: {}, CellLogicalType: {}, CellType: {}, CellDataType: {}, CellMacro: {}, CellHelp: {}, CellThousand: {},
+            CellCurrence: {}, CellSmbol: {}, CellLock: {}, CellZero: {}
+        };
+        var cellFlag = { cellSetFlag: true };
+        var parentParam = {};
+        //刷新单元格数据
+        function RefreshDataGrid(node) {
+            parentParam = node;
+            pubHelp.setResultObjIframeFunc(FuncGetObj);
+            if (node != undefined && node.Id != undefined) {
+                var para = { Id: "" };
+                FormularData.reportId = node.Id;
+                para.Id = node.Id;
+                para = CreateParameter(ReportFormatAction.ActionType.Post, ReportFormatAction.Functions.ReportFormatMenu, ReportFormatAction.Methods.ReportFormatMenuMethods.LoadReportFormat, para);
+
+                DataManager.sendData(urls.functionsUrl, para, resultManagers.LoadSuccess, resultManagers.fail, false);
+            }
+        }
+        //公共接口
+        function FuncGetObj() {
+            var cells = [];
+            //var selection = Grid1.Selection;Grid1.getActiveColumnIndex(), Grid1.getSelections()[0].colCount
+           
+            if (parentParam.type == "total") {
+                for (var i = Grid1.getActiveRowIndex(); i <= Grid1.getSelections()[0].row; i++) {
+                    for (var j = Grid1.getActiveColumnIndex(); j <= Grid1.getSelections()[0].col; j++) {
+                        var cell = toolManager.getCell(i, j);
+                        cells.push(cell);
+                    }
+                }
+            } else if (parentParam.type == "BBQS") {
+                for (var i = Grid1.getActiveRowIndex(); i <= Grid1.getSelections()[0].row; i++) {
+                    for (var j = Grid1.getActiveColumnIndex(); j <= Grid1.getSelections()[0].col; j++) {
+                        var cell = toolManager.CreateCode(i, j);
+                        if (cells) {
+                            cells.push(cell);
+                        } //此处可以换成能够 警告提示 并中断程序
+                    }
+                }
+            } else if (parentParam.type == "BBHLQS" || parentParam.type == "BBQKQS") {
+                var area;
+                //单个单元格
+                if (Grid1.getActiveRowIndex() == Grid1.getSelections()[0].row && Grid1.getActiveColumnIndex() == Grid1.getSelections()[0].col) {
+                    area = "[" + Grid1.getActiveRowIndex() + "," + Grid1.getActiveColumnIndex() + "]";
+                } else {
+                    //多个单元格
+                    var begin = "[" + Grid1.getActiveRowIndex() + "," + Grid1.getActiveColumnIndex();
+                    var end = Grid1.getSelections()[0].row + "," + Grid1.getSelections()[0].col + "]";
+                    area = begin + ":" + end;
+                }
+                cells.push(area);
+            }
+            return cells;
+        }
+
+        $(function () {
+            // var node = window.dialogArguments;
+
+            spreadNS = GcSpread.Sheets;
+            spread = new spreadNS.Spread($("#ss")[0]);
+            spread.setTabStripRatio(0.88);
+            Grid1 = new spreadNS.Sheet("Cell");
+            spread.removeSheet(0);
+            spread.addSheet(spread.getSheetCount(), Grid1);
+            Grid1.setIsProtected(true); //是否锁定
+
+            node = pubHelp.getIframeParentParameters();
+            pubHelp.setResultObjIframeFunc(FuncGetObj);
+            parentParam = node;
+            if (node != undefined && node.Id != undefined) {
+                var para = { Id: "" };
+                FormularData.reportId = node.Id;
+                para.Id = node.Id;
+                para = CreateParameter(ReportFormatAction.ActionType.Post, ReportFormatAction.Functions.ReportFormatMenu, ReportFormatAction.Methods.ReportFormatMenuMethods.LoadReportFormat, para);
+
+                DataManager.sendData(urls.functionsUrl, para, resultManagers.LoadSuccess, resultManagers.fail, false);
+            }
+
+          
+        });
+
+        function InitializeFlexCell(row, col) {
+
+            if (Grid1) {
+                Grid1.NewFile();
+                Grid1.AutoRedraw = false;
+           
+                Grid1.AutoRedraw = true;
+                Grid1.Refresh();
+                if (Grid1.attachEvent) {
+                    Grid1.attachEvent("RowColChange", GridManager.RowColChange_Event);
+                }
+
+            
+                BBData = { bbCode: "", bbName: "", bbData: {}, bdq: { bdNum: 0, BdRowNum: 0, BdColNum: 0, BdqMaps: {}, Bdqs: []} };
+            }
+
+        }
+
+
+
+        var cellManager = {
+            GeneralCell: function (func, value) {
+
+                for (var i = Grid1.getActiveRowIndex(); i <= Grid1.getSelections()[0].row; i++) {
+                    for (var j = Grid1.getActiveColumnIndex(); j <= Grid1.getSelections()[0].col; j++) {
+                        func(i, j, value);
+                    }
+                }
+
+            },
+            GeneralLoadCellDataValue: function (row, col) {
+
+            }
+
+        };
+
+        var GridManager = {
+            RowColChange_Event: function (row, col) {
+           
+            }
+
+        };
+        var bdManager = {
+            CreateBdq: function (type, bdPara) {
+                BBData.bdq.bdNum = BBData.bdq.bdNum + 1;
+
+                if (type == "1") {
+                    BBData.bdq.BdRowNum++;
+                } else {
+                    BBData.bdq.BdColNum++;
+                }
+                //增加变动区描述
+                var bdq = { Code: "", BdType: "", Offset: -1, SortField: 2, DataCode: 2, DataName: 3, isOrNotMerge: false };
+                bdq.Code = toolManager.CreateBdqCode(BBData.bdq.bdNum);
+                bdq.BdType = type;
+                bdq.Offset = bdPara.Offset;
+                bdq.SortField = bdPara.SortField;
+                bdq.DataCode = bdPara.DataCode;
+                bdq.DataName = bdPara.DataName;
+                bdq.isOrNotMerge = bdPara.Merge;
+                BBData.bdq.Bdqs.push(bdq);
+                BBData.bdq.BdqMaps[bdq.Code] = BBData.bdq.Bdqs.length - 1;
+            }
+        };
+
+        var toolManager = {
+            CreateCode: function (row, col) {
+                if (BBData.bbData[row] && BBData.bbData[row][col]) {
+                    return BBData.bbData[row][col].CellCode;
+                } else {
+                    return false;
+                }
+            },
+            GetCellData: function (row, col) {
+                if (BBData.bbData[row] && BBData.bbData[row][col]) {
+                    return BBData.bbData[row][col];
+                }
+            },
+            //获取cell内容，属性可添加
+            //张双义
+            getCell: function (row, col) {
+                var tempCell = { cellCode: BBData.bbData[row][col].CellCode, cellName: BBData.bbData[row][col].CellName };
+                return tempCell;
+            }
+        };
+
+
+        var resultManagers = {
+
+            success: function (data) {
+                if (data.success) {
+                    alert(data.sMeg);
+
+                } else {
+                    alert(data.sMeg);
+                }
+            },
+            fail: function (data) {
+
+                alert(data.toString);
+            },
+            LoadSuccess: function (data) {
+                if (data.success) {
+
+
+                    Grid1.fromJSON(JSON.parse(data.obj.formatStr));
+
+                    if (Grid1.bind) {
+                        Grid1.bind(spreadNS.Events.SelectionChanged, GridManager.RowColChange_Event);
+                    }  
+                  
+                    BBData = JSON2.parse(data.obj.itemStr);
+
+                    for (var i = 0; i < Grid1.getRowCount(); i++) {
+                        for (var j = 0; j < Grid1.getColumnCount(); j++) {
+                           
+                            Grid1.getCell(i, j).locked(true);
+                        }
+                    }
+                   
+                } else {
+                    alert(data.sMeg);
+                }
+            }
+        };
+       
+    </script>
+</head>
+<body style=" overflow:hidden">
+<!--<div id="FileToolBar"   ></div>-->
+
+		<div id="ss"  style="height:600px; width:100%">
+		</div>
+
+
+</body>
+</html>

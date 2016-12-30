@@ -1,0 +1,83 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="4.0" DefaultTargets="Build" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <PropertyGroup>
+    <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
+    <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
+    <ProductVersion>8.0.30703</ProductVersion>
+    <SchemaVersion>2.0</SchemaVersion>
+    <ProjectGuid>{1315AF7B-D709-4B3B-9B2F-3A3637C08EAB}</ProjectGuid>
+    <OutputType>Library</OutputType>
+    <AppDesignerFolder>Properties</AppDesignerFolder>
+    <RootNamespace>DbManager</RootNamespace>
+    <AssemblyName>DbManager</AssemblyName>
+    <TargetFrameworkVersion>v4.0</TargetFrameworkVersion>
+    <FileAlignment>512</FileAlignment>
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
+    <DebugSymbols>true</DebugSymbols>
+    <DebugType>full</DebugType>
+    <Optimize>false</Optimize>
+    <OutputPath>bin\Debug\</OutputPath>
+    <DefineConstants>DEBUG;TRACE</DefineConstants>
+    <ErrorReport>prompt</ErrorReport>
+    <WarningLevel>4</WarningLevel>
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
+    <DebugType>pdbonly</DebugType>
+    <Optimize>true</Optimize>
+    <OutputPath>bin\Release\</OutputPath>
+    <DefineConstants>TRACE</DefineConstants>
+    <ErrorReport>prompt</ErrorReport>
+    <WarningLevel>4</WarningLevel>
+  </PropertyGroup>
+  <ItemGroup>
+    <Reference Include="Interop.SQLDMO">
+      <HintPath>..\DLL\Interop.SQLDMO.dll</HintPath>
+      <EmbedInteropTypes>True</EmbedInteropTypes>
+    </Reference>
+    <Reference Include="System" />
+    <Reference Include="System.Core" />
+    <Reference Include="System.Data.Linq" />
+    <Reference Include="System.Web" />
+    <Reference Include="System.Xml.Linq" />
+    <Reference Include="System.Data.DataSetExtensions" />
+    <Reference Include="Microsoft.CSharp" />
+    <Reference Include="System.Data" />
+    <Reference Include="System.Xml" />
+  </ItemGroup>
+  <ItemGroup>
+    <Compile Include="BackUpConfigManager.cs" />
+    <Compile Include="BackUpStruct.cs" />
+    <Compile Include="ConnectionManager.cs" />
+    <Compile Include="CTDbManager.cs" />
+    <Compile Include="DataBaseBackupAndRestore.cs" />
+    <Compile Include="DbDataSourceInstance.cs" />
+    <Compile Include="DBTool.cs" />
+    <Compile Include="LinqDataManager.cs" />
+    <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="ServerDataSource.cs" />
+    <Compile Include="SqlServerDatabaseBackupAndRestore.cs" />
+  </ItemGroup>
+  <ItemGroup>
+    <ProjectReference Include="..\AuditEntity\AuditEntity.csproj">
+      <Project>{CE175B93-F42C-4E67-B82A-E7BAE9562434}</Project>
+      <Name>AuditEntity</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\AuditSPI\AuditSPI.csproj">
+      <Project>{CA0A3AA8-C615-4175-A4E8-BD885823C80D}</Project>
+      <Name>AuditSPI</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\CtTool\CtTool.csproj">
+      <Project>{F42CDA29-EEFA-49E3-A14C-D875AB932EE1}</Project>
+      <Name>CtTool</Name>
+    </ProjectReference>
+  </ItemGroup>
+  <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
+  <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
+       Other similar extension points exist, see Microsoft.Common.targets.
+  <Target Name="BeforeBuild">
+  </Target>
+  <Target Name="AfterBuild">
+  </Target>
+  -->
+</Project>

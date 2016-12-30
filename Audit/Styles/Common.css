@@ -1,0 +1,26 @@
+﻿.textbox{
+			height:20px;
+			margin:0;
+			padding:0 2px;
+			box-sizing:content-box;
+		}
+		body
+		{
+		    font-size:12px;
+		}
+		.CommonInput
+		{
+		    width:170px;
+		}
+		
+		.IframeMask
+		{
+		    position:absolute; 
+		    visibility:inherit; 
+		    top:0px; left:0px; 
+		    height:100%;
+		    width:100%; 
+		    z-index:-1;
+		    filter:progid:DXImageTransform.Microsoft.Alpha(style=0,opacity=0);
+		
+		

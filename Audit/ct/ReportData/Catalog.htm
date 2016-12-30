@@ -1,0 +1,286 @@
+﻿<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head runat="server">
+    <title>报表目录</title>
+    <script src="../../lib/jquery/jquery-1.5.2.min.js" type="text/javascript"></script>
+    <script src="../../lib/easyUI/jquery.easyui.min.js" type="text/javascript"></script>
+    <link href="../../lib/easyUI/themes/icon.css" rel="stylesheet" type="text/css" />
+    <link href="../../lib/easyUI/themes/color.css" rel="stylesheet" type="text/css" />
+    <link href="../../lib/easyUI/themes/default/easyui.css" rel="stylesheet" type="text/css" />
+    <script src="../../lib/easyUI/locale/easyui-lang-zh_CN.js" type="text/javascript"></script>
+    <link href="../../Styles/Common.css" rel="stylesheet" type="text/css" />
+
+    <script src="../../Scripts/Ct_Controls.js" type="text/javascript"></script>
+    <link href="../../Styles/Ct_Controls.css" rel="stylesheet" type="text/css" />
+      <script src="../../Scripts/AjaxTrigger.js" type="text/javascript"></script>
+    <script src="../../Scripts/FunctionMethodManager.js" type="text/javascript"></script>
+    <script src="../../Scripts/ct/pub/PubHelp.js" type="text/javascript"></script>
+    <style type="text/css">
+       .ctFont
+       {
+          font-size:14px;
+       }
+
+    a:link {text-decoration:none;}
+    a:active:{color: red; }
+   a:hover {color: red; text-decoration:underline;}
+    .MyTd_box
+    { 
+        width:170px;
+    }
+    .MyTd_text
+    { 
+        width:30px;
+    }
+    </style>
+    <script type="text/javascript">
+        var urls = {
+            functionsUrl: "../../handler/FormatHandler.ashx",
+            fillReportUrl: "../../handler/ReportDataHandler.ashx",
+            DelFunctionsUrl: "../../handler/ReportDataHandler.ashx",
+            StateUrl:"../../handler/BasicHandler.ashx?ActionType=" + BasicAction.ActionType.Get + "&MethodName=GetDictionaryListByClassType&FunctionName=" + BasicAction.Functions.DictionaryManager + "&ClassType=BBZT"
+        };
+        var gridData;
+        var classifiyBox;
+        var searchState = false;
+        var resultManagers = {
+            success: function (data) {
+                if (data.success) {
+                    MessageManager.InfoMessage(data.sMg);
+                    parent.mediatorManager.RefreshHome();
+                    $("#dg").datagrid('unselectAll');
+                } else { MessageManager.ErrorMessage(data.sMg); }
+            },
+            fail: function (data) {
+                MessageManager.ErrorMessage(data.toString);
+            }
+        }
+        //列操作方法
+        var formatManager = {
+            ///张双义
+            ///显示附件状态
+            ViewAttatch: function (item) {
+                var param = { ReportId: item.id };
+                parent.EventManager.ReportAttatch_Upload(param);
+            },
+            DeleteReportData: function (item) {
+                var par = { ReportId: item.id };
+                $.messager.confirm('系统提示', '确定要清空此报表下的数据?', function (r) {
+                    if (!r) { return; }
+                    else {
+                        parent.EventManager.ReportData_delet(par);
+                    }
+                });
+            },
+            SelectedItem: function (item) {
+                var report = { Id: item.id, bbName: item.text, ReportState: item.name };
+                var item = { tabid: item.id, text: item.text, showClose: true };
+                parent.tabManager.AddReport(item,report);
+            }
+        };
+        var ButtonClickManager = {
+            refresh: function () {
+                parent.mediatorManager.RefreshHome();
+                $("#bbCode").val("");
+                $("#bbName").val("");
+                classifiyBox.name.val("");
+                $("#ReportState").combobox("setValue", "");
+            },
+           
+            restoreSearch: function () {
+                $("#bbCode").val("");
+                $("#bbName").val("");
+                classifiyBox.name.val(""); ;
+                $("#ReportState").combobox("setValue", "");
+                parent.mediatorManager.RefreshHome();
+            },
+            /**获取查询参数*/
+            //并查询
+            doSearch: function () {
+                searchState = true;
+                var par = { bbCode: "", bbName: "" };
+                var bbCode = $("#bbCode").val();
+                var bbName = $("#bbName").val();
+                var ReportState = $("#ReportState").combobox("getText");
+                var classifiy = classifiyBox.name.val();
+                parent.mediatorManager.RefreshHome();
+                searchState = false;
+                var data = gridData;
+                var key = {};
+                //条件全空时还原列表
+                if (bbCode == "" && bbName == "" && classifiy == "" && ReportState == "") {
+                    if (gridData) {
+                        $('#dg').datagrid("loadData", gridData);
+                    }
+                } else {
+                    if (bbCode && bbCode != "") { data = search(bbCode, "bbCode", data); }
+                    if (bbName && bbName != "") { data = search(bbName, "bbName", data); }
+                    if (classifiy && classifiy != "") { data = search(classifiy, "ReportClassifyName", data); }
+                    if (ReportState && ReportState != "") { data = ButtonClickManager.SearchReportState(ReportState, data); }
+                    $('#dg').datagrid("loadData", data);
+                }
+            },
+            SearchReportState: function (key, data) {
+                var newData = [];
+                $.each(data, function (index, row) {
+                    if (!row.ReportState && key == "未填报") {
+                        newData.push(row);
+                    } else if (row.ReportState == key) {
+                        newData.push(row);
+                    }
+                });
+                return newData;
+            },
+            OpenDialog: function () {
+                var paras = { sortOrder: "ASC", sortName: "Code" }
+                paras.parameter = CreateParameter(ReporClassifyAction.ActionType.Post, ReporClassifyAction.Functions.ReportClassify, ReporClassifyAction.Methods.ReportClassifyMethods.GetClassifiesList, {});
+                paras.functionsUrl = "../../handler/FormatHandler.ashx";
+                paras.columns = [[
+                { field: "Id", title: "id", hidden: true, width: 120 },
+                { field: "Code", title: "分类编号", width: 80 },
+                    { field: "Name", title: "分类名称", width: 100 }
+                    ]]
+                paras.width = 375;
+                paras.height = 420;
+                pubHelp.setParameters(paras);
+                pubHelp.OpenDialogWithHref("Dialog", "报表分类选择", "../pub/HelpList.aspx", ButtonClickManager.GetDialogResult, paras.width, paras.height, true);
+            },
+            GetDialogResult: function () {
+                var result = pubHelp.getResultObj();
+                if (result && result.Id != undefined) {
+                    classifiyBox.name.val(result.Name);
+                    ButtonClickManager.doSearch();
+                }
+            }
+        }
+       
+        $(function () {
+            $('#dg').datagrid({
+                rownumbers: true,
+                fitColumns: true,
+                singleSelect: true,
+                remoteSort: false,
+                pagination: false,
+                fit: false,
+                striped: true,
+                border: true,
+                toolbar: "#toolBar",
+                columns: [[
+                     { title: '', field: 'Id', width: 180, hidden: true },
+                     { title: '<span style="font-size:14px">报表编号</span>', field: 'bbCode', width: 140, sortable: true, formatter: function (value, row, index) {
+                         return "<span  class = 'ctFont'>" + row.bbCode + "</span>";
+                     }
+                     },
+                      { title: '<span style="font-size:14px">报表名称</span>', field: 'bbName', width: 250, sortable: true, formatter: function (value, row, index) {
+                          return "<a href='#' onclick='formatManager.SelectedItem(this)' class='ctFont' id='" + row.Id + "'name='" + row.ReportState + "' text='" + row.bbName + "'>" + row.bbName + "</a>";
+                      }
+                      },
+                     { title: '<span style="font-size:14px">报表分类</span>', field: 'ReportClassifyName', width: 120, sortable: true, formatter: function (value, row, index) {
+                         return "<span  class = 'ctFont'>" + row.ReportClassifyName + "</span>";
+                     }
+                     },
+                     { title: '<span style="font-size:14px">报表状态</span>', field: 'ReportState', width: 150, sortable: true, formatter: function (value, row, index) {
+                         if (value == "") return "<span  class = 'ctFont'>未填报</span>";
+                         return "<span  class = 'ctFont'>" + row.ReportState + "</span>";
+                     }
+                     },
+                     { title: '<span style="font-size:14px">数据清除</span>', field: 'ee', align: 'center', width: 110, sortable: true, formatter: function (value, row, index) {
+                         return "<a href='#' onclick='formatManager.DeleteReportData(this)' class='ctFont' id='" + row.Id + "' text='数据清空 ' >数据清空</a>";
+                     }
+                     },
+                     { title: '<span style="font-size:14px">附件</span>', field: 'Attatchments', align: 'center', width: 50, sortable: true, formatter: function (value, row, index) {
+                         if (value && value != "") {
+                             return "<a href='#' onclick='formatManager.ViewAttatch(this)' class='ctFont' id='" + row.Id + "'><img border='0' src='../../images/ReportData/attatch.png' title='附件查看'/></a>";
+                         } else { return ""; }
+                     }
+                     }
+                 ]], onDblClickRow: function (rowIndex, rowData) {
+                     var report = { Id: rowData.Id, bbName: rowData.bbName, ReportState: rowData.ReportState };
+                     var item = { tabid: rowData.Id, text: rowData.bbName, showClose: true };
+                     parent.tabManager.AddReport(item, report);
+                 }
+            });
+            classifiyBox = $("#classifiy").PopEdit();
+            classifiyBox.btn.bind("click", function () {
+                ButtonClickManager.OpenDialog();
+            });
+        });
+        //回车监听
+        //张双义
+        $(document).keypress(function (e) {
+            var curKey = e.which;
+            if (curKey == 13) {
+                ButtonClickManager.doSearch();
+            }
+        });
+        function LoadData(data) {
+            if (!searchState) {
+                $("#bbCode").val("");
+                $("#bbName").val("");
+                classifiyBox.name.val("");
+                $("#ReportState").combobox("setValue", "");
+                $('#dg').datagrid("loadData", data);
+            }
+            gridData = data;
+            //ButtonClickManager.doSearch();
+        }
+        //查询方法
+        // [kay]查询内容 [type]指定属性 [data] 数据data  
+        //支持 对属性的模糊查询
+        //张双义
+        function search(kay, type, data) {
+            if (kay == "") return data;
+            var result;
+            var newData = [];
+            for (var i = 0; i < data.length; i++) {
+                result = find(kay, data[i][type]);
+                if (result) { newData.push(data[i]); }
+            }
+            return newData;
+        }
+        function find(sFind, sObj) {
+            var nSize = sFind.length;
+            var nLen = sObj.length;
+            var sCompare;
+            if (nSize <= nLen) {
+                for (var i = 0; i <= nLen - nSize + 1; i++) {
+                    sCompare = sObj.substring(i, i + nSize);
+                    if (sCompare == sFind) {
+                        return true;
+                    }
+                }
+            }
+            return null;
+        }
+    </script>
+</head>
+
+<body class="easyui-layout">
+
+<div data-options="region:'center'" style="border:0px">
+    <table id="dg"></table>
+    <div id="toolBar" style="min-width:850px">
+        <table style="padding:3px;  ">
+            <tr >
+            <td class="MyTd_text">编号</td><td class="MyTd_box"> <input id = "bbCode"class="easyui-validatebox textbox" /></td>
+            <td class="MyTd_text">名称</td><td class="MyTd_box"> <input id = "bbName"class="easyui-validatebox textbox" /></td>
+            <td class="MyTd_text">类别</td><td class="MyTd_box"><div id="classifiy"></div></td>
+            <td class="MyTd_text">状态</td><td class="MyTd_box"><input id = "ReportState" style=" width:155px"  class="easyui-combobox" data-options="url:urls.StateUrl,valueField:'Code',textField:'Name',panelHeight:'auto'" /></td>
+            </tr>
+        </table>
+        <div style=" width:100%; text-align:right">
+            <a href="#" class="easyui-linkbutton"  onclick="ButtonClickManager.doSearch()" iconCls='icon-search'" style=" margin-right:10px">查询</a>
+            <a href="#" class="easyui-linkbutton"  onclick="ButtonClickManager.restoreSearch()" iconcls="icon-undo" plain="false" style=" margin-right:10px">重置</a>
+            <a href="#" class="easyui-linkbutton"  onclick="ButtonClickManager.refresh()" iconcls="icon-reload" plain="false" style=" margin-right:10px">刷新</a>
+          
+        </div>
+    </div>
+</div>
+<div data-options="region:'south'" style=" height:30px; border-top:0px">
+</div>
+    <div id="Dialog" >
+    <table id="classifiyTable" >       
+    </table>
+    </div>
+</body>
+</html>

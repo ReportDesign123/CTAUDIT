@@ -1,0 +1,125 @@
+﻿
+.ctPopEdit
+{
+    border: 1px solid #95B8E7;
+vertical-align: middle;
+}
+
+
+.ctPopEdit:focus
+{
+    border: 1px solid #95B8E7;
+ vertical-align: middle;
+}
+
+.PopButton
+{
+        background: linear-gradient(to bottom,#EFF5FF 0,#E0ECFF 100%);
+background-repeat: repeat-x;
+}
+
+
+
+.ctTextInput{
+	width: 140px;
+	height:20px;
+	line-height:20px;
+	font-size:12px;
+	border:1px solid #95B8E7;
+	vertical-align:middle;
+	-webkit-rtl-ordering: logical;
+-webkit-user-select: text;
+border-radius: 0 0 0 0;
+background: #fff;
+font-style:normal;
+}
+.ctBtn
+{
+    float: left;
+    margin-left: 4px;
+    cursor: pointer;
+    font-size:12px;
+}
+.ctBtnOver
+{
+    background:#E0EDFF url('images/panel-btn.gif') repeat-x
+}
+.ctBtnHasIcon
+{
+    padding-left: 22px;
+}
+.ctBtnPanel
+{
+    display: block;
+height: 22px;
+overflow: hidden;
+line-height: 22px;
+position: relative;
+padding-right: 15px;
+text-align: center;
+color: #2C4D79;
+text-decoration: none;
+cursor: pointer;
+}
+.ctBtnPanelLeft
+{
+    position: absolute;
+width: 3px;
+left: 0px;
+top: 0px;
+height: 22px;
+background: #E0EDFF url(images/panel-btn-l.gif) no-repeat;
+}
+.ctBtnPanelRight
+{
+    position: absolute;
+width: 3px;
+right: 0px;
+top: 0px;
+height: 22px;
+background: #E0EDFF url(images/panel-btn-r.gif) no-repeat;
+}
+
+.ctBtnIcon
+{
+    width: 16px;
+    height: 16px;
+    overflow: hidden;
+    position: absolute;
+    left: 2px;
+    top: 2px;
+    display: block;
+}
+.ct-InsertRow-Icon
+{
+    background:url('images/InsertRow.jpg') no-repeat center;
+}
+
+.ct-DeleteRow-Icon
+{
+    background:url('images/delete.gif') no-repeat center;
+}
+.ct-Attatch-Icon
+{
+    background:url('images/attatch.jpg') no-repeat center;
+}
+.ct-Excel-Icon
+{
+    background:url('images/Excel-16.png') no-repeat center;
+}
+.ct-Search-Icon
+{
+    background:url('images/search.gif') no-repeat center;
+}
+.ct-Undo-Icon
+{
+    background:url('images/undo.png') no-repeat center;
+}
+.ct-Save-Icon
+{
+    background:url('images/filesave.png') no-repeat center;
+}
+
+
+
+

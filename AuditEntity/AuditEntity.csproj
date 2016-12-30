@@ -1,0 +1,119 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="4.0" DefaultTargets="Build" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <PropertyGroup>
+    <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
+    <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
+    <ProductVersion>8.0.30703</ProductVersion>
+    <SchemaVersion>2.0</SchemaVersion>
+    <ProjectGuid>{CE175B93-F42C-4E67-B82A-E7BAE9562434}</ProjectGuid>
+    <OutputType>Library</OutputType>
+    <AppDesignerFolder>Properties</AppDesignerFolder>
+    <RootNamespace>AuditEntity</RootNamespace>
+    <AssemblyName>AuditEntity</AssemblyName>
+    <TargetFrameworkVersion>v4.0</TargetFrameworkVersion>
+    <FileAlignment>512</FileAlignment>
+     
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
+    <DebugSymbols>true</DebugSymbols>
+    <DebugType>full</DebugType>
+    <Optimize>false</Optimize>
+    <OutputPath>bin\Debug\</OutputPath>
+    <DefineConstants>DEBUG;TRACE</DefineConstants>
+    <ErrorReport>prompt</ErrorReport>
+    <WarningLevel>4</WarningLevel>
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
+    <DebugType>pdbonly</DebugType>
+    <Optimize>true</Optimize>
+    <OutputPath>bin\Release\</OutputPath>
+    <DefineConstants>TRACE</DefineConstants>
+    <ErrorReport>prompt</ErrorReport>
+    <WarningLevel>4</WarningLevel>
+  </PropertyGroup>
+  <ItemGroup>
+    <Reference Include="System" />
+    <Reference Include="System.Core" />
+    <Reference Include="System.Data.Linq" />
+    <Reference Include="System.Xml.Linq" />
+    <Reference Include="System.Data.DataSetExtensions" />
+    <Reference Include="Microsoft.CSharp" />
+    <Reference Include="System.Data" />
+    <Reference Include="System.Xml" />
+  </ItemGroup>
+  <ItemGroup>
+    <Compile Include="AuditPaper\AuditPaperAndCompanyEntity.cs" />
+    <Compile Include="AuditPaper\AuditPaperAndReportEntity.cs" />
+    <Compile Include="AuditPaper\AuditPaperEntity.cs" />
+    <Compile Include="AuditPaper\PaperAttatchEntity.cs" />
+    <Compile Include="AuditPaper\ReportTemplateEntity.cs" />
+    <Compile Include="AuditTask\AuditTaskAndAuditPaperEntity.cs" />
+    <Compile Include="AuditTask\AuditTaskAndCompanyEntity.cs" />
+    <Compile Include="AuditTask\AuditTaskEntity.cs" />
+    <Compile Include="Authority\UserAndCompanyEntity.cs" />
+    <Compile Include="BackUp\BackUpEntity.cs" />
+    <Compile Include="CompanyEntity.cs" />
+    <Compile Include="ConfigEntity.cs" />
+    <Compile Include="CparaEntity.cs" />
+    <Compile Include="CycleEntity.cs" />
+    <Compile Include="DataItemEntity.cs" />
+    <Compile Include="DataSourceEntity.cs" />
+    <Compile Include="DictionaryClassificationEntity.cs" />
+    <Compile Include="DictionaryEntity.cs" />
+    <Compile Include="ExportReport\BookmarkEntity.cs" />
+    <Compile Include="ExportReport\BookmarkTemplateEntity.cs" />
+    <Compile Include="ExportReport\OperationLogEntity.cs" />
+    <Compile Include="ExportReport\ReportTemplateEntity.cs" />
+    <Compile Include="ExportReport\TemplateAndCompanyRelationEntity.cs" />
+    <Compile Include="ExportReport\TemplateLogEntity.cs" />
+    <Compile Include="FormularEntity.cs" />
+    <Compile Include="FunctionEntity.cs" />
+    <Compile Include="LogEntity.cs" />
+    <Compile Include="PositionEntity.cs" />
+    <Compile Include="Procedure\ProcedureEntity.cs" />
+    <Compile Include="Procedure\ProcedureFormularEntity.cs" />
+    <Compile Include="Procedure\ProcedureParameterEntity.cs" />
+    <Compile Include="Properties\Class1.cs" />
+    <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="ReportAggregation\AggregationClassifyEntity.cs" />
+    <Compile Include="ReportAggregation\AggregationLogEntity.cs" />
+    <Compile Include="ReportAggregation\AggregationTemplateEntity.cs" />
+    <Compile Include="ReportAttatch\ReportAttatchEntity.cs" />
+    <Compile Include="ReportAudit\ReportAuditCellCommentDetail.cs" />
+    <Compile Include="ReportAudit\ReportAuditCellConclusion.cs" />
+    <Compile Include="ReportAudit\ReportAuditCellStatistic.cs" />
+    <Compile Include="ReportAudit\ReportAuditDefinitionEntity.cs" />
+    <Compile Include="ReportAudit\ReportAuditEntity.cs" />
+    <Compile Include="ReportChangeRelationEntity.cs" />
+    <Compile Include="ReportClassifyEntity.cs" />
+    <Compile Include="ReportColChangeEntity.cs" />
+    <Compile Include="ReportFormatDicEntity.cs" />
+    <Compile Include="ReportLink\ReportLinkEntity.cs" />
+    <Compile Include="ReportProblem\ReportProblemEntity.cs" />
+    <Compile Include="ReportRelationEntity.cs" />
+    <Compile Include="ReportRowChangeEntity.cs" />
+    <Compile Include="ReportState\ReportLockEntity.cs" />
+    <Compile Include="ReportState\ReportStateDetailEntity.cs" />
+    <Compile Include="ReportState\ReportStateEntity.cs" />
+    <Compile Include="ReportState\VerifyProblemEntity.cs" />
+    <Compile Include="RoleAndFunctionsEntity.cs" />
+    <Compile Include="RoleEntity.cs" />
+    <Compile Include="SimaEntity.cs" />
+    <Compile Include="SingleLoginEntity.cs" />
+    <Compile Include="UserEntity.cs" />
+    <Compile Include="UserPositionRelation.cs" />
+    <Compile Include="UserRoleRelation.cs" />
+    <Compile Include="WorkFlow\WorkFlowBusinessEntity.cs" />
+    <Compile Include="WorkFlow\WorkFlowDefinition.cs" />
+    <Compile Include="WorkFlow\WorkFlowHistory.cs" />
+  </ItemGroup>
+  <ItemGroup />
+  <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
+  <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
+       Other similar extension points exist, see Microsoft.Common.targets.
+  <Target Name="BeforeBuild">
+  </Target>
+  <Target Name="AfterBuild">
+  </Target>
+  -->
+</Project>

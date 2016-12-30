@@ -1,0 +1,25 @@
+﻿<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+    <title>信息查看</title>
+<!--     <script src="../../lib/jquery/jquery-1.11.1.min.js" type="text/javascript"></script>
+    <script src="../../Scripts/ct/pub/PubHelp.js" type="text/javascript"></script>-->
+</head>
+<body>
+    <script type="text/javascript">
+        //公式内容显示
+         function Initialize() {
+             var content = pubHelp.getParameters();
+             pubHelp.setResultObjFunc(FuncGetObj);
+            $("#contentSS").text(content);
+        }
+        function FuncGetObj() {
+            var result = $("#contentSS").text();
+             return result;
+         }
+         Initialize();
+       
+    </script>
+ <textarea id="contentSS"  rows="15" cols="48"  style=" line-height: 150%;  border:0px; padding:5px; color:#0000ff; font-size:12px;"></textarea>
+</body>
+</html>

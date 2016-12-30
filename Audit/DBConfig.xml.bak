@@ -1,0 +1,20 @@
+﻿<?xml version="1.0" encoding="utf-8" ?>
+<CtConfig>
+	<DataSources>
+		<DataSource ConnectString="Data Source=192.168.1.200;Initial Catalog=BPREPORT;User ID=CT;Password=aaaaaa;Persist Security Info=False" DbType="sql" Default="true"/>
+		<DataSource ConnectString="Data Source=192.168.1.200;Initial Catalog=CTTEST;User ID=CT;Password=aaaaaa;Persist Security Info=False" DbType="sql" Default="false"/>
+		<DataSource ConnectString="Data Source=192.168.1.200;Initial Catalog=CTAUDITNEW2;User ID=CT;Password=aaaaaa;Persist Security Info=False" DbType="sql" Default="false"/>
+		<DataSource ConnectString="Data Source=192.168.1.200;Initial Catalog=TJSK0925;User ID=Test3;Password=aaaaaa;Persist Security Info=False" DbType="sql" Default="false"/>
+		<DataSource ConnectString="Data Source=116.213.94.136;Initial Catalog=CTAUDIT;User ID=CT;Password=aaaaaa;Persist Security Info=False" DbType="sql" Default="false"/>
+		<DataSource ConnectString="Data Source=192.168.1.200;Initial Catalog=CT1020;User ID=CT1020;Password=aaaaaa;Persist Security Info=False" DbType="sql" Default="false"/>
+		<DataSource ConnectString="Data Source=192.168.1.200;Initial Catalog=CT1028;User ID=CT1020;Password=aaaaaa;Persist Security Info=False" DbType="sql" Default="false"/>
+		<DataSource ConnectString="Data Source=192.168.1.200;Initial Catalog=1105;User ID=CT1020;Password=aaaaaa;Persist Security Info=False" DbType="sql" Default="false"/>
+		<DataSource ConnectString="Data Source=192.168.1.200;Initial Catalog=1106;User ID=CT1020;Password=aaaaaa;Persist Security Info=False" DbType="sql" Default="false"/>
+		<DataSource ConnectString="Data Source=192.168.1.200;Initial Catalog=1120;User ID=CT1020;Password=aaaaaa;Persist Security Info=False" DbType="sql" Default="false"/>
+		<DataSource ConnectString="Data Source=192.168.1.200;Initial Catalog=1121;User ID=CT1020;Password=aaaaaa;Persist Security Info=False" DbType="sql" Default="false"/>
+		<DataSource ConnectString="Data Source=192.168.1.200;Initial Catalog=1127;User ID=CT1020;Password=aaaaaa;Persist Security Info=False" DbType="sql" Default="false"/>
+		<DataSource ConnectString="Data Source=192.168.1.200;Initial Catalog=1230;User ID=CT1020;Password=aaaaaa;Persist Security Info=False" DbType="sql" Default="false"/>
+		<DataSource ConnectString="Data Source=.;Initial Catalog=CTADUIT;User ID=sa;Password=aaaaaa;Persist Security Info=False" DbType="sql" Default="true"/>
+	</DataSources>
+	<BackUpConfig path="D:\backupData"/>
+</CtConfig>

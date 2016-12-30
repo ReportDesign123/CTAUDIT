@@ -1,0 +1,158 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="4.0" DefaultTargets="Build" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <PropertyGroup>
+    <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
+    <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
+    <ProductVersion>8.0.30703</ProductVersion>
+    <SchemaVersion>2.0</SchemaVersion>
+    <ProjectGuid>{CA0A3AA8-C615-4175-A4E8-BD885823C80D}</ProjectGuid>
+    <OutputType>Library</OutputType>
+    <AppDesignerFolder>Properties</AppDesignerFolder>
+    <RootNamespace>AuditSPI</RootNamespace>
+    <AssemblyName>AuditSPI</AssemblyName>
+    <TargetFrameworkVersion>v4.0</TargetFrameworkVersion>
+    <FileAlignment>512</FileAlignment>
+    
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
+    <DebugSymbols>true</DebugSymbols>
+    <DebugType>full</DebugType>
+    <Optimize>false</Optimize>
+    <OutputPath>bin\Debug\</OutputPath>
+    <DefineConstants>DEBUG;TRACE</DefineConstants>
+    <ErrorReport>prompt</ErrorReport>
+    <WarningLevel>4</WarningLevel>
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
+    <DebugType>pdbonly</DebugType>
+    <Optimize>true</Optimize>
+    <OutputPath>bin\Release\</OutputPath>
+    <DefineConstants>TRACE</DefineConstants>
+    <ErrorReport>prompt</ErrorReport>
+    <WarningLevel>4</WarningLevel>
+  </PropertyGroup>
+  <ItemGroup>
+    <Reference Include="System" />
+    <Reference Include="System.Core" />
+    <Reference Include="System.Data.Linq" />
+    <Reference Include="System.Xml.Linq" />
+    <Reference Include="System.Data.DataSetExtensions" />
+    <Reference Include="Microsoft.CSharp" />
+    <Reference Include="System.Data" />
+    <Reference Include="System.Xml" />
+  </ItemGroup>
+  <ItemGroup>
+    <Compile Include="Analysis\IfFormularStruct.cs" />
+    <Compile Include="Analysis\IFormularDeserialize.cs" />
+    <Compile Include="Analysis\IFormularExpressDeserialize.cs" />
+    <Compile Include="AuditPaper\IAuditAttatch.cs" />
+    <Compile Include="AuditPaper\IAuditPaper.cs" />
+    <Compile Include="AuditPaper\IAuditPaperAndCompanys.cs" />
+    <Compile Include="AuditPaper\IAuditPaperAndReports.cs" />
+    <Compile Include="AuditPaper\IReportTemplate.cs" />
+    <Compile Include="AuditTask\IAuditTask.cs" />
+    <Compile Include="AuditTask\IAuditTaskAndAuditPaper.cs" />
+    <Compile Include="AuditTask\IAuditTaskCompany.cs" />
+    <Compile Include="Authority\IAuthority.cs" />
+    <Compile Include="BackUp\IBackUp.cs" />
+    <Compile Include="ICpara.cs" />
+    <Compile Include="ICycleService.cs" />
+    <Compile Include="DataGrid.cs" />
+    <Compile Include="DataSource.cs" />
+    <Compile Include="ExportReport\CreateTemplateReportStruct.cs" />
+    <Compile Include="ExportReport\IBookmarkTemplate.cs" />
+    <Compile Include="ExportReport\ICreateReport.cs" />
+    <Compile Include="ExportReport\IReportTemplateInstanceState.cs" />
+    <Compile Include="ExportReport\IReportTemplate.cs" />
+    <Compile Include="ExportReport\IReportTemplateBookmark.cs" />
+    <Compile Include="ExportReport\ITemplateAndCompany.cs" />
+    <Compile Include="ExportReport\WordTemplateStruct.cs" />
+    <Compile Include="FileStruct.cs" />
+    <Compile Include="Format\BBData.cs" />
+    <Compile Include="Format\Bdq.cs" />
+    <Compile Include="Format\BdqsData.cs" />
+    <Compile Include="Format\Cell.cs" />
+    <Compile Include="Format\FormularDeserializeStruct.cs" />
+    <Compile Include="Format\FormularStruct.cs" />
+    <Compile Include="Format\IFormular.cs" />
+    <Compile Include="Format\IReportClassify.cs" />
+    <Compile Include="Format\IReportFormat.cs" />
+    <Compile Include="Format\ReportStruct.cs" />
+    <Compile Include="FunctionStruct.cs" />
+    <Compile Include="ICompanyService.cs" />
+    <Compile Include="IDataSource.cs" />
+    <Compile Include="IDbManager.cs" />
+    <Compile Include="IDictionaryService.cs" />
+    <Compile Include="IFunctionService.cs" />
+    <Compile Include="ILinqDataManager.cs" />
+    <Compile Include="IPositionService.cs" />
+    <Compile Include="ISystemService.cs" />
+    <Compile Include="MyException.cs" />
+    <Compile Include="MyExceptionStruct.cs" />
+    <Compile Include="ProblemTrace\IProblemTrace.cs" />
+    <Compile Include="Procedure\IProcedure.cs" />
+    <Compile Include="IRole.cs" />
+    <Compile Include="ISima.cs" />
+    <Compile Include="IUser.cs" />
+    <Compile Include="JsonStruct.cs" />
+    <Compile Include="NameValueStruct.cs" />
+    <Compile Include="Procedure\IProcedureFormular.cs" />
+    <Compile Include="Procedure\ProcedureParametersStruct.cs" />
+    <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="ReportAggregation\IReportAggregation.cs" />
+    <Compile Include="ReportAggregation\ReportAggregationStruct.cs" />
+    <Compile Include="ReportAnalysis\IReportStateAggregation.cs" />
+    <Compile Include="ReportAnalysis\ReportStateAggregationStruct.cs" />
+    <Compile Include="ReportAnalysis\ReportStateByClass.cs" />
+    <Compile Include="ReportAttatchment\IReportAttatchment.cs" />
+    <Compile Include="ReportAudit\ChartDataStruct.cs" />
+    <Compile Include="ReportAudit\CustomerGridDataStruct.cs" />
+    <Compile Include="ReportAudit\IReportAudit.cs" />
+    <Compile Include="ReportAudit\IReportAuditCell.cs" />
+    <Compile Include="ReportAudit\IReportAuditDefinition.cs" />
+    <Compile Include="ReportAudit\ReportAuditCellDefinitionDataStruct.cs" />
+    <Compile Include="ReportAudit\ReportAuditCellStruct.cs" />
+    <Compile Include="ReportAudit\ReportAuditStruct.cs" />
+    <Compile Include="ReportCycleStruct.cs" />
+    <Compile Include="ReportData\IFillReport.cs" />
+    <Compile Include="IReportCycle.cs" />
+    <Compile Include="ReportLink\IReportLink.cs" />
+    <Compile Include="ReportLink\ReportLinkStruct.cs" />
+    <Compile Include="ReportProblem\IReportProblem.cs" />
+    <Compile Include="ReportState\IReportExam.cs" />
+    <Compile Include="ReportData\ItemDataValueStruct.cs" />
+    <Compile Include="ReportData\ReportDataParameterStruct.cs" />
+    <Compile Include="ReportData\ReportDataStruct.cs" />
+    <Compile Include="ReportData\ReportFormatStruct.cs" />
+    <Compile Include="ReportState\IReportHigherExamine.cs" />
+    <Compile Include="ReportState\IReportLock.cs" />
+    <Compile Include="ReportState\IReportState.cs" />
+    <Compile Include="ReportState\IReportVerify.cs" />
+    <Compile Include="ReportState\ReportStateRecord.cs" />
+    <Compile Include="SessionInfo.cs" />
+    <Compile Include="TabStruct.cs" />
+    <Compile Include="ThirdPart\AccountBalance\AccountBalanceStruct.cs" />
+    <Compile Include="ThirdPart\AccountBalance\AccountSubjectStruct.cs" />
+    <Compile Include="ThirdPart\AccountBalance\IAccountBalance.cs" />
+    <Compile Include="TreeNode.cs" />
+    <Compile Include="WorkFlow\IWorkFlowBusinessDefinition.cs" />
+    <Compile Include="WorkFlow\IWorkFlowDefinition.cs" />
+    <Compile Include="WorkFlow\IWorkFlowHistory.cs" />
+    <Compile Include="WorkFlow\IWorkFlowTask.cs" />
+  </ItemGroup>
+  <ItemGroup>
+    <ProjectReference Include="..\AuditEntity\AuditEntity.csproj">
+      <Project>{CE175B93-F42C-4E67-B82A-E7BAE9562434}</Project>
+      <Name>AuditEntity</Name>
+    </ProjectReference>
+  </ItemGroup>
+  <ItemGroup />
+  <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
+  <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
+       Other similar extension points exist, see Microsoft.Common.targets.
+  <Target Name="BeforeBuild">
+  </Target>
+  <Target Name="AfterBuild">
+  </Target>
+  -->
+</Project>

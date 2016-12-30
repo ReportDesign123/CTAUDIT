@@ -1,0 +1,68 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="4.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003" DefaultTargets="Build">
+  <PropertyGroup>
+    <ProjectType>local</ProjectType>
+    <ProjectVersion>7.10.377</ProjectVersion>
+    <SchemaVersion>2.0</SchemaVersion>
+    <ProjectGuid>{FF58E591-B93E-4581-B765-CD83C00658FA}</ProjectGuid>
+    <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
+    <AssemblyName>DbManager</AssemblyName>
+    <OutputType>Library</OutputType>
+    <TargetFrameworkVersion>v4.0</TargetFrameworkVersion>
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|x86' ">
+    <PlatformTarget>AnyCPU</PlatformTarget>
+    <DebugSymbols>true</DebugSymbols>
+    <DebugType>full</DebugType>
+    <Optimize>false</Optimize>
+    <OutputPath>bin\Debug\</OutputPath>
+    <DefineConstants>DEBUG;TRACE</DefineConstants>
+    <ErrorReport>prompt</ErrorReport>
+    <WarningLevel>4</WarningLevel>
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|x86' ">
+    <PlatformTarget>x86</PlatformTarget>
+    <DebugType>pdbonly</DebugType>
+    <Optimize>true</Optimize>
+    <OutputPath>bin\Release\</OutputPath>
+    <DefineConstants>TRACE</DefineConstants>
+    <ErrorReport>prompt</ErrorReport>
+    <WarningLevel>4</WarningLevel>
+  </PropertyGroup>
+  <Import Project="$(MSBuildBinPath)\Microsoft.CSharp.targets" />
+  <ItemGroup>
+    <Reference Include="Interop.SQLDMO">
+      <HintPath>..\DLL\Interop.SQLDMO.dll</HintPath>
+      <EmbedInteropTypes>True</EmbedInteropTypes>
+    </Reference>
+    <Reference Include="System.Data.Linq" />
+    <Reference Include="System.Core" />
+    <Reference Include="System.Data" />
+    <Reference Include="System.Xml" />
+    <Reference Include="System.Web" />
+    <Compile Include="DbManager\LinqDataManager.cs" />
+    <Compile Include="DbManager\DbDataSourceInstance.cs" />
+    <Compile Include="DbManager\DataBaseBackupAndRestore.cs" />
+    <Compile Include="DbManager\ServerDataSource.cs" />
+    <Compile Include="DbManager\SqlServerDatabaseBackupAndRestore.cs" />
+    <Compile Include="DbManager\DBTool.cs" />
+    <Compile Include="DbManager\ConnectionManager.cs" />
+    <Compile Include="DbManager\BackUpStruct.cs" />
+    <Compile Include="DbManager\BackUpConfigManager.cs" />
+    <Compile Include="DbManager\CTDbManager.cs" />
+  </ItemGroup>
+  <ItemGroup>
+    <ProjectReference Include="..\AuditEntity\AuditEntity.csproj">
+      <Project>{CE175B93-F42C-4E67-B82A-E7BAE9562434}</Project>
+      <Name>AuditEntity</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\AuditSPI\AuditSPI.csproj">
+      <Project>{CA0A3AA8-C615-4175-A4E8-BD885823C80D}</Project>
+      <Name>AuditSPI</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\CtTool\CtTool.csproj">
+      <Project>{F42CDA29-EEFA-49E3-A14C-D875AB932EE1}</Project>
+      <Name>CtTool</Name>
+    </ProjectReference>
+  </ItemGroup>
+</Project>

@@ -1,0 +1,80 @@
+﻿<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head >
+    <title>系统帮助</title>
+<!--        <script src="../../lib/jquery/jquery-1.11.1.min.js" type="text/javascript"></script>
+    <script src="../../lib/easyUI/easyloader.js" type="text/javascript"></script>
+    <script src="../../lib/easyUI/jquery.easyui.min.js" type="text/javascript"></script>
+    <link href="../../lib/easyUI/themes/icon.css" rel="stylesheet" type="text/css" />
+<link href="../../lib/easyUI/themes/default/easyui.css" rel="stylesheet" type="text/css" />
+    <script src="../../lib/easyUI/locale/easyui-lang-zh_CN.js" type="text/javascript"></script>
+    <script src="../../Scripts/AjaxTrigger.js" type="text/javascript"></script>
+    <script src="../../Scripts/FunctionMethodManager.js" type="text/javascript"></script>
+    <script src="../../Scripts/ct/pub/PubHelp.js" type="text/javascript"></script>-->
+   
+</head>
+<body>
+ <script type="text/javascript">
+     var helpGrid;
+     var para;
+     var urls = {
+         DicCGridUrl: "../../handler/BasicHandler.ashx?ActionType=" + BasicAction.ActionType.Grid + "&MethodName=" + BasicAction.Methods.DicManagerMethods.GetDictionaryListByClass + "&FunctionName=" + BasicAction.Functions.DictionaryManager + "&classId=HHS"
+     };
+    
+     //公共接口
+     function FuncGetObj() {
+         return helpGrid.datagrid("getSelections"); ;
+     }
+     function Initialize() {
+
+                  para = pubHelp.getParameters();       
+
+         pubHelp.setResultObjFunc(FuncGetObj);
+         var url = para.url;
+         helpManager.InitializeHelp(url, para.sortName, para.sortOrder, para.columns, para.height);
+     }
+
+
+     var helpManager = {
+
+         InitializeHelp: function (url, sortName, sortOrder, columns, height) {
+             height = height - 76;
+             helpGrid = $("#helpGrid").datagrid(
+                {
+                    url: url,
+                    fit:true,
+                    sortName: sortName,
+                    sortOrder: sortOrder,
+                    pagination: true,
+                    title: "",
+                    columns: columns,
+                    onDblClickRow: function (rowIndex, rowData) {
+                        pubHelp.setResultObj(rowData);
+                        pubHelp.CloseDialog();
+                    },
+                     toolbar: "#tb"
+                }
+                );
+         }
+     };
+
+     function doSearch(value, name) {
+         var obj = {};
+         if (para.NameField && para.NameField.length > 0) {
+             var namesArr = para.NameField.split(",");
+             for (var i = 0; i < namesArr.length; i++) {
+                 obj[namesArr[i]] = value;
+             }
+         }
+
+         helpGrid.datagrid('load', obj);
+
+     }
+     Initialize();
+    </script>
+  <div id="tb" style="padding:5px;height:auto; font-size:12px; display:none">
+     名称: <input class="easyui-searchbox" id="search" data-options="prompt:'过滤名称',searcher:doSearch" style="width:220px"></input>
+     </div>
+   <table id="helpGrid"></table>
+</body>
+</html>

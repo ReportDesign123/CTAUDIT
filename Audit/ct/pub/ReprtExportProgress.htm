@@ -1,0 +1,136 @@
+﻿<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+   <title>系统提示：　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　</title>   
+   <meta http-equiv="X-UA-Compatible" content="IE=10" />
+     <meta http-equiv="X-UA-Compatible" content="IE=9" />
+     <meta http-equiv="X-UA-Compatible" content="IE=8" />
+     <meta http-equiv="X-UA-Compatible" content="IE=7" />
+    <script src="../../Scripts/ct/ReportData/ReportAggregation/ReportDataCell.js" type="text/javascript"></script>
+    <script src="../../Scripts/FunctionMethodManager.js" type="text/javascript"></script>
+    <script src="../../lib/jquery/jquery-1.5.2.min.js" type="text/javascript"></script>
+    <script src="../../Scripts/AjaxTrigger.js" type="text/javascript"></script>
+    <link href="../../Styles/default.css" rel="stylesheet" type="text/css" />
+    <script src="../../lib/Base64.js" type="text/javascript"></script>
+    <script src="../../lib/json2.js" type="text/javascript"></script>
+    <script src="../../Scripts/Ct_Tool.js" type="text/javascript"></script>
+    <script type="text/javascript">
+        var urls = {
+            reportAuditUrl: "../../handler/ReportDataHandler.ashx"
+        };
+        var reportParam;
+        var currentState = {bbFormat: {}, bbData: {}};
+        var ExportNames = {};
+        var LoadingMessage;
+        var exporting = true; // 维持继续导出的状态
+        var ExportObjList = []; //存储导出信息的参数
+        var ExportControl = { MaxNum: 0, ExportNum: 0 ,FielName:""};
+        $(function () {
+            reportParam = parent.controls.parameter; //window.dialogArguments;
+            ExportManager.setExoprtList();
+            setTimeout(ExportManager.LoadReport(ExportObjList[0]), 100);
+        });
+        var ExportManager = {
+            setExoprtList: function () {
+                $.each(reportParam.Reports, function (index, report) {
+                    for (var i = 0; i < reportParam.Companies.length; ++i) {
+                        var para = {};
+                        para.ReportId = report.Id;
+                        para.reportName = report.Name;
+                        para.CompanyId = reportParam.Companies[i].Id;
+                        para.companyName = reportParam.Companies[i].Name;
+                        ExportObjList.push(para);
+                    }
+                });
+                ExportControl.MaxNum = ExportObjList.length;
+            },
+            LoadReport: function (ExportObj) {
+                ExportControl.ExportNum += 1;
+                ExportControl.FielName = ExportManager.CreatFielName();
+                $("#ExportNameSpan").text(ExportControl.FielName); // 显示导出文件名
+                $("#NumSpan").text(ExportControl.ExportNum + "/" + ExportControl.MaxNum); //显示已导出文件数量
+                var para = { TaskId: "", PaperId: "", Year: "", Cycle: "", CompanyId: "", ReportId: "" };
+                para.TaskId = reportParam.TaskId;
+                para.PaperId = reportParam.PaperId;
+                para.Cycle = reportParam.Cycle;
+                para.Year = reportParam.Year;
+                para.ReportId = ExportObj.ReportId;
+                para.CompanyId = ExportObj.CompanyId;
+                if (!exporting) return false; // 如果发生了错误则程序不再继续
+                para = CreateParameter(ReportDataAction.ActionType.Post, ReportDataAction.Functions.ReportAggregation, ReportDataAction.Methods.ReportAggregationMethods.GetReportAllDatas, para);
+                DataManager.sendData(urls.reportAuditUrl, para, gridManager.Success, gridManager.Success, true);
+                return;
+            },
+            ExportExcel: function () {
+                var path = ExportControl.FielName;
+                if (reportParam["path"] && reportParam["path"] != "") {
+                    path = reportParam["path"] + "\\" + path;
+                } else {
+                    path = "ct\\" + path;
+                }
+                Grid1.ExportToExcel(path, false, false);
+                ExportObjList.splice(0, 1);
+                if (!exporting) return false; // 如果发生了错误则程序不再继续
+                if (ExportObjList.length > 0) {
+                    ExportManager.LoadReport(ExportObjList[0]);
+                } else {
+                    exporting = false;
+                    //window.returnValue = { success: true, msg: '报表已全部成功导出！' };
+                    parent.EventManager.getExportResult({ success: true, msg: '报表已全部成功导出！' })
+                    //window.close();
+                }
+            },
+            ExportFail: function (err) {
+                exporting = false;
+                //window.returnValue = { success: false, msg: ExportControl.FielName+"导出失败：" + err };
+                parent.EventManager.getExportResult({ success: false, msg: ExportControl.FielName + "导出失败：" + err })
+                //window.close();
+            },
+            CreatFielName: function () {
+                var report = ExportObjList[0].reportName;
+                var company = ExportObjList[0].companyName;
+                if (ExportNames[report + company]) {
+                    var num = (ExportNames[report + company + "Num"] + 1).toString();
+                    company = company + "(" + num + ")";
+                } else {
+                    ExportNames[report + company] = true;
+                    ExportNames[report + company + "Num"] = 1;
+                }
+                var fielName = report + "_" + company + ".xls";
+                return fielName;
+            },
+            stopExport: function () {
+                if (exporting) {
+                    exporting = false;
+                }
+            }
+        };
+//        window.onunload = function () {
+//            if (exporting) {
+//                exporting = false;
+//                parent.EventManager.getExportResult({ success: true, msg: "导出已被终止" };)
+//                //window.returnValue = { success: true, msg: "导出已终止" };
+//            }
+//        }
+    </script>
+</head>   
+    <OBJECT CLASSID = "clsid:5220cb21-c88d-11cf-b347-00aa00a28331" VIEWASTEXT>
+         <PARAM NAME="LPKPath" VALUE="../lpk/flexCell.lpk">
+      </OBJECT> 
+<body>
+    <table style="width:100%;padding:7px 0px 0px 10px; font-size:13px;">
+    <tr>
+        <td style="width:60px"><img border='0' src='../../images/ReportData/loading.gif' alt="" style=" width:45px; height:45px;margin-top:0px" /></td>
+        <td>
+        <div style="padding-top:10px">已导出：<span id="NumSpan"></span> , 请稍等</div>
+        <div style="margin-top:10px;height:30px"><span id="ExportNameSpan"></span></div>
+        </td>
+    </tr>
+    </table>
+    <div style="display:none"><OBJECT  ID="Grid1"  CLASSID="clsid:4331220A-1077-4630-BEE3-0D7142D6ABD0" style=" widht:500px;height:500px"  >
+    <PARAM NAME="_ExtentX" VALUE="0">
+         <PARAM NAME="_ExtentY" VALUE="0">
+      </OBJECT>
+      </div>
+</body>
+</html>

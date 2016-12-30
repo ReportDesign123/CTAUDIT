@@ -1,0 +1,55 @@
+﻿<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+    <title>上传模板</title>
+    <script src="../../lib/jquery/jquery-1.11.1.min.js" type="text/javascript"></script>   
+    <script src="../../Scripts/FunctionMethodManager.js" type="text/javascript"></script>
+    <script src="../../Scripts/AjaxTrigger.js" type="text/javascript"></script>
+
+<style type="text/css">
+input {
+ font-size: 12px;
+ height: 25px;
+ margin: 0px;
+ padding: 0px;
+}
+</style>
+</head>
+<body style=" overflow:hidden">
+<script src="../../Scripts/Ct_Upload.js" type="text/javascript"></script>
+<script type="text/javascript">
+    var template;
+    var uploadUrl = "../../handler/ExportReport.ashx?ActionType=" + ExportAction.ActionType.Grid + "&MethodName=" + ExportAction.Methods.TemplateMethod.UploadTemplate + "&FunctionName=" + ExportAction.Functions.ReportTemplate;
+    $(function () {
+        template = parent.currentState.inEditTemplate;
+        $("#FuJianName").text(template.AttatchName);
+    });
+    function upload() {
+        var IsOrNotOverwrite = "0";
+        if ($("#IsORNortCover").prop("checked")) {
+            IsOrNotOverwrite = "1";
+        }
+        var action = parent.urls.uploadUrl + "&Id=" + template.Id + "&IsOrNotOverwrite=" + IsOrNotOverwrite;
+        $('#TemplateForm').attr('action', action);
+        $('#TemplateForm').submit();
+    }
+    function close() {
+        $('#TemplateForm').submit();
+        window.close();
+    }
+     
+</script>
+<form id="TemplateForm"   action=""   method="post" enctype="multipart/form-data">
+    <table id="upTable" style=" width:300px; padding-top:0px;" >
+    <tr><td style="border-bottom:1px solid #c4DADF;"><input type="file" name="file1"   class="file"  style=" width:180px; "/>
+    <div  style="border-bottom:1px solid #c4DADF;font-size:13px;padding:5px 0px 5px 5px;" >已上传：</div>
+    <div style="margin:15px 10px 15px 6px;font-size:13px;"><span id="title">附&nbsp;&nbsp;&nbsp;件&nbsp;：</span>&nbsp;<span id="FuJianName" style=""></span></div></td>
+    </tr>
+    <tr><td style=" font-size:13px"><input type="checkbox" id ="IsORNortCover" style="float:left; margin-left:5px; margin-right:5px"/><div style="padding:6px" >是否覆盖同名标签</div></td></tr>
+    </table>
+    <input id="Hidden1" name="ActionType" type="hidden" value="grid"/>
+    <input id="Hidden2" name="MethodName" type="hidden"  value="Save"/>
+   
+</form>
+</body>
+</html>

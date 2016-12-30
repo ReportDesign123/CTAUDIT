@@ -1,0 +1,16 @@
+﻿
+.myTxtInput{
+	width: 140px;
+	height:20px;
+	line-height:20px;
+	font-size:14px;
+	border:1px solid #95B8E7;
+	vertical-align:middle;
+	-webkit-rtl-ordering: logical;
+-webkit-user-select: text;
+border-radius: 0 0 0 0;
+background: #fff;
+}
+.myTr{
+	height:25px;
+}
