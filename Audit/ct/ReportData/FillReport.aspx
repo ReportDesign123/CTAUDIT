@@ -570,11 +570,6 @@
              },
 
              DeserializeFatchFormular: function () {
-
-
-
-
-
                  if (!BBDataItems.Gdq) { alert("先选择一张需要操作的报表"); return; }
                  if (currentState.IsOrNotWriteLock == "0") { alert("报表已被锁定，无法执行操作"); return; }
                  LoadingMessage = $.ligerDialog.open({ height: 450, width: 450, target: $("#s"), isResize: true, show: true });
