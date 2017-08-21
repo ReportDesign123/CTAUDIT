@@ -61,13 +61,24 @@
                 }
             }
             $(function () {
+                initializeCell(0, 0);
+            });
 
-                spreadNS = GcSpread.Sheets;
-                spread = new spreadNS.Spread($("#ss")[0]);
+            function initializeCell(row, col) {
+                if (!spreadNS) {
+                    spreadNS = GcSpread.Sheets;
+                }
+                if (!spread)
+                {
+                    spread = new spreadNS.Spread($("#ss")[0]);
+                }
                 spread.setTabStripRatio(0.88);
+               
+                spread.removeSheet(0);
+               
                 Grid1 = new spreadNS.Sheet("Cell");
                 Grid1.setIsProtected(true); //是否锁定
-                spread.removeSheet(0);
+
                 spread.addSheet(spread.getSheetCount(), Grid1);
 
                 Grid1.isPaintSuspended(true);
@@ -85,47 +96,30 @@
                 }
                 Grid1.isPaintSuspended(false);
                 currentState.currentNum = 0;
-            });
 
-
+            }
             function InitializeFlexCell(row,col) {
-
                 if (Grid1) {
-                    Grid1.isPaintSuspended(true);
-                    Grid1.setColumnCount(col);
-                    Grid1.setRowCount(row);
-                  
-                    Grid1.isPaintSuspended(false);
+                    initializeCell(0, 0);
+                    //Grid1.isPaintSuspended(true);
+                    //Grid1.setColumnCount(col);
+                    //Grid1.setRowCount(row);
+                    //Grid1.isPaintSuspended(false);
                 }
 
             }
             function RefreshGrid(formatStr, width, height) {
-
-               
                 if (!grid1) {
                     Initialize(width,height);
                     grid1 = Grid1;
                 }
                 InitializeFlexCell(0, 0);
-                //                spread.refresh();
                 $("#ss").data("spread").refresh();
                 ClearFilter();
-
-//                for (var i = 0; i < Grid1.getRowCount(); i++) {
-//                   for (var j = 0; j < Grid1.getColumnCount(); j++) {
-//                           Grid1.setValue(i, j, "");
-//                           Grid1.setFormula(i, j, null);
-//                           Grid1.setTag(i, j, "");
-//                           Grid1.getCell(i, j).backColor(undefined);
-//                       
-//                   }
-//               }
                 Grid1.isPaintSuspended(true);
                 Grid1.fromJSON(JSON.parse(formatStr));
-               
-//                Grid1.autoFitColumn(1);
-//                Grid1.autoFitRow(1);
                 Grid1.isPaintSuspended(false);
+
            }
            var GridManager = {
 
