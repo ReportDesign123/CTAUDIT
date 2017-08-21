@@ -305,9 +305,6 @@
 
                        spreadNS = GcSpread.Sheets;
                        spread = new spreadNS.Spread($("#ss")[0]);
-
-
-
                        spread.setTabStripRatio(0.88);
                        Grid1 = new spreadNS.Sheet("Cell");
                        spread.removeSheet(0);
@@ -316,10 +313,6 @@
                        InitializeFlexCell(0, 0);
 
                        BindClick();
-
-                      
-                      
-
                    });
         //初始事件绑定
         function BindClick() {
@@ -475,9 +468,6 @@
             }
         }
         function InitializeFlexCell(row, col) {
-
-         
-
             if (Grid1) {
                 Grid1.isPaintSuspended(true);
                 Grid1.setColumnCount(col);
@@ -485,10 +475,8 @@
                 Grid1.isPaintSuspended(false);
                 fbx = new spreadNS.FormulaTextBox(document.getElementById('formulabox'));
                 fbx.spread(spread);
-
                 if (Grid1.bind) {
                     Grid1.bind(spreadNS.Events.SelectionChanged, GridManager.RowColChange_Event);
-                  
                 }
                 InitializeControlValue(true);
                 BBData = { bbCode: "", bbName: "", bbData: {}, bdq: { bdNum: 0, BdRowNum: 0, BdColNum: 0, BdqMaps: {}, Bdqs: [] }, MaxNum: "0" };
@@ -1105,15 +1093,18 @@
                 // Grid1.Selection.BackColor = backColor;
             },
             Border_Click: function (edge, value) {
-
-
-
                 Grid1.isPaintSuspended(true);
                 var sels = Grid1.getSelections();
                 var rowCount = Grid1.getRowCount(),
                   columnCount = Grid1.getColumnCount();
                 var option = { all: true };
+              
                 var lineBorder = new spreadNS.LineBorder("#000000", spreadNS.LineStyle.thin);
+                if (value == "0") {
+                    var border = new GcSpread.Sheets.LineBorder();
+                    border.style = GcSpread.Sheets.LineStyle.empty;
+                    lineBorder = border;
+                }
                 for (var n = 0; n < sels.length; n++) {
                     var sel = getActualCellRange(sels[n], rowCount, columnCount);
                     Grid1.setBorder(sel, lineBorder, option);
@@ -1205,34 +1196,48 @@
         function setCellTypeFont(r, c) {
             var tag = GridManager.GetGridTag(r, c);
             if (tag[cellTag.CellFont]) {
-
-                var style = new spreadNS.Style() ;
-                var vStyle = "";
                 var tagCellFont = tag[cellTag.CellFont];
+                var cssStyle = Grid1.getStyle(r, c);
+                var defaultStyle = Grid1.getDefaultStyle();
+                var fontElement = $("<span></span>");
+
+                if (!cssStyle) {
+                     cssStyle = new spreadNS.Style();
+                }
+                if (!cssStyle.font) {
+                    cssStyle.font = defaultStyle.font || "11pt Calibri";
+                }
+                fontElement.css("font", cssStyle.font);
+              
+
                 if (tagCellFont.FontItalic != "") {
-                    vStyle = tagCellFont.FontItalic + " ";
+                    fontElement.css("font-style", 'italic');
+                }
+                else
+                {
+                    fontElement.css("font-style", 'normal');//normal
                 }
                 if (tagCellFont.FontBold != "") {
-                    vStyle += tagCellFont.FontBold + " ";
-                }
-              
-                if (tagCellFont.FontSize != "") {
-                    vStyle += tagCellFont.FontSize + " ";
+                    fontElement.css("font-weight", tagCellFont.FontBold);
                 }
                 else {
-                    vStyle = "11pt ";
-                    tagCellFont.FontSize = "11pt";
+                    fontElement.css("font-weight", 'normal');
+                }
+                if (tagCellFont.FontSize != "") {
+                    fontElement.css("font-size", tagCellFont.FontSize+"pt");
+                }
+                else {
+                    fontElement.css("font-size", '11pt');
 
                 }
                 if (tagCellFont.FontType != "") {
-                    vStyle += tagCellFont.FontType;
+                    fontElement.css("font-family", tagCellFont.FontType);
                 }
                 else {
-                    vStyle += "宋体 ";
-                    tagCellFont.FontType = "宋体";
+                    fontElement.css("font-family", '宋体');
                 }
-                style.font = vStyle;
-                Grid1.setStyle(r, c, style);
+                cssStyle.font = fontElement.css("font");
+                Grid1.setStyle(r, c, cssStyle,GcSpread.Sheets.SheetArea.viewport);
             }
         }
         //下划线
@@ -2081,6 +2086,12 @@
             LoadSuccess: function (data) {
                 if (data.success) {
                     // InitializeFlexCell(-1, -1);
+                    spread.removeSheet(0);
+                    Grid1 = new spreadNS.Sheet("Cell");
+                    spread.addSheet(spread.getSheetCount(), Grid1);
+
+                    InitializeFlexCell(0, 0);
+
                     Grid1.fromJSON(JSON.parse(data.obj.formatStr));
                     spread.refresh();
                     Grid1.isPaintSuspended(true);
@@ -2267,7 +2278,102 @@
             }
             return selectionInfo;
         }
+        /*设置字体样式*/
+        function parseFont(font) {
+            var fontFamily = null,
+                fontSize = null,
+                fontStyle = "normal",
+                fontWeight = "normal",
+                fontVariant = "normal",
+                lineHeight = "normal";
+          //  FontSize:"",FontType:"",FontItalic:"",FontBold:""
+            var elements = font.split(/\s+/);
+            var element;
+            while ((element = elements.shift())) {
+                switch (element) {
+                    case "normal":
+                        break;
 
+                    case "italic":
+                    case "oblique":
+                        fontStyle = element;
+                        break;
+
+                    case "small-caps":
+                        fontVariant = element;
+                        break;
+
+                    case "bold":
+                    case "bolder":
+                    case "lighter":
+                    case "100":
+                    case "200":
+                    case "300":
+                    case "400":
+                    case "500":
+                    case "600":
+                    case "700":
+                    case "800":
+                    case "900":
+                        fontWeight = element;
+                        break;
+
+                    default:
+                        if (!fontSize) {
+                            var parts = element.split("/");
+                            fontSize = parts[0];
+                            if (fontSize.indexOf("px") !== -1) {
+                                fontSize = px2pt(parseFloat(fontSize)) + 'pt';
+                            }
+                            if (parts.length > 1) {
+                                lineHeight = parts[1];
+                                if (lineHeight.indexOf("px") !== -1) {
+                                    lineHeight = px2pt(parseFloat(lineHeight)) + 'pt';
+                                }
+                            }
+                            break;
+                        }
+
+                        fontFamily = element;
+                        if (elements.length)
+                            fontFamily += " " + elements.join(" ");
+
+                        return {
+                            "fontStyle": fontStyle,
+                            "fontVariant": fontVariant,
+                            "fontWeight": fontWeight,
+                            "fontSize": fontSize,
+                            "lineHeight": lineHeight,
+                            "fontFamily": fontFamily
+                        };
+                }
+            }
+
+            return {
+                "fontStyle": fontStyle,
+                "fontVariant": fontVariant,
+                "fontWeight": fontWeight,
+                "fontSize": 30,
+                "lineHeight": lineHeight,
+                "fontFamily": fontFamily
+            };
+        }
+        var tempSpan = $("<span></span>");
+        function px2pt(pxValue) {
+            tempSpan.css({
+                "font-size": "96pt",
+                "display": "none"
+            });
+            tempSpan.appendTo($(document.body));
+            var tempPx = tempSpan.css("font-size");
+            if (tempPx.indexOf("px") !== -1) {
+                var tempPxValue = parseFloat(tempPx);
+                return Math.round(pxValue * 96 / tempPxValue);
+            }
+            else {  // when browser have not convert pt to px, use 96 DPI.
+                return Math.round(pxValue * 72 / 96);
+            }
+        }
     </script>
 
     <style type="text/css">
@@ -2499,7 +2605,6 @@ a.c3:hover{
                             </tr>
 						</table>
 					</div>
-           
 			<div tabid="home" title="格式信息"  style="height: 100%">
 					<div id="Div1" style="margin: 0px; height: 100%;">
 					<div id="bbInfoHeader" class="l-layout-header">单元格逻辑属性</div>
