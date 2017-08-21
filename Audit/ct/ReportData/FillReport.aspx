@@ -9,7 +9,8 @@
      <meta http-equiv="X-UA-Compatible" content="IE=9" />
      <meta http-equiv="X-UA-Compatible" content="IE=8" />
      <meta http-equiv="X-UA-Compatible" content="IE=7" />
-    <script src="../../lib/jquery/jquery-1.5.2.min.js" type="text/javascript"></script>
+    <script src="../../lib/jquery/jquery-1.11.1.min.js" type="text/javascript"></script>
+    <%--<script src="../../lib/jquery/jquery-1.5.2.min.js" type="text/javascript"></script>--%>
      <script src="../../Scripts/Ct_Controls.js" type="text/javascript"></script>
         <script src="../../Scripts/FunctionMethodManager.js" type="text/javascript"></script>
       <script src="../../Scripts/AjaxTrigger.js" type="text/javascript"></script>
@@ -2077,14 +2078,12 @@
                  }
              },
              AddReport: function (item, report) {
-                 try {
+                 
 
                      currentState.TabDatas.push(report);
                      controls.AuditReportTab.addTabItem(item);
 
-                 } catch (err) {
-
-                 }
+                 
              },
              CheckOutInfManager: {
                  LoadInfFrame: function () {
