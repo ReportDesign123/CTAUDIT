@@ -424,7 +424,7 @@
                      layer.msg('拼了命努力加载中...', {
                          icon: 16,
                          time: 0,
-                         shade: 0.6
+                        shade: 0.3
                      });
 
    mediatorManager.LoadBBFormat();
@@ -580,7 +580,7 @@
                  layer.msg('拼了命努力加载中...', {
                      icon: 16,
                      time: 0,
-                     shade: 0.6
+                    shade: 0.3
                  });
                    var para = { Gdq: {}, BdqData: [], bdMaps: {}, rdps: {}, GdbId: "", GdbTableName: "", bdIds: {}, bdTableNames: {} };
                  para.GdbId = BBDataItems.GdbId;
@@ -652,7 +652,7 @@
                  layer.msg('拼了命努力加载中...', {
                      icon: 16,
                      time: 0,
-                     shade: 0.6
+                    shade: 0.3
                  });
 
                  
@@ -1157,7 +1157,7 @@
                      layer.msg('拼了命努力加载中...', {
                          icon: 16,
                          time: 0,
-                         shade: 0.6
+                        shade: 0.3
                      });
 
                      gridFrame.RefreshGrid(currentState.ReportFormat);
