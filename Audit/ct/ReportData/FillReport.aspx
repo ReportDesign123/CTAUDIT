@@ -50,21 +50,21 @@
     <script type="text/javascript">
         var kb = 0;
         var totalKb = 999;
-        $(function () {
-            var $topLoader = $("#topLoader").percentageLoader({ width: 256, height: 256, controllable: true, progress: 0.5, onProgressUpdate: function (val) {
-                $topLoader.setValue(Math.round(val * 100.0));
-            }
-            });
+        //$(function () {
+        //    //var $topLoader = $("#topLoader").percentageLoader({ width: 256, height: 256, controllable: true, progress: 0.5, onProgressUpdate: function (val) {
+        //    //    $topLoader.setValue(Math.round(val * 100.0));
+        //    //}
+        //    //});
 
 
-            $("#animateButton").click(function () {
-                kb += 5;
-                $topLoader.setProgress(kb / totalKb);
-                $topLoader.setValue(kb.toString() + 'kb');
+        //    $("#animateButton").click(function () {
+        //        kb += 5;
+        //        $topLoader.setProgress(kb / totalKb);
+        //        $topLoader.setValue(kb.toString() + 'kb');
 
 
-            });
-        });
+        //    });
+        //});
     
     var urls={
          fillReportUrl:"../../handler/ReportDataHandler.ashx",
@@ -83,7 +83,7 @@
      var auditReportTabAutoLoadFlag = false;
      var companyLoadFlag = false;
      var zqLoadFlag = false;
-     var LoadingMessage = {};
+    
      var cellTextNotChangeSetCellType = false;
      var CellTag = "1;00010002;0001|01|{单元格基本信息}"; //第一位是指是否为固定区（1：固定区；0为变动区；）；第二位为当前单元格编号；第三位是指如果为变动区，则为变动区编号；01代表文本字符;下一位代表单元格基本信息（向前兼容）
      var ItemDataValue = { value: "", cellDataType: "", isOrNotUpdate: "0" };
