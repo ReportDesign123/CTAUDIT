@@ -26,10 +26,9 @@
     <script src="../../lib/ligerUI/js/core/inject.js" type="text/javascript"></script>
     <script src="../../lib/ligerUI/js/ligerui.min.js" type="text/javascript"></script>
     <script src="../../Scripts/ct/pub/PubHelp.js" type="text/javascript"></script>
-    <script src="../../lib/processLoader/jquery.percentageloader-0.1.js" type="text/javascript"></script>
-    <link href="../../lib/processLoader/jquery.percentageloader-0.1.css" rel="stylesheet"
-        type="text/css" />
-         <style>
+    <script src="../../Scripts/layer/layer.js"></script>
+
+         <style type="text/css">
        
       #topLoader {
         width: 256px;
@@ -421,13 +420,18 @@
                      }
                      currentState.BdqBh = "";
                      currentState.BdqDataMaps = {};
-                     LoadingMessage = window.showModelessDialog("../pub/Progress.htm", null, "DialogHeight:120px;DialogWidth:450px;help:no;status:no;scroll:no;");
-                     mediatorManager.LoadBBFormat();
+                     layer.msg('拼了命努力加载中...', {
+                         icon: 16,
+                         time: 0,
+                         shade: 0.6
+                     });
+
+   mediatorManager.LoadBBFormat();
                      mediatorManager.LoadBBCompFormat();
                      mediatorManager.LoadBbData();
 
-                     if (LoadingMessage.close()) {
-                         LoadingMessage.close();
+                     if (layer) {
+                         layer.close(layer.index);
                      }
                  }
 
@@ -572,9 +576,12 @@
              DeserializeFatchFormular: function () {
                  if (!BBDataItems.Gdq) { alert("先选择一张需要操作的报表"); return; }
                  if (currentState.IsOrNotWriteLock == "0") { alert("报表已被锁定，无法执行操作"); return; }
-                 LoadingMessage = $.ligerDialog.open({ height: 450, width: 450, target: $("#s"), isResize: true, show: true });
-                 //   LoadingMessage = window.showModelessDialog("../pub/Progress.htm", null, "DialogHeight:120px;DialogWidth:450px;help:no;status:no;scroll:no;");
-                 var para = { Gdq: {}, BdqData: [], bdMaps: {}, rdps: {}, GdbId: "", GdbTableName: "", bdIds: {}, bdTableNames: {} };
+                 layer.msg('拼了命努力加载中...', {
+                     icon: 16,
+                     time: 0,
+                     shade: 0.6
+                 });
+                   var para = { Gdq: {}, BdqData: [], bdMaps: {}, rdps: {}, GdbId: "", GdbTableName: "", bdIds: {}, bdTableNames: {} };
                  para.GdbId = BBDataItems.GdbId;
                  para.GdbTableName = BBDataItems.GdbTableName;
                  para.rdps = toolsManager.GetReportParameter();
@@ -610,8 +617,7 @@
 
                  if (!BBDataItems.Gdq) { alert("先选择一张需要操作的报表"); return; }
                  if (currentState.IsOrNotWriteLock == "0") { alert("报表已被锁定，无法执行操作"); return; }
-                 //  LoadingMessage = window.showModelessDialog("../pub/Progress.htm", null, "DialogHeight:120px;DialogWidth:450px;help:no;status:no;scroll:no;");
-
+                 
                  if (currentState.ReportCalcuFormat && currentState.ReportCalcuFormat != "") {
                      var vCalcFormatData = JSON.parse(currentState.ReportCalcuFormat);
                      gridFrame.Grid1.isPaintSuspended(true);
@@ -642,7 +648,13 @@
              DeserializeVarifyFormular: function () {
                  if (!BBDataItems.Gdq) { alert("先选择一张需要操作的报表"); return; }
                  //if (currentState.IsOrNotWriteLock == "0") { alert("报表已被锁定，无法执行操作"); return; }
-                 LoadingMessage = window.showModelessDialog("../pub/Progress.htm", null, "DialogHeight:120px;DialogWidth:450px;help:no;status:no;scroll:no;");
+                 layer.msg('拼了命努力加载中...', {
+                     icon: 16,
+                     time: 0,
+                     shade: 0.6
+                 });
+
+                 
                  var para = { Gdq: {}, BdqData: [], bdMaps: {}, rdps: {}, GdbId: "", GdbTableName: "", bdIds: {}, bdTableNames: {} };
                  para.GdbId = BBDataItems.GdbId;
                  para.GdbTableName = BBDataItems.GdbTableName;
@@ -1140,7 +1152,13 @@
                  currentState.RowColChange = false;
                  if (currentState.navigatorData.currentReportId == "home" || currentState.navigatorData.currentReportId == "") { mediatorManager.RefreshHome(); return; }
                  if (BBData.bdq.bdNum > 0) {
-                     LoadingMessage = window.showModelessDialog("../pub/Progress.htm", null, "DialogHeight:120px;DialogWidth:450px;help:no;status:no;scroll:no;");
+                    
+                     layer.msg('拼了命努力加载中...', {
+                         icon: 16,
+                         time: 0,
+                         shade: 0.6
+                     });
+
                      gridFrame.RefreshGrid(currentState.ReportFormat);
                      gridFrame.Grid1.isPaintSuspended(true);
                      $.each(BBData.bbData, function (rowIndex, row) {
@@ -1201,8 +1219,8 @@
                  currentState.RowColChange = true;
 
                  mediatorManager.LoadBbData();
-                 if (LoadingMessage.close()) {
-                     LoadingMessage.close();
+                 if (layer) {
+                     layer.close(layer.index);
                  }
              },
              InitializeCompanies: function (data) {
@@ -1420,8 +1438,8 @@
              },
              FailResult: function (data) {
                  alert(data.sMeg);
-                 if (LoadingMessage.close()) {
-                     LoadingMessage.close();
+                 if (layer) {
+                     layer.close(layer.index);
                  }
              },
              LoadCompBB_Success: function (data) {
@@ -1915,7 +1933,7 @@
                  }
              },
              DesrializeFatchFormular_Success: function (data) {
-                 // LoadingMessage.close();
+                  
                  if (data.success) {
                      mediatorManager.LoadBBFormat();
                      mediatorManager.LoadBbData();
@@ -1923,11 +1941,13 @@
                  } else {
                      alert(data.sMeg);
                  }
-                 LoadingMessage.close();
+                 if ( layer) {
+                     layer.close( layer.index);
+                 }
              },
              DeserializeCaculateFormular_Success: function (data) {
 
-                 LoadingMessage.close();
+                
                  if (data.success) {
                      mediatorManager.LoadBBFormat();
                      mediatorManager.LoadBbData();
@@ -1935,9 +1955,12 @@
                  } else {
                      alert(data.sMeg);
                  }
+                 if (layer) {
+                     layer.close(layer.index);
+                 }
              },
              DeserializeVerifyFormular_Success: function (data) {
-                 LoadingMessage.close();
+                 
                  if (data.success) {
                      if (data.sMeg == "校验成功") {
                          alert(data.sMeg);
@@ -1948,6 +1971,9 @@
                      }
                  } else {
                      alert(data.sMeg);
+                 }
+                 if (layer) {
+                     layer.close(layer.index);
                  }
              },
              SelfCheck_Success: function (data) {
