@@ -72,7 +72,7 @@
                 {
                     spread = new spreadNS.Spread($("#ss")[0]);
                 }
-                spread.setTabStripRatio(0.88);
+               // spread.setTabStripRatio(0.88);
                
                 spread.removeSheet(0);
                
@@ -86,7 +86,7 @@
                 var filter = new GcSpread.Sheets.HideRowFilter(new GcSpread.Sheets.Range(-1, 0, -1, 2));
                 Grid1.rowFilter(filter);
                 filter.setShowFilterButton(false);
-
+                Grid1.isPaintSuspended(true);
                 if (Grid1.bind) {
                     Grid1.bind(spreadNS.Events.ColumnChanged, ClearFilter);
                     Grid1.bind(spreadNS.Events.ValueChanged, GridManager.CellChange_Event);
@@ -100,25 +100,40 @@
             }
             function InitializeFlexCell(row,col) {
                 if (Grid1) {
-                    initializeCell(0, 0);
-                    //Grid1.isPaintSuspended(true);
-                    //Grid1.setColumnCount(col);
-                    //Grid1.setRowCount(row);
-                    //Grid1.isPaintSuspended(false);
+                    //initializeCell(0, 0);
+                    Grid1.isPaintSuspended(true);
+                    Grid1.setColumnCount(col);
+                    Grid1.setRowCount(row);
+                    Grid1.isPaintSuspended(false);
                 }
 
+
+            }
+            function Refresh() {
+                if (Grid1)
+                {
+                    spread.removeSheet(0);
+                    Grid1 = new spreadNS.Sheet("Cell");
+                    Grid1.setIsProtected(true); //是否锁定
+                    spread.addSheet(spread.getSheetCount(), Grid1);
+
+                    Grid1.isPaintSuspended(true);
+                    Grid1.setColumnCount(0);
+                    Grid1.setRowCount(0);
+                    if (Grid1.bind) {
+                        Grid1.bind(spreadNS.Events.ColumnChanged, ClearFilter);
+                        Grid1.bind(spreadNS.Events.ValueChanged, GridManager.CellChange_Event);
+                        Grid1.bind(spreadNS.Events.SelectionChanged, GridManager.RowColChange_Event);
+                    }
+                    Grid1.isPaintSuspended(false);
+                    ClearFilter();
+                }
             }
             function RefreshGrid(formatStr, width, height) {
-                if (!grid1) {
-                    Initialize(width,height);
-                    grid1 = Grid1;
-                }
-                InitializeFlexCell(0, 0);
-                $("#ss").data("spread").refresh();
-                ClearFilter();
-                Grid1.isPaintSuspended(true);
+                Refresh();
+                Initialize(width,height);
                 Grid1.fromJSON(JSON.parse(formatStr));
-                Grid1.isPaintSuspended(false);
+                spread.refresh();
 
            }
            var GridManager = {
