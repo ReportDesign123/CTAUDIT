@@ -48,24 +48,7 @@
         }
     </style>
     <script type="text/javascript">
-        loader = {
-            open: function () {
-                if (top.layer) {
-
-
-                    top.layer.msg('拼了命努力加载中...', {
-                        icon: 16,
-                        time: 0,
-                        shade: 0.3
-                    });
-                }
-            },
-            close: function () {
-                if (top.layer) {
-                    top.layer.close(top.layer.index);
-                }
-            }
-        };
+        
         var kb = 0;
         var totalKb = 999;
         //$(function () {
@@ -439,13 +422,13 @@
                         }
                         currentState.BdqBh = "";
                         currentState.BdqDataMaps = {};
-                        loader.open();
+                        top.loader && top.loader.open();
 
                         mediatorManager.LoadBBFormat();
                         mediatorManager.LoadBBCompFormat();
                         mediatorManager.LoadBbData();
 
-                        loader.close();
+                        top.loader && top.loader.close();
                     }
 
                 },
@@ -589,7 +572,7 @@
                 DeserializeFatchFormular: function () {
                     if (!BBDataItems.Gdq) { alert("先选择一张需要操作的报表"); return; }
                     if (currentState.IsOrNotWriteLock == "0") { alert("报表已被锁定，无法执行操作"); return; }
-                    loader.open();
+                    top.loader && top.loader.open();
                     var para = { Gdq: {}, BdqData: [], bdMaps: {}, rdps: {}, GdbId: "", GdbTableName: "", bdIds: {}, bdTableNames: {} };
                     para.GdbId = BBDataItems.GdbId;
                     para.GdbTableName = BBDataItems.GdbTableName;
@@ -657,7 +640,7 @@
                 DeserializeVarifyFormular: function () {
                     if (!BBDataItems.Gdq) { alert("先选择一张需要操作的报表"); return; }
                     //if (currentState.IsOrNotWriteLock == "0") { alert("报表已被锁定，无法执行操作"); return; }
-                    loader.open();
+                    top.loader && top.loader.open();
 
 
                     var para = { Gdq: {}, BdqData: [], bdMaps: {}, rdps: {}, GdbId: "", GdbTableName: "", bdIds: {}, bdTableNames: {} };
@@ -1161,7 +1144,7 @@
                 if (currentState.navigatorData.currentReportId == "home" || currentState.navigatorData.currentReportId == "") { mediatorManager.RefreshHome(); return; }
                 if (BBData.bdq.bdNum > 0) {
 
-                    loader.open();
+                    top.loader && top.loader.open();
 
                     gridFrame.RefreshGrid(currentState.ReportFormat);
                     gridFrame.Grid1.isPaintSuspended(true);
@@ -1223,7 +1206,7 @@
                 currentState.RowColChange = true;
 
                 mediatorManager.LoadBbData();
-                loader.close();
+                top.loader && top.loader.close();
             },
             InitializeCompanies: function (data) {
                 try {
@@ -1440,7 +1423,7 @@
             },
             FailResult: function (data) {
                 alert(data.sMeg);
-                loader.close();
+                top.loader && top.loader.close();
             },
             LoadCompBB_Success: function (data) {
                 alert(data.sMeg);
@@ -1941,7 +1924,7 @@
                 } else {
                     alert(data.sMeg);
                 }
-                loader.close();
+                top.loader && top.loader.close();
             },
             DeserializeCaculateFormular_Success: function (data) {
 
@@ -1953,7 +1936,7 @@
                 } else {
                     alert(data.sMeg);
                 }
-                loader.close();
+                top.loader && top.loader.close();
             },
             DeserializeVerifyFormular_Success: function (data) {
 
@@ -1968,7 +1951,7 @@
                 } else {
                     alert(data.sMeg);
                 }
-                loader.close();
+                top.loader && top.loader.close();
             },
             SelfCheck_Success: function (data) {
                 if (data.success) {

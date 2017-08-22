@@ -73,6 +73,7 @@
                 });
             },
             SelectedItem: function (item) {
+                top.loader && top.loader.open();
                 var report = { Id: item.id, bbName: item.text, ReportState: item.name };
                 var item = { tabid: item.id, text: item.text, showClose: true };
                 parent.tabManager.AddReport(item,report);

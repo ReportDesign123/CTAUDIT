@@ -26,6 +26,7 @@
 		</div>
  
         <script type="text/javascript">
+            top.loader && top.loader.close();
             var urls = {
                 HelpUrl: "../../handler/BasicHandler.ashx",
                 ReportDataUrl: "JumpReportMang.aspx"

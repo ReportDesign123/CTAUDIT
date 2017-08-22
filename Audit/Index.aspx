@@ -7,42 +7,64 @@
 
     <title>浩物机电审计系统</title>
 
-     <meta http-equiv="X-UA-Compatible" content="IE=10" />
-     <meta http-equiv="X-UA-Compatible" content="IE=9" />
-     <meta http-equiv="X-UA-Compatible" content="IE=8" />
-     <meta http-equiv="X-UA-Compatible" content="IE=7" />
+    <meta http-equiv="X-UA-Compatible" content="IE=10" />
+    <meta http-equiv="X-UA-Compatible" content="IE=9" />
+    <meta http-equiv="X-UA-Compatible" content="IE=8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=7" />
     <script src="lib/jquery/jquery-1.11.1.min.js" type="text/javascript"></script>
     <link href="lib/easyUI/themes/default/easyui.css" rel="stylesheet" type="text/css" />
     <link href="lib/easyUI/themes/icon.css" rel="stylesheet" type="text/css" />
-    
+
     <script src="lib/easyUI/jquery.easyui.min.js" type="text/javascript"></script>
     <script src="lib/easyUI/locale/easyui-lang-zh_CN.js" type="text/javascript"></script>
     <script src="Scripts/AjaxTrigger.js" type="text/javascript"></script>
-<script src="Scripts/FunctionMethodManager.js" type="text/javascript"></script>
+    <script src="Scripts/FunctionMethodManager.js" type="text/javascript"></script>
 
     <script src="Scripts/layer/layer.js"></script>
-<style type="text/css">
-   .easyui-tree li{
-	margin-top: 6px;
-}
-.headerCss
-{
-    padding-left:10px;
-}
-body {
-	font-family: helvetica, tahoma, verdana, sans-serif;
-	padding: 10px;
-	font-size: 13px;
-	margin: 0;
-}
-.easyui-tree {
-list-style-type: none;
-margin: 0px;
-padding: 0px;
-}
-</style>
     <script type="text/javascript">
-    //导航函数
+        loader = {
+            open: function () {
+                if (layer) {
+
+
+                    layer.msg('拼了命努力加载中...', {
+                        icon: 16,
+                        time: 0,
+                        shade: 0.3
+                    });
+                }
+            },
+            close: function () {
+                if (layer) {
+                    layer.close(layer.index);
+                }
+            }
+        };
+    </script>
+    <style type="text/css">
+        .easyui-tree li {
+            margin-top: 6px;
+        }
+
+        .headerCss {
+            padding-left: 10px;
+        }
+
+        body {
+            font-family: helvetica, tahoma, verdana, sans-serif;
+            padding: 10px;
+            font-size: 13px;
+            margin: 0;
+        }
+
+        .easyui-tree {
+            list-style-type: none;
+            margin: 0px;
+            padding: 0px;
+        }
+    </style>
+    <script type="text/javascript">
+        //导航函数
         function NavigatorNode(node) {
             addTab(node);
         }
@@ -98,11 +120,11 @@ padding: 0px;
                 }
             });
 
-//            var heightMax = document.documentElement.clientHeight;
-//            var widthMax = document.body.clientWidth;
-//            var niframe = document.getElementById("Notice");
-//            niframe.height = heightMax;
-//            niframe.width = widthMax;
+            //            var heightMax = document.documentElement.clientHeight;
+            //            var widthMax = document.body.clientWidth;
+            //            var niframe = document.getElementById("Notice");
+            //            niframe.height = heightMax;
+            //            niframe.width = widthMax;
 
         });
         function refreshTab(title) {
@@ -215,47 +237,48 @@ padding: 0px;
     </script>
 </head>
 <body id="indexLayout" class="easyui-layout">
-  <%-- <div region="north" class="logo" style="height: 85px; padding: 1px; overflow: hidden;"  href="Layout/north.aspx"></div>--%>
-   <div region="center" style="overflow: hidden;"   >
-     <div id="centerTabs">
-	<div title="公告版" border="false" style="overflow: hidden;" >
-    <%--<iframe id="Notice"src="Layout/News.aspx" border="0" frameborder="no"></iframe>--%>
-    </div>
-</div>
-<div id="tabsMenu" style="width: 120px;display:none;">
-	<div type="refresh">刷新</div>
-	<div class="menu-sep"></div>
-	<div type="close">关闭</div>
-	<div type="closeOther">关闭其他</div>
-	<div type="closeAll">关闭所有</div>
-</div>
-   </div>
-   <div region="west" title="功能导航" split="false" style="width:190px;overflow: hidden;">
-        <div class ="easyui-layout" data-options="fit:true" style=" border:0px" >
-            <div region="center" style=" border:0px">
-                <div class="easyui-accordion" style="border:left" data-options="fit:true,border:false,animate:true">
-                <%
-                    int i = 0;
-                    foreach (AuditSPI.FunctionStruct fs in functions)
-                    {
-                        string temp = i.ToString();
-                        Response.Write("<script type='text/javascript'>var mdata"+i.ToString()+"=" + fs.childrenJson + "</script>");
-                         %>               
-                         <div title="<%=fs.text %>" data-options="iconCls:'<%=fs.iconCls %>'" >
-                                <ul class="easyui-tree tree" data-options="data:mdata<%=temp%>,onClick : clickHandler"></ul>                 
-                         </div>
-
-                        <%
-                            i++;
-                    }
-                %>
-                </div>
-                </div>
-            <div region="south" style="height:30px;overflow: hidden; border:0px" data-options="collapsible:false">
-                <div class="panel-header" style="width:190px; cursor:pointer" onclick="LoginOut()" ><img src="lib/easyUI/themes/icons/closs16.png" style="left:3px;width:16px;position: relative;" /><span class="panel-title" style="left:9px;top:-3px;position: relative;">退出系统</span></div>
+    <%-- <div region="north" class="logo" style="height: 85px; padding: 1px; overflow: hidden;"  href="Layout/north.aspx"></div>--%>
+    <div region="center" style="overflow: hidden;">
+        <div id="centerTabs">
+            <div title="公告版" border="false" style="overflow: hidden;">
+                <%--<iframe id="Notice"src="Layout/News.aspx" border="0" frameborder="no"></iframe>--%>
             </div>
         </div>
-   </div>
-<%--   <div region="south" style="height:20px;overflow: hidden;"  href="Layout/south.aspx"></div>--%>
+        <div id="tabsMenu" style="width: 120px; display: none;">
+            <div type="refresh">刷新</div>
+            <div class="menu-sep"></div>
+            <div type="close">关闭</div>
+            <div type="closeOther">关闭其他</div>
+            <div type="closeAll">关闭所有</div>
+        </div>
+    </div>
+    <div region="west" title="功能导航" split="false" style="width: 190px; overflow: hidden;">
+        <div class="easyui-layout" data-options="fit:true" style="border: 0px">
+            <div region="center" style="border: 0px">
+                <div class="easyui-accordion" style="border: left" data-options="fit:true,border:false,animate:true">
+                    <%
+                        int i = 0;
+                        foreach (AuditSPI.FunctionStruct fs in functions)
+                        {
+                            string temp = i.ToString();
+                            Response.Write("<script type='text/javascript'>var mdata" + i.ToString() + "=" + fs.childrenJson + "</script>");
+                    %>
+                    <div title="<%=fs.text %>" data-options="iconCls:'<%=fs.iconCls %>'">
+                        <ul class="easyui-tree tree" data-options="data:mdata<%=temp%>,onClick : clickHandler"></ul>
+                    </div>
+
+                    <%
+                            i++;
+                        }
+                    %>
+                </div>
+            </div>
+            <div region="south" style="height: 30px; overflow: hidden; border: 0px" data-options="collapsible:false">
+                <div class="panel-header" style="width: 190px; cursor: pointer" onclick="LoginOut()">
+                    <img src="lib/easyUI/themes/icons/closs16.png" style="left: 3px; width: 16px; position: relative;" /><span class="panel-title" style="left: 9px; top: -3px; position: relative;">退出系统</span></div>
+            </div>
+        </div>
+    </div>
+    <%--   <div region="south" style="height:20px;overflow: hidden;"  href="Layout/south.aspx"></div>--%>
 </body>
 </html>
