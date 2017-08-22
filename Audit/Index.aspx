@@ -20,7 +20,7 @@
     <script src="Scripts/AjaxTrigger.js" type="text/javascript"></script>
 <script src="Scripts/FunctionMethodManager.js" type="text/javascript"></script>
 
-
+    <script src="Scripts/layer/layer.js"></script>
 <style type="text/css">
    .easyui-tree li{
 	margin-top: 6px;
