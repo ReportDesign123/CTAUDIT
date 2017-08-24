@@ -23,16 +23,18 @@
     <script src="Scripts/layer/layer.js"></script>
     <script type="text/javascript">
         loader = {
-            open: function () {
-                if (layer) {
-
-
+            open: function (  ) {
+                if (layer) { 
                     layer.msg('拼了命努力加载中...', {
                         icon: 16,
                         time: 0,
-                        shade: 0.3
-                    });
+                        shade: 0.3,
+                       
+
+                    } );
+                    
                 }
+               
             },
             close: function () {
                 if (layer) {

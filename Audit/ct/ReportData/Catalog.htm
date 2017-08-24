@@ -2,7 +2,8 @@
 <html xmlns="http://www.w3.org/1999/xhtml">
 <head runat="server">
     <title>报表目录</title>
-    <script src="../../lib/jquery/jquery-1.5.2.min.js" type="text/javascript"></script>
+
+    <script src="../../lib/jquery/jquery-1.11.1.min.js"></script>
     <script src="../../lib/easyUI/jquery.easyui.min.js" type="text/javascript"></script>
     <link href="../../lib/easyUI/themes/icon.css" rel="stylesheet" type="text/css" />
     <link href="../../lib/easyUI/themes/color.css" rel="stylesheet" type="text/css" />
@@ -12,33 +13,41 @@
 
     <script src="../../Scripts/Ct_Controls.js" type="text/javascript"></script>
     <link href="../../Styles/Ct_Controls.css" rel="stylesheet" type="text/css" />
-      <script src="../../Scripts/AjaxTrigger.js" type="text/javascript"></script>
+    <script src="../../Scripts/AjaxTrigger.js" type="text/javascript"></script>
     <script src="../../Scripts/FunctionMethodManager.js" type="text/javascript"></script>
     <script src="../../Scripts/ct/pub/PubHelp.js" type="text/javascript"></script>
     <style type="text/css">
-       .ctFont
-       {
-          font-size:14px;
-       }
+        .ctFont {
+            font-size: 14px;
+        }
 
-    a:link {text-decoration:none;}
-    a:active:{color: red; }
-   a:hover {color: red; text-decoration:underline;}
-    .MyTd_box
-    { 
-        width:170px;
-    }
-    .MyTd_text
-    { 
-        width:30px;
-    }
+        a:link {
+            text-decoration: none;
+        }
+
+        a:active: {
+            color: red;
+        }
+
+        a:hover {
+            color: red;
+            text-decoration: underline;
+        }
+
+        .MyTd_box {
+            width: 170px;
+        }
+
+        .MyTd_text {
+            width: 30px;
+        }
     </style>
     <script type="text/javascript">
         var urls = {
             functionsUrl: "../../handler/FormatHandler.ashx",
             fillReportUrl: "../../handler/ReportDataHandler.ashx",
             DelFunctionsUrl: "../../handler/ReportDataHandler.ashx",
-            StateUrl:"../../handler/BasicHandler.ashx?ActionType=" + BasicAction.ActionType.Get + "&MethodName=GetDictionaryListByClassType&FunctionName=" + BasicAction.Functions.DictionaryManager + "&ClassType=BBZT"
+            StateUrl: "../../handler/BasicHandler.ashx?ActionType=" + BasicAction.ActionType.Get + "&MethodName=GetDictionaryListByClassType&FunctionName=" + BasicAction.Functions.DictionaryManager + "&ClassType=BBZT"
         };
         var gridData;
         var classifiyBox;
@@ -72,11 +81,31 @@
                     }
                 });
             },
+            
             SelectedItem: function (item) {
-                top.loader && top.loader.open();
                 var report = { Id: item.id, bbName: item.text, ReportState: item.name };
                 var item = { tabid: item.id, text: item.text, showClose: true };
-                parent.tabManager.AddReport(item,report);
+                parent.tabManager.AddReport(item, report);
+               
+                //top.loader.open();
+                //var  wait=function (item) {
+                //    var dtd = $.Deferred();
+                //    setTimeout(function (item) {
+                //        var report = { Id: item.id, bbName: item.text, ReportState: item.name };
+                //        var item = { tabid: item.id, text: item.text, showClose: true };
+                //        parent.tabManager.AddReport(item, report);
+                //        dtd.resolve();
+                //    }, 1, item);
+                   
+                //    return dtd.promise(); // 返回promise对象  
+                //};
+                //$.when(wait(item)).then(function () {
+                //    alert(1);
+                //    top.loader.close();
+                //    alert(2);
+                //});
+
+
             }
         };
         var ButtonClickManager = {
@@ -87,11 +116,11 @@
                 classifiyBox.name.val("");
                 $("#ReportState").combobox("setValue", "");
             },
-           
+
             restoreSearch: function () {
                 $("#bbCode").val("");
                 $("#bbName").val("");
-                classifiyBox.name.val(""); ;
+                classifiyBox.name.val("");;
                 $("#ReportState").combobox("setValue", "");
                 parent.mediatorManager.RefreshHome();
             },
@@ -140,7 +169,7 @@
                 { field: "Id", title: "id", hidden: true, width: 120 },
                 { field: "Code", title: "分类编号", width: 80 },
                     { field: "Name", title: "分类名称", width: 100 }
-                    ]]
+                ]]
                 paras.width = 375;
                 paras.height = 420;
                 pubHelp.setParameters(paras);
@@ -154,7 +183,7 @@
                 }
             }
         }
-       
+
         $(function () {
             $('#dg').datagrid({
                 rownumbers: true,
@@ -168,38 +197,44 @@
                 toolbar: "#toolBar",
                 columns: [[
                      { title: '', field: 'Id', width: 180, hidden: true },
-                     { title: '<span style="font-size:14px">报表编号</span>', field: 'bbCode', width: 140, sortable: true, formatter: function (value, row, index) {
-                         return "<span  class = 'ctFont'>" + row.bbCode + "</span>";
-                     }
+                     {
+                         title: '<span style="font-size:14px">报表编号</span>', field: 'bbCode', width: 140, sortable: true, formatter: function (value, row, index) {
+                             return "<span  class = 'ctFont'>" + row.bbCode + "</span>";
+                         }
                      },
-                      { title: '<span style="font-size:14px">报表名称</span>', field: 'bbName', width: 250, sortable: true, formatter: function (value, row, index) {
-                          return "<a href='#' onclick='formatManager.SelectedItem(this)' class='ctFont' id='" + row.Id + "'name='" + row.ReportState + "' text='" + row.bbName + "'>" + row.bbName + "</a>";
-                      }
+                      {
+                          title: '<span style="font-size:14px">报表名称</span>', field: 'bbName', width: 250, sortable: true, formatter: function (value, row, index) {
+                              return "<a href='#' onclick='formatManager.SelectedItem(this)' class='ctFont' id='" + row.Id + "'name='" + row.ReportState + "' text='" + row.bbName + "'>" + row.bbName + "</a>";
+                          }
                       },
-                     { title: '<span style="font-size:14px">报表分类</span>', field: 'ReportClassifyName', width: 120, sortable: true, formatter: function (value, row, index) {
-                         return "<span  class = 'ctFont'>" + row.ReportClassifyName + "</span>";
-                     }
+                     {
+                         title: '<span style="font-size:14px">报表分类</span>', field: 'ReportClassifyName', width: 120, sortable: true, formatter: function (value, row, index) {
+                             return "<span  class = 'ctFont'>" + row.ReportClassifyName + "</span>";
+                         }
                      },
-                     { title: '<span style="font-size:14px">报表状态</span>', field: 'ReportState', width: 150, sortable: true, formatter: function (value, row, index) {
-                         if (value == "") return "<span  class = 'ctFont'>未填报</span>";
-                         return "<span  class = 'ctFont'>" + row.ReportState + "</span>";
-                     }
+                     {
+                         title: '<span style="font-size:14px">报表状态</span>', field: 'ReportState', width: 150, sortable: true, formatter: function (value, row, index) {
+                             if (value == "") return "<span  class = 'ctFont'>未填报</span>";
+                             return "<span  class = 'ctFont'>" + row.ReportState + "</span>";
+                         }
                      },
-                     { title: '<span style="font-size:14px">数据清除</span>', field: 'ee', align: 'center', width: 110, sortable: true, formatter: function (value, row, index) {
-                         return "<a href='#' onclick='formatManager.DeleteReportData(this)' class='ctFont' id='" + row.Id + "' text='数据清空 ' >数据清空</a>";
-                     }
+                     {
+                         title: '<span style="font-size:14px">数据清除</span>', field: 'ee', align: 'center', width: 110, sortable: true, formatter: function (value, row, index) {
+                             return "<a href='#' onclick='formatManager.DeleteReportData(this)' class='ctFont' id='" + row.Id + "' text='数据清空 ' >数据清空</a>";
+                         }
                      },
-                     { title: '<span style="font-size:14px">附件</span>', field: 'Attatchments', align: 'center', width: 50, sortable: true, formatter: function (value, row, index) {
-                         if (value && value != "") {
-                             return "<a href='#' onclick='formatManager.ViewAttatch(this)' class='ctFont' id='" + row.Id + "'><img border='0' src='../../images/ReportData/attatch.png' title='附件查看'/></a>";
-                         } else { return ""; }
+                     {
+                         title: '<span style="font-size:14px">附件</span>', field: 'Attatchments', align: 'center', width: 50, sortable: true, formatter: function (value, row, index) {
+                             if (value && value != "") {
+                                 return "<a href='#' onclick='formatManager.ViewAttatch(this)' class='ctFont' id='" + row.Id + "'><img border='0' src='../../images/ReportData/attatch.png' title='附件查看'/></a>";
+                             } else { return ""; }
+                         }
                      }
-                     }
-                 ]], onDblClickRow: function (rowIndex, rowData) {
-                     var report = { Id: rowData.Id, bbName: rowData.bbName, ReportState: rowData.ReportState };
-                     var item = { tabid: rowData.Id, text: rowData.bbName, showClose: true };
-                     parent.tabManager.AddReport(item, report);
-                 }
+                ]], onDblClickRow: function (rowIndex, rowData) {
+                    var report = { Id: rowData.Id, bbName: rowData.bbName, ReportState: rowData.ReportState };
+                    var item = { tabid: rowData.Id, text: rowData.bbName, showClose: true };
+                    parent.tabManager.AddReport(item, report);
+                }
             });
             classifiyBox = $("#classifiy").PopEdit();
             classifiyBox.btn.bind("click", function () {
@@ -226,7 +261,7 @@
             //ButtonClickManager.doSearch();
         }
         //查询方法
-        // [kay]查询内容 [type]指定属性 [data] 数据data  
+        // [kay]查询内容 [type]指定属性 [data] 数据data
         //支持 对属性的模糊查询
         //张双义
         function search(kay, type, data) {
@@ -258,30 +293,33 @@
 
 <body class="easyui-layout">
 
-<div data-options="region:'center'" style="border:0px">
-    <table id="dg"></table>
-    <div id="toolBar" style="min-width:850px">
-        <table style="padding:3px;  ">
-            <tr >
-            <td class="MyTd_text">编号</td><td class="MyTd_box"> <input id = "bbCode"class="easyui-validatebox textbox" /></td>
-            <td class="MyTd_text">名称</td><td class="MyTd_box"> <input id = "bbName"class="easyui-validatebox textbox" /></td>
-            <td class="MyTd_text">类别</td><td class="MyTd_box"><div id="classifiy"></div></td>
-            <td class="MyTd_text">状态</td><td class="MyTd_box"><input id = "ReportState" style=" width:155px"  class="easyui-combobox" data-options="url:urls.StateUrl,valueField:'Code',textField:'Name',panelHeight:'auto'" /></td>
-            </tr>
-        </table>
-        <div style=" width:100%; text-align:right">
-            <a href="#" class="easyui-linkbutton"  onclick="ButtonClickManager.doSearch()" iconCls='icon-search'" style=" margin-right:10px">查询</a>
-            <a href="#" class="easyui-linkbutton"  onclick="ButtonClickManager.restoreSearch()" iconcls="icon-undo" plain="false" style=" margin-right:10px">重置</a>
-            <a href="#" class="easyui-linkbutton"  onclick="ButtonClickManager.refresh()" iconcls="icon-reload" plain="false" style=" margin-right:10px">刷新</a>
-          
+    <div data-options="region:'center'" style="border:0px">
+        <table id="dg"></table>
+        <div id="toolBar" style="min-width:850px">
+            <table style="padding:3px;  ">
+                <tr>
+                    <td class="MyTd_text">编号</td>
+                    <td class="MyTd_box"> <input id="bbCode" class="easyui-validatebox textbox" /></td>
+                    <td class="MyTd_text">名称</td>
+                    <td class="MyTd_box"> <input id="bbName" class="easyui-validatebox textbox" /></td>
+                    <td class="MyTd_text">类别</td>
+                    <td class="MyTd_box"><div id="classifiy"></div></td>
+                    <td class="MyTd_text">状态</td>
+                    <td class="MyTd_box"><input id="ReportState" style=" width:155px"=width:155px" class="easyui-combobox" data-options="url:urls.StateUrl,valueField:'Code',textField:'Name',panelHeight:'auto'" /></td>
+                </tr>
+            </table>
+            <div style=" width:100%;=width:100%; text-align:right"=text-align:right">
+                <a href="#" class="easyui-linkbutton" onclick="ButtonClickManager.doSearch()" iconCls='icon-search' =" style=" margin-right:10px"=margin-right:10px">查询</a>
+                <a href="#" class="easyui-linkbutton" onclick="ButtonClickManager.restoreSearch()" iconcls="icon-undo" plain="false" style=" margin-right:10px"=margin-right:10px">重置</a>
+                <a href="#" class="easyui-linkbutton" onclick="ButtonClickManager.refresh()" iconcls="icon-reload" plain="false" style=" margin-right:10px"=margin-right:10px">刷新</a>
+
+            </div>
         </div>
     </div>
-</div>
-<div data-options="region:'south'" style=" height:30px; border-top:0px">
-</div>
-    <div id="Dialog" >
-    <table id="classifiyTable" >       
-    </table>
+    <div data-options="region:'south'" style=" height:30px;=height:30px; border-top:0px"=border-top:0px">
+    </div>
+    <div id="Dialog">
+        <table id="classifiyTable"></table>
     </div>
 </body>
 </html>

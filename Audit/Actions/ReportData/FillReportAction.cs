@@ -393,6 +393,7 @@ namespace Audit.Actions.ReportData
                     //获取变动区的辅助信息
                     rdps.bdqMaps = JsonTool.DeserializeObject<Dictionary<string, BdqData>>(rdps.bdqStr);
                 }
+                //System.Threading.Thread.Sleep(5000);
               ReportDataStruct rds=fillReportService.LoadReportDatas(rdps,true);
               
               rds.IsOrNotLock = reportStateService.GetReportReadWriteState(rdps);

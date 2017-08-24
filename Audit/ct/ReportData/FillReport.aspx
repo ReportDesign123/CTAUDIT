@@ -48,7 +48,22 @@
         }
     </style>
     <script type="text/javascript">
+        function callbackRun(callback,arg)
+        { 
+           top.loader&& top.loader.open();
+            var  wait=function (item) {
+                var dtd = $.Deferred();
+                setTimeout(function(){
+                    callback (arg) ;
+                    dtd.resolve();
+                },1,item); 
+                return dtd.promise(); // 返回promise对象  
+            };
+            $.when(wait(callback)).then(function () { 
+                top.loader&& top.loader.close(); 
+            });
         
+        }
         var kb = 0;
         var totalKb = 999;
         //$(function () {
@@ -422,13 +437,22 @@
                         }
                         currentState.BdqBh = "";
                         currentState.BdqDataMaps = {};
-                        top.loader && top.loader.open();
+                        callbackRun(function () {
+                            mediatorManager.LoadBBFormat();
+                            mediatorManager.LoadBBCompFormat();
+                            mediatorManager.LoadBbData();
 
-                        mediatorManager.LoadBBFormat();
-                        mediatorManager.LoadBBCompFormat();
-                        mediatorManager.LoadBbData();
+                        });
+                      
 
-                        top.loader && top.loader.close();
+                       
+                            //mediatorManager.LoadBBFormat();
+                            //mediatorManager.LoadBBCompFormat();
+                            //mediatorManager.LoadBbData();
+
+                        
+
+                       
                     }
 
                 },
@@ -572,37 +596,71 @@
                 DeserializeFatchFormular: function () {
                     if (!BBDataItems.Gdq) { alert("先选择一张需要操作的报表"); return; }
                     if (currentState.IsOrNotWriteLock == "0") { alert("报表已被锁定，无法执行操作"); return; }
-                    top.loader && top.loader.open();
-                    var para = { Gdq: {}, BdqData: [], bdMaps: {}, rdps: {}, GdbId: "", GdbTableName: "", bdIds: {}, bdTableNames: {} };
-                    para.GdbId = BBDataItems.GdbId;
-                    para.GdbTableName = BBDataItems.GdbTableName;
-                    para.rdps = toolsManager.GetReportParameter();
-                    para.bdMaps = BBDataItems.bdMaps;
-                    para.bdTableNames = BBDataItems.bdTableNames;
-                    para.Gdq = BBDataItems.Gdq;
+                    //   top.loader && top.loader.open();
+                    callbackRun(function (BBDataItems) {
+                        var para = { Gdq: {}, BdqData: [], bdMaps: {}, rdps: {}, GdbId: "", GdbTableName: "", bdIds: {}, bdTableNames: {} };
+                        para.GdbId = BBDataItems.GdbId;
+                        para.GdbTableName = BBDataItems.GdbTableName;
+                        para.rdps = toolsManager.GetReportParameter();
+                        para.bdMaps = BBDataItems.bdMaps;
+                        para.bdTableNames = BBDataItems.bdTableNames;
+                        para.Gdq = BBDataItems.Gdq;
 
-                    var gridIframe = toolsManager.GetGridIframe();
-                    //将现有的数据进行拷贝
-                    $.extend(true, para.BdqData, BBDataItems.BdqData);
+                        var gridIframe = toolsManager.GetGridIframe();
+                        //将现有的数据进行拷贝
+                        $.extend(true, para.BdqData, BBDataItems.BdqData);
 
-                    $.each(para.Gdq, function (index, item) {
-                        item.value = "";
-                    });
-                    $.each(para.BdqData, function (bdqIndex, bdqData) {
-                        $.each(bdqData, function (rowIndex, rowData) {
-                            if (rowData) {
-                                $.each(rowData, function (cellCode, item) {
-                                    if (cellCode != "DATA_ID")
-                                        item.value = "";
-                                });
-                            }
+                        $.each(para.Gdq, function (index, item) {
+                            item.value = "";
                         });
-                    });
+                        $.each(para.BdqData, function (bdqIndex, bdqData) {
+                            $.each(bdqData, function (rowIndex, rowData) {
+                                if (rowData) {
+                                    $.each(rowData, function (cellCode, item) {
+                                        if (cellCode != "DATA_ID")
+                                            item.value = "";
+                                    });
+                                }
+                            });
+                        });
 
-                    var obj = { dataStr: "" };
-                    obj.dataStr = JSON.stringify(para);
-                    obj = CreateParameter(ReportDataAction.ActionType.Post, ReportDataAction.Functions.FillReport, ReportDataAction.Methods.FillReportMethods.DeserializeFatchFormular, obj);
-                    DataManager.sendData(urls.fillReportUrl, obj, resultManager.DesrializeFatchFormular_Success, resultManager.FailResult, true);
+                        var obj = { dataStr: "" };
+                        obj.dataStr = JSON.stringify(para);
+                        obj = CreateParameter(ReportDataAction.ActionType.Post, ReportDataAction.Functions.FillReport, ReportDataAction.Methods.FillReportMethods.DeserializeFatchFormular, obj);
+                        DataManager.sendData(urls.fillReportUrl, obj, resultManager.DesrializeFatchFormular_Success, resultManager.FailResult, false);
+
+                    },BBDataItems);
+
+                    //var para = { Gdq: {}, BdqData: [], bdMaps: {}, rdps: {}, GdbId: "", GdbTableName: "", bdIds: {}, bdTableNames: {} };
+                    //para.GdbId = BBDataItems.GdbId;
+                    //para.GdbTableName = BBDataItems.GdbTableName;
+                    //para.rdps = toolsManager.GetReportParameter();
+                    //para.bdMaps = BBDataItems.bdMaps;
+                    //para.bdTableNames = BBDataItems.bdTableNames;
+                    //para.Gdq = BBDataItems.Gdq;
+
+                    //var gridIframe = toolsManager.GetGridIframe();
+                    ////将现有的数据进行拷贝
+                    //$.extend(true, para.BdqData, BBDataItems.BdqData);
+
+                    //$.each(para.Gdq, function (index, item) {
+                    //    item.value = "";
+                    //});
+                    //$.each(para.BdqData, function (bdqIndex, bdqData) {
+                    //    $.each(bdqData, function (rowIndex, rowData) {
+                    //        if (rowData) {
+                    //            $.each(rowData, function (cellCode, item) {
+                    //                if (cellCode != "DATA_ID")
+                    //                    item.value = "";
+                    //            });
+                    //        }
+                    //    });
+                    //});
+
+                    //var obj = { dataStr: "" };
+                    //obj.dataStr = JSON.stringify(para);
+                    //obj = CreateParameter(ReportDataAction.ActionType.Post, ReportDataAction.Functions.FillReport, ReportDataAction.Methods.FillReportMethods.DeserializeFatchFormular, obj);
+                    //DataManager.sendData(urls.fillReportUrl, obj, resultManager.DesrializeFatchFormular_Success, resultManager.FailResult, true);
 
                 },
                 DeserializeCaculateFormular: function () {
@@ -640,7 +698,7 @@
                 DeserializeVarifyFormular: function () {
                     if (!BBDataItems.Gdq) { alert("先选择一张需要操作的报表"); return; }
                     //if (currentState.IsOrNotWriteLock == "0") { alert("报表已被锁定，无法执行操作"); return; }
-                    top.loader && top.loader.open();
+                    //  top.loader && top.loader.open();
 
 
                     var para = { Gdq: {}, BdqData: [], bdMaps: {}, rdps: {}, GdbId: "", GdbTableName: "", bdIds: {}, bdTableNames: {} };
@@ -1140,11 +1198,12 @@
                 DataManager.sendData(urls.fillReportUrl, para, resultManager.LoadRefreshHomeData_Success, resultManager.FailResult);
             },
             RefreshReport: function () {
+                callbackRun(function(){
                 currentState.RowColChange = false;
                 if (currentState.navigatorData.currentReportId == "home" || currentState.navigatorData.currentReportId == "") { mediatorManager.RefreshHome(); return; }
                 if (BBData.bdq.bdNum > 0) {
 
-                    top.loader && top.loader.open();
+                    //    top.loader && top.loader.open();
 
                     gridFrame.RefreshGrid(currentState.ReportFormat);
                     gridFrame.Grid1.isPaintSuspended(true);
@@ -1206,7 +1265,8 @@
                 currentState.RowColChange = true;
 
                 mediatorManager.LoadBbData();
-                top.loader && top.loader.close();
+                    });
+                // top.loader && top.loader.close();
             },
             InitializeCompanies: function (data) {
                 try {
@@ -1423,7 +1483,7 @@
             },
             FailResult: function (data) {
                 alert(data.sMeg);
-                top.loader && top.loader.close();
+                 top.loader && top.loader.close();
             },
             LoadCompBB_Success: function (data) {
                 alert(data.sMeg);
@@ -1924,7 +1984,7 @@
                 } else {
                     alert(data.sMeg);
                 }
-                top.loader && top.loader.close();
+                //  top.loader && top.loader.close();
             },
             DeserializeCaculateFormular_Success: function (data) {
 
@@ -1936,7 +1996,7 @@
                 } else {
                     alert(data.sMeg);
                 }
-                top.loader && top.loader.close();
+                //    top.loader && top.loader.close();
             },
             DeserializeVerifyFormular_Success: function (data) {
 
@@ -1951,7 +2011,7 @@
                 } else {
                     alert(data.sMeg);
                 }
-                top.loader && top.loader.close();
+                //   top.loader && top.loader.close();
             },
             SelfCheck_Success: function (data) {
                 if (data.success) {
@@ -2055,7 +2115,9 @@
             },
             AddReport: function (item, report) {
 
+                //top.loader && top.loader.open();
 
+                
                 currentState.TabDatas.push(report);
                 controls.AuditReportTab.addTabItem(item);
 

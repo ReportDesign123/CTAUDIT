@@ -1,10 +1,17 @@
 ﻿
 /// <reference path="../lib/jquery/jquery-1.11.1.min.js" />
-
+//$.ajaxSetup("beforeSend", function () {
+//    top.loader && loader.open();
+//});
+//$.ajaxSetup("complete", function () {
+//    top.loader && loader.close();
+//});
 //数据管理
 var DataManager = {
     sendData: function (url, parameters, successFunc, failFunc, isOrNotAsync) {
-        if (isOrNotAsync == null||isOrNotAsync=="undefined") isOrNotAsync = false;
+      
+        if (isOrNotAsync == null || isOrNotAsync == "undefined") isOrNotAsync = false;
+         
         $.ajax(
         {
             url: url,
