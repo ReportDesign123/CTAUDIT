@@ -56,7 +56,7 @@
                 setTimeout(function(){
                     callback (arg) ;
                     dtd.resolve();
-                },1,item); 
+                },1000,item); 
                 return dtd.promise(); // 返回promise对象  
             };
             $.when(wait(callback)).then(function () { 
@@ -439,7 +439,7 @@
                         currentState.BdqDataMaps = {};
                         callbackRun(function () {
                             mediatorManager.LoadBBFormat();
-                            mediatorManager.LoadBBCompFormat();
+                            //mediatorManager.LoadBBCompFormat();
                             mediatorManager.LoadBbData();
 
                         });
@@ -1685,6 +1685,7 @@
                             mediatorManager.TextChange(CellItem.row, CellItem.col, tag);
 
                         });
+                        gridFrame.Grid1.isPaintSuspended(false);
                         var vsKSRow;
                         var vsRowNum;
 
@@ -1711,27 +1712,35 @@
 
                                 });
                                 if (rowNum > 1) {
+                                    datestart = new Date();
+                                    s += "11111  " + datestart;
                                     vsKSRow = bdFormat.Offset + addRowData;
                                     vsRowNum = bdFormat.Offset + addRowData + rowNum - 1;
-
+                                    
+                                    gridFrame.Grid1.isPaintSuspended(true);
                                     gridFrame.Grid1.addRows(bdFormat.Offset + 1 + addRowData, rowNum - 1);
+
+                                    datestart = new Date();
+                                    s += "11111  " + datestart;
                                     for (var i = bdFormat.Offset + 1 + addRowData; i <= bdFormat.Offset + addRowData + rowNum; i++) {
                                         gridFrame.Grid1._vpCalcSheetModel.dataTable[i] = undefined;
                                     }
+
+                                    datestart = new Date();
+                                    s += "22222 " + datestart;
                                     var columnCount = gridFrame.Grid1.getColumnCount();
                                     var option = { all: true };
                                     var lineBorder = new gridFrame.spreadNS.LineBorder("#000000", gridFrame.spreadNS.LineStyle.thick);
                                     var columnCount = gridFrame.Grid1.getColumnCount();
                                     // var vsRange = new gridFrame.spreadNS.Range(bdFormat.Offset + 1, 0, rowNum - 1, columnCount);
                                     var vsRange = new gridFrame.spreadNS.Range(vsKSRow, 0, rowNum, columnCount);
-                                    datestart = new Date();
-                                    s += "开始setBorder" + datestart;
+                                    gridFrame.Grid1.isPaintSuspended(false);
+                                    gridFrame.Grid1.isPaintSuspended(true);
                                     gridFrame.Grid1.setBorder(vsRange, lineBorder, option);
-                                    datestart = new Date();
-                                    s += "结束setBorder" + datestart;
-                                    for (var i = 0; i < columnCount; i++) {
-                                        gridFrame.Grid1.getCells(bdFormat.Offset + addRowData, 0, bdFormat.Offset + addRowData + rowNum - 1, columnCount - 1).backColor("#FF99CC");
-                                    }
+                                    gridFrame.Grid1.getCells(bdFormat.Offset + addRowData, 0, bdFormat.Offset + addRowData + rowNum - 1, columnCount - 1).backColor("#FF99CC");
+                                    //for (var i = 0; i < columnCount; i++) {
+                                    //    gridFrame.Grid1.getCells(bdFormat.Offset + addRowData, 0, bdFormat.Offset + addRowData + rowNum - 1, columnCount - 1).backColor("#FF99CC");
+                                    //}
                                     for (var i = bdFormat.Offset + addRowData; i <= bdFormat.Offset + addRowData + rowNum - 1; i++) {
 
                                         for (var j = 0; j < gridFrame.Grid1.getColumnCount() ; j++) {
@@ -1739,6 +1748,10 @@
                                         }
                                     }
                                     gridIframe.Grid1.getCells(bdFormat.Offset + addRowData, 0, bdFormat.Offset + addRowData + rowNum - 1, gridFrame.Grid1.getColumnCount() - 1).locked(false);
+                                    gridFrame.Grid1.isPaintSuspended(false);
+                                    gridFrame.Grid1.isPaintSuspended(true);
+
+                                    
                                     //设置变动行中的数据格式信息
                                     $.each(BBData.bbData[bdFormat.Offset], function (columnIndex, cell) {
                                         for (var i = bdFormat.Offset + 1 + addRowData - 1; i <= bdFormat.Offset + rowNum + addRowData - 1; i++) {
@@ -1768,7 +1781,10 @@
                                     rowChangeFlag[bdFormat.Offset] = rowNum - 1;
 
                                 }
+                               
                                 //gridFrame.Grid1.isPaintSuspended(true);
+                                datestart = new Date();
+                                s += "开始setBorder " + datestart;
                                 //设置变动行数据
                                 if (bdqData && bdqData.length > 0) {
                                     $.each(bdqData, function (bdRowIndex, bdRow) {
@@ -1800,7 +1816,10 @@
 
                                     });
                                 }
-                            } else if (bdFormat.BdType == "2") {
+                                datestart = new Date();
+                                s += "结束setBorder " + datestart;
+                            }
+                            else if (bdFormat.BdType == "2") {
                                 //变动列
                                 var colNum = bdqData.length;
                                 //变动行
