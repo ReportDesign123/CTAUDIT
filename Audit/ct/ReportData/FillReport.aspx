@@ -48,6 +48,17 @@
         }
     </style>
     <script type="text/javascript">
+        function convertToIndex(n) {
+            var str = "abcdefghijklmnopqrstuvwxyz";
+            n = n.toLowerCase(); 
+            var lastNum = n[n.length - 1];
+            var index = str.indexOf(lastNum);
+            var num = index;
+            if (n.length>1) {
+                num = 26 * (n.length - 1) + index;
+            } 
+            return num;
+        }
         function callbackRun(callback,arg)
         { 
            top.loader&& top.loader.open();
@@ -1917,8 +1928,28 @@
                                     $.each(row, function (colIndex, cell) {
                                         if (cell.formula) {
                                             for (var i = vsKSRow; i <= vsRowNum; i++) {
-
-                                                var newF = cell.formula.replace(/\d+/g, parseInt(i + 1));
+                                                var newF = cell.formula;
+                                                var reg = new RegExp("/\D+\d+", "g");
+                                                var array = cell.formula.match(/[A-Za-z]+\d+/g);
+                                                for (var j = 0; j < array.length; j++) {
+                                                    var one = array[j];
+                                                    var rowReg = /\d+/.exec(one);
+                                                    if (rowReg) {
+                                                        var rowIndex = parseInt(rowReg[0]) - 1;
+                                                        var colIndexStr = /[A-Za-z]+/.exec(one);
+                                                        if (colIndexStr) {
+                                                            colIndexStr = colIndexStr[0];
+                                                            var colIndexInt = convertToIndex(colIndexStr);
+                                                            var tag = gridFrame.Grid1.getTag(rowIndex, colIndexInt);
+                                                            if (tag && tag.indexOf("0;") == 0) {
+                                                                //变动行
+                                                                newF = newF.replace(one, colIndexStr +( i+1));
+                                                            }
+                                                        }
+                                                       
+                                                    }
+                                                    
+                                                } 
                                                 gridFrame.Grid1.setFormula(parseInt(i), parseInt(colIndex), newF); //cell.formula.replace(/\d+/g, i)
                                             }
 
