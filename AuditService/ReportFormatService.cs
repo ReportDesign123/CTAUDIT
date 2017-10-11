@@ -381,7 +381,7 @@ namespace AuditService
                             //{                               
                                 BdJudge bdJudge = JudgeCellGdOrBd(bbData, row, col);
                                 DataItemEntity die = ConvertCellToDataItem(bbData.bbData[row][col], bbData, bdJudge);                                
-                                if (die.Row == 0 || die.Col == 0) continue;
+                              //  if (die.Row == 0 || die.Col == 0) continue;
 
                                 //查找已有的数据项
                                 DataItemEntity old = null;
