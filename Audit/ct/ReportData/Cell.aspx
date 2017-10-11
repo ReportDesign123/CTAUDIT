@@ -147,7 +147,7 @@
                    else {
 
                        CellItem.ParaValue = GetRequest(CellItem.ParaValue, row, col);
-                       if (CellItem.ParaValue.indexOf("umpReportMang.aspx") > 0) {
+                       if (CellItem.ParaValue.indexOf("JumpReportMang.aspx") > 0) {
 
                            CellItem.ParaValue += "&UserCode=9999&Stype=1";
                            CellItem.ParaValue += "&AuditType=" + parent.currentState.ReportState.AuditType.value;
@@ -221,6 +221,7 @@
                        if (newText == "NaN") return;
                    }
                    if (CellType["CellThousand"] == "1") {
+                       newText = newText + "";
                        newText = Ct_Tool.AddDecimalPoint(newText);
                    }
                    if (CellType["CellSmbol"] == "01") {
@@ -240,6 +241,7 @@
                        text = GridManager.GetSmboText(text);
                    }
                    if (cellType["CellThousand"] == "1") {
+                       text = text + "";
                        text = Ct_Tool.RemoveDecimalPoint(text);
                    }
                    return text;
