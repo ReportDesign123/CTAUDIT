@@ -28,13 +28,13 @@ namespace AuditEntity
             set;
         }
         [Column(Name = "LOCKITEM_ROW", IsPrimaryKey = true)]
-        public string BBRow
+        public int BBRow
         {
             get;
             set;
         }
         [Column(Name = "LOCKITEM_COL", IsPrimaryKey = true)]
-        public string BBCol
+        public int BBCol
         {
             get;
             set;
