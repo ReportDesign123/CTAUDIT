@@ -112,7 +112,7 @@ namespace Audit.Actions
                         entity.WeekRpJsrq = de.JSRQ;
                         entity.WeekRpKsrq = de.KSRQ;
                         entity.WeekRpName = de.Name;
-                        entity.AuditZq = de.Id;
+                        entity.AuditZq = de.Code;
                     }
                 }
                 if (AuditCycle == "01")

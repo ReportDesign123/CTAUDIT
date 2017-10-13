@@ -39,7 +39,7 @@ namespace AuditService
                    entity.AuditTypeValue = result.Split(',')[0];
                    entity.AuditTypeName = result.Split(',')[1];
                }
-               sql = string.Format("select AUDITTASK_ID,AUDITTASK_Name from CT_TASK_AUDITTASK where AUDITTASK_Code='{0}'",AuditTaskCode);
+               sql = string.Format("select AUDITTASK_ID,AUDITTASK_Name from CT_TASK_AUDITTASK where (AUDITTASK_Code='{0}'  or AUDITTASK_id='{0}')", AuditTaskCode);
 
                DataTable table = dbManager.ExecuteSqlReturnDataTable(sql);
 
@@ -49,7 +49,7 @@ namespace AuditService
                    entity.AuditTaskName = table.Rows[0][1].ToString();
                }
 
-               sql = string.Format("select AUDITPAPER_ID,AUDITPAPER_Name from CT_PAPER_AUDITPAPER where AUDITPAPER_Code='{0}'",AuditPaperCode);
+               sql = string.Format("select AUDITPAPER_ID,AUDITPAPER_Name from CT_PAPER_AUDITPAPER where (AUDITPAPER_Code='{0}' or AUDITPAPER_ID='{0}')", AuditPaperCode);
                table = dbManager.ExecuteSqlReturnDataTable(sql);
 
                if (table != null && table.Rows.Count > 0)

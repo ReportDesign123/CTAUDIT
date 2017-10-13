@@ -146,19 +146,36 @@
                    }
                    else {
 
+                       var vsBBName;
                        CellItem.ParaValue = GetRequest(CellItem.ParaValue, row, col);
-                       if (CellItem.ParaValue.indexOf("JumpReportMang.aspx") > 0) {
+                       var vsUrl;
+                       if (CellItem.ParaValue.indexOf("BB$") >= 0) {
 
-                           CellItem.ParaValue += "&UserCode=9999&Stype=1";
-                           CellItem.ParaValue += "&AuditType=" + parent.currentState.ReportState.AuditType.value;
-                           CellItem.ParaValue += "&AuditTask=" + parent.currentState.ReportState.AuditTask.value;
-                           CellItem.ParaValue += "&AuditPaper=" + parent.currentState.ReportState.AuditPaper.value;
-                           CellItem.ParaValue += "&AuditCycle=" + parent.currentState.ReportState.Zq;
-                           CellItem.ParaValue += "&AuditDate=" + parent.currentState.ReportState.AuditDate;
-                           CellItem.ParaValue += "&Company=" + parent.currentState.CompanyId;
+                           var vsBBArry = CellItem.ParaValue.split("$");
+                           vsBBName = GetCellValue(vsBBArry[1], row, col);
+                           vsUrl = "../../JumpReportMang.aspx?Report=" + vsBBName;
+                           vsUrl += "&UserCode=9999&Stype=1";
+                           vsUrl += "&AuditType=" + parent.currentState.ReportState.AuditType.value;
+                           vsUrl += "&AuditTask=" + parent.currentState.ReportState.AuditTask.value;
+                           vsUrl += "&AuditPaper=" + parent.currentState.ReportState.AuditPaper.value;
+                           vsUrl += "&AuditCycle=" + parent.currentState.ReportState.auditZqType;
+                           if (parent.currentState.ReportState.auditZqType == "05")
+                               vsUrl += "&AuditDate=" + parent.currentState.ReportState.WeekReport.Ksrq;
+                           else
+                               vsUrl += "&AuditDate=" + parent.currentState.ReportState.AuditDate.value;
+                           vsUrl += "&Company=" + parent.currentState.CompanyId;
+                        
+                           Grid1.setValue(row, col, vsUrl);
+                           Grid1.getCellType(row, col)._text = vsBBName;
                        }
-                       Grid1.getCellType(row, col)._text = CellItem.ParaValue;
-                       Grid1.setValue(row, col, CellItem.ParaValue);
+                       else
+                       {
+                           Grid1.setValue(row, col, CellItem.ParaValue);
+                           Grid1.getCellType(row, col)._text = CellItem.ParaValue;
+                       }
+                          
+                     
+                       
 
                    }
                },
@@ -254,7 +271,6 @@
                    parent.mediatorManager.SetRowColInput(row, col, tag);
                    currentState.Row = row;
                    currentState.Col = col;
-
                },
                CellChange_Event: function (e, data) {
 
@@ -409,6 +425,6 @@
                }
            };
            
-    </script>
+        </script>
 </body>
 </html>

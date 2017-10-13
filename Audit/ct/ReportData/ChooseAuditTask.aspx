@@ -25,7 +25,7 @@
     <script src="../../Scripts/ct/pub/PubHelp.js" type="text/javascript"></script>
     <script type="text/javascript">
         var controls = { auditType: {}, auditTask: {}, auditPaper: {} };
-        var paras = { AuditType: { name: "", value: "" }, AuditDate: "", AuditTask: { name: "", value: "" }, AuditPaper: { name: "", value: "" }, auditZqVisible: "0", auditPaperVisible: "0", auditZqType: "01", Nd: "", Zq: "", WeekReport: {ID:"",Name:"",Ksrq:"",Jsrq:""} };
+        var paras = { AuditType: { name: "", value: "" }, AuditDate: "", AuditTask: { name: "", value: "" }, AuditPaper: { name: "", value: "" }, auditZqVisible: "0", auditPaperVisible: "0", auditZqType: "01", Nd: "", Zq: "", WeekReport: {ID:"",Code:"",Name:"",Ksrq:"",Jsrq:""} };
         var urls = {
             AuditTypeUrl: "../../handler/BasicHandler.ashx?ActionType=" + BasicAction.ActionType.Get + "&MethodName=GetDictionaryListByClassType&FunctionName=" + BasicAction.Functions.DictionaryManager + "&ClassType=RWLX",
             AuditTaskUrl: "../../handler/ReportDataHandler.ashx?ActionType=" + ReportDataAction.ActionType.Grid + "&MethodName=" + ReportDataAction.Methods.FillReportMethods.GetAuditTasksDataGrid + "&FunctionName=" + ReportDataAction.Functions.FillReport,
@@ -94,7 +94,7 @@
                             para.WeekReport.Ksrq = paras.WeekReport.Ksrq;
                             para.WeekReport.Jsrq = paras.WeekReport.Jsrq;
 
-                            para.Zq = paras.WeekReport.ID;// $('#txtRq').datebox("getValue");
+                            para.Zq = paras.WeekReport.Code;// $('#txtRq').datebox("getValue");
                            
                             break;
 
@@ -341,12 +341,14 @@
                      paras.WeekReport.Name = data.obj.Name;
                      paras.WeekReport.Jsrq = data.obj.JSRQ;
                      paras.WeekReport.Ksrq = data.obj.KSRQ;
+                     paras.WeekReport.Code = data.obj.Code;
                  }
                  else {
                      paras.WeekReport.ID = "";
                      paras.WeekReport.Name ="";
                      paras.WeekReport.Jsrq = "";
-                     paras.WeekReport.Ksrq ="";
+                     paras.WeekReport.Ksrq = "";
+                     paras.WeekReport.Code = "";
                  }
              }
          },

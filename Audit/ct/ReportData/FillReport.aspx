@@ -921,7 +921,7 @@
                         reportZq = currentState.ReportState.Zq + "日";
                         break;
                     case "05":
-                        reportZq = currentState.ReportState.Zq + "日";
+                        reportZq = currentState.ReportState.Zq + "周";
                         break;
                 }
 
