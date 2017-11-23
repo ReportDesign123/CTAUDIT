@@ -78,8 +78,15 @@
                 spread.removeSheet(0);
                
                 Grid1 = new spreadNS.Sheet("Cell");
-                Grid1.setIsProtected(true); //是否锁定
 
+                Grid1.setIsProtected(true); //是否锁定
+                var option = Grid1.protectionOption();
+                option.allowResizeColumns = "allowResizeColumns";
+                Grid1.protectionOption(option);
+               
+             //   Grid1.protectionOption({ allowResizeColumns: true, allowResizeColumns: true });
+
+              
                 spread.addSheet(spread.getSheetCount(), Grid1);
 
                 Grid1.isPaintSuspended(true);
@@ -115,8 +122,11 @@
                 {
                     spread.removeSheet(0);
                     Grid1 = new spreadNS.Sheet("Cell");
-                    Grid1.setIsProtected(true); //是否锁定
                     spread.addSheet(spread.getSheetCount(), Grid1);
+
+                    Grid1.setIsProtected(true); //是否锁定
+                   
+               
 
                     Grid1.isPaintSuspended(true);
                     Grid1.setColumnCount(0);
@@ -128,15 +138,24 @@
                     }
                     Grid1.isPaintSuspended(false);
                     ClearFilter();
+            
                 }
             }
             function RefreshGrid(formatStr, width, height) {
                 Refresh();
                 Initialize(width,height);
                 Grid1.fromJSON(JSON.parse(formatStr));
+                var option = Grid1.protectionOption();
+                option.allowResizeColumns = "allowResizeColumns";
+                Grid1.protectionOption(option);
                 spread.refresh();
-
-           }
+            }
+            function InitGrid()
+            {
+                if (Grid1) {
+                 
+                }
+            }
            var GridManager = {
 
                SetRowColText: function (row, col, CellItem) {
@@ -250,7 +269,7 @@
                        if (charFirst == "$") return;
                        newText = "$" + newText;
                    }
-                   if (text != newText) Grid1.getCell(row, col).text(newText); //Grid1.setValue(row, col, newText);
+                   if (text != newText) Grid1.setValue(row, col, newText);// Grid1.getCell(row, col).text(newText); //Grid1.setValue(row, col, newText);
                },
                GetRowColTextByCellType: function (text, cellType) {
                    if (text == null) return "";

@@ -1741,21 +1741,23 @@
                                     s += "22222 " + datestart;
                                     var columnCount = gridFrame.Grid1.getColumnCount();
                                     var option = { all: true };
-                                    var lineBorder = new gridFrame.spreadNS.LineBorder("#000000", gridFrame.spreadNS.LineStyle.thick);
+                                    //var lineBorder = new gridFrame.spreadNS.LineBorder("#000000", gridFrame.spreadNS.LineStyle.thick);
                                     var columnCount = gridFrame.Grid1.getColumnCount();
-                                    // var vsRange = new gridFrame.spreadNS.Range(bdFormat.Offset + 1, 0, rowNum - 1, columnCount);
-                                    var vsRange = new gridFrame.spreadNS.Range(vsKSRow, 0, rowNum, columnCount);
+                                   
+                                   // var vsRange = new gridFrame.spreadNS.Range(vsKSRow, 0, rowNum, columnCount);
                                     gridFrame.Grid1.isPaintSuspended(false);
                                     gridFrame.Grid1.isPaintSuspended(true);
-                                    gridFrame.Grid1.setBorder(vsRange, lineBorder, option);
+                                    //gridFrame.Grid1.setBorder(vsRange, lineBorder, option);
                                     gridFrame.Grid1.getCells(bdFormat.Offset + addRowData, 0, bdFormat.Offset + addRowData + rowNum - 1, columnCount - 1).backColor("#FF99CC");
-                                    //for (var i = 0; i < columnCount; i++) {
-                                    //    gridFrame.Grid1.getCells(bdFormat.Offset + addRowData, 0, bdFormat.Offset + addRowData + rowNum - 1, columnCount - 1).backColor("#FF99CC");
-                                    //}
+                                    
+                                    var vsCellType = gridFrame.Grid1.getStyle(bdFormat.Offset + addRowData, 0);
+                                    
+
                                     for (var i = bdFormat.Offset + addRowData; i <= bdFormat.Offset + addRowData + rowNum - 1; i++) {
 
                                         for (var j = 0; j < gridFrame.Grid1.getColumnCount() ; j++) {
                                             gridIframe.Grid1.getCell(i, j).locked(false);
+                                            gridFrame.Grid1.setStyle(i, j, vsCellType);
                                         }
                                     }
                                     gridIframe.Grid1.getCells(bdFormat.Offset + addRowData, 0, bdFormat.Offset + addRowData + rowNum - 1, gridFrame.Grid1.getColumnCount() - 1).locked(false);
