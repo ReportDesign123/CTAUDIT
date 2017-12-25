@@ -1105,6 +1105,11 @@
                     border.style = GcSpread.Sheets.LineStyle.empty;
                     lineBorder = border;
                 }
+                if (value == "2|1|1") {
+                    var border = new GcSpread.Sheets.LineBorder();
+                    border.style = GcSpread.Sheets.LineStyle.thick;
+                    lineBorder = border;
+                }
                 for (var n = 0; n < sels.length; n++) {
                     var sel = getActualCellRange(sels[n], rowCount, columnCount);
                     Grid1.setBorder(sel, lineBorder, option);

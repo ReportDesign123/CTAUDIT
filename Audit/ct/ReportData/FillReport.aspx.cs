@@ -4,8 +4,6 @@ using System.Linq;
 using System.Web;
 using System.Web.UI;
 using System.Web.UI.WebControls;
-using CtTool;
-
 
 namespace Audit.ct.ReportData
 {
@@ -14,7 +12,7 @@ namespace Audit.ct.ReportData
         protected void Page_Load(object sender, EventArgs e)
         {
             string curCompany = CtTool.SessoinUtil.GetCurrentCompanyId();
-            Response.Write("<Script>var curCompany='"+curCompany+"';</Script>");
+            Response.Write("<Script>var curCompany='" + curCompany + "';</Script>");
         }
     }
 }

@@ -4,11 +4,13 @@
 <html xmlns="http://www.w3.org/1999/xhtml">
 <head id="Head1" runat="server">
     <title></title>
-    <link rel="stylesheet" href="../../lib/SpreadCSS/gcspread.sheets.excel2013white.9.40.20153.0.css" title="spread-theme" />
-      <script type="text/javascript" src="../../lib/jquery/jquery-1.11.1.min.js"></script>
-    <script src="../../lib/jquery/jquery-ui-1.10.3.custom.min.js" type="text/javascript"></script>
-     <script type="text/javascript" src="../../lib/SpreadJS/gcspread.sheets.all.9.40.20153.0.min.js"></script>
-     <script type="text/javascript" src="../../lib/SpreadJS/gcspread.sheets.print.9.40.20153.0.min.js"></script>
+    <link rel="stylesheet" href="../../lib/SpreadCSS/gc.spread.sheets.excel2013white.10.2.0.css" title="spread-theme" />
+    <script type="text/javascript" src="../../lib/jquery/jquery-1.11.1.min.js"></script>
+    <script type="text/javascript" src="../../lib/jquery/jquery-ui-1.10.3.custom.min.js" ></script>
+     <script type="text/javascript" src="../../lib/SpreadJS/gc.spread.sheets.all.10.2.0.min.js"></script>
+     <script type="text/javascript" src="../../lib/SpreadJS/gc.spread.sheets.print.10.2.0.min.js"></script>
+     <script type="text/javascript" src="../../lib/SpreadJS/gc.spread.excelio.10.2.0.min.js"></script>
+       <script type="text/javascript" src="../../lib/SpreadJS/gc.spread.sheets.resources.zh.10.2.0.min.js"></script>
       <script type="text/javascript" src="../../lib/SpreadJS/FileSaver.min.js"></script>
     <script type="text/javascript" src="../../lib/SpreadJS/resources.js"></script>
      <script type="text/javascript" src="../../lib/SpreadJS/bootstrap.min.js"></script>
@@ -24,7 +26,6 @@
 <body  style=" height:100%; width:100%; margin:0; padding:0; overflow:hidden;">
 			<div id="ss"  style="height:600px; width:100%">
 		</div>
- 
         <script type="text/javascript">
             top.loader && top.loader.close();
             var urls = {
@@ -37,6 +38,17 @@
             var spreadNS;
             var spread;
             var Grid1;
+            var excelIO;
+            var DOWNLOAD_DIALOG_WIDTH = 300;
+            var isSafari = (function () {
+                var tem, M = navigator.userAgent.match(/(opera|chrome|safari|firefox|msie|trident(?=\/))\/?\s*(\d+)/i) || [];
+                if (!/trident/i.test(M[1]) && M[1] !== 'Chrome') {
+                    M = M[2] ? [M[1], M[2]] : [navigator.appName, navigator.appVersion, '-?'];
+                    if ((tem = navigator.userAgent.match(/version\/(\d+)/i)) != null) M.splice(1, 1, tem[1]);
+                    return M[0].toLowerCase() === "safari";
+                }
+                return false;
+            })();
             function Initialize(width,height) {
            
                 currentState.Row = "";
@@ -63,38 +75,33 @@
             }
             $(function () {
                 initializeCell(0, 0);
+                excelIO = new GC.Spread.Excel.IO();
             });
 
             function initializeCell(row, col) {
                 if (!spreadNS) {
-                    spreadNS = GcSpread.Sheets;
+                    spreadNS = GC.Spread.Sheets;
                 }
                 if (!spread)
                 {
-                    spread = new spreadNS.Spread($("#ss")[0]);
+                    spread = new spreadNS.Workbook($("#ss")[0], { tabStripRatio: 0.88 });
                 }
-               // spread.setTabStripRatio(0.88);
-               
                 spread.removeSheet(0);
                
-                Grid1 = new spreadNS.Sheet("Cell");
-
-                Grid1.setIsProtected(true); //是否锁定
-                var option = Grid1.protectionOption();
-                option.allowResizeColumns = "allowResizeColumns";
-                Grid1.protectionOption(option);
-               
-             //   Grid1.protectionOption({ allowResizeColumns: true, allowResizeColumns: true });
-
-              
+                Grid1 =  new spreadNS.Worksheet("Cell");
                 spread.addSheet(spread.getSheetCount(), Grid1);
+                Grid1.options.isProtected = true;//是否锁定
+                var option = Grid1.options.protectionOptions;
+                option.allowResizeColumns = "allowResizeColumns";
+         
+              
 
-                Grid1.isPaintSuspended(true);
+               
+                Grid1.suspendPaint();
 
-                var filter = new GcSpread.Sheets.HideRowFilter(new GcSpread.Sheets.Range(-1, 0, -1, 2));
+                var filter = new spreadNS.Filter.HideRowFilter(new spreadNS.Range(-1, 0, -1, 2));
                 Grid1.rowFilter(filter);
-                filter.setShowFilterButton(false);
-                Grid1.isPaintSuspended(true);
+                filter.filterButtonVisible(false);
                 if (Grid1.bind) {
                     Grid1.bind(spreadNS.Events.ColumnChanged, ClearFilter);
                     Grid1.bind(spreadNS.Events.ValueChanged, GridManager.CellChange_Event);
@@ -102,7 +109,7 @@
 
 
                 }
-                Grid1.isPaintSuspended(false);
+                Grid1.resumePaint();
                 currentState.currentNum = 0;
 
             }
@@ -121,14 +128,10 @@
                 if (Grid1)
                 {
                     spread.removeSheet(0);
-                    Grid1 = new spreadNS.Sheet("Cell");
+                    Grid1 = new spreadNS.Worksheet("Cell");
                     spread.addSheet(spread.getSheetCount(), Grid1);
-
-                    Grid1.setIsProtected(true); //是否锁定
-                   
-               
-
-                    Grid1.isPaintSuspended(true);
+                    Grid1.options.isProtected = true;//是否锁定
+                    Grid1.suspendPaint();
                     Grid1.setColumnCount(0);
                     Grid1.setRowCount(0);
                     if (Grid1.bind) {
@@ -136,7 +139,7 @@
                         Grid1.bind(spreadNS.Events.ValueChanged, GridManager.CellChange_Event);
                         Grid1.bind(spreadNS.Events.SelectionChanged, GridManager.RowColChange_Event);
                     }
-                    Grid1.isPaintSuspended(false);
+                    Grid1.resumePaint();
                     ClearFilter();
             
                 }
@@ -145,9 +148,9 @@
                 Refresh();
                 Initialize(width,height);
                 Grid1.fromJSON(JSON.parse(formatStr));
-                var option = Grid1.protectionOption();
+                Grid1.options.isProtected = true;//是否锁定
+                var option = Grid1.options.protectionOptions;
                 option.allowResizeColumns = "allowResizeColumns";
-                Grid1.protectionOption(option);
                 spread.refresh();
             }
             function InitGrid()
@@ -249,28 +252,50 @@
                    if (CellType["CellDataType"] == "01") return;
                    var text = Grid1.getCell(row, col).text();
                    if (text == undefined || text.length == 0) return;
-                   text = GridManager.GetSmboText(text);
-                   text = Ct_Tool.RemoveDecimalPoint(text);
+                   var vsFormatter="0";
                    var newText = text;
-                   if (CellType["DigitNumber"] && CellType["CellDataType"] == "02") {
-                       newText = Ct_Tool.FixNumber(text, CellType["DigitNumber"]);
-                       if (newText == "NaN") return;
+                   if (CellType["CellSmbol"] == "01") {
+                       vsFormatter = "￥#,##0.00";
+
+                   } else if (CellType["CellSmbol"] == "02") {
+                       vsFormatter = "$#,##0.00";
+                       // newText = "$" + newText;
+
                    }
                    if (CellType["CellThousand"] == "1") {
-                       newText = newText + "";
-                       newText = Ct_Tool.AddDecimalPoint(newText);
+                       if (vsFormatter.indexOf(",") <= 0)
+                           vsFormatter = "#,##0.00";
                    }
-                   if (CellType["CellSmbol"] == "01") {
-                       var charFirst = newText.substring(0, 1);
-                       if (charFirst == "￥") return;
-                       newText = "￥" + newText;
-                   } else if (CellType["CellSmbol"] == "02") {
-                       var charFirst = text.substring(0, 1);
-                       if (charFirst == "$") return;
-                       newText = "$" + newText;
+                   var vsZero = "";
+                   if (CellType["DigitNumber"] && CellType["CellDataType"] == "02") {
+                       if (vsFormatter == "NaN") return;
+                       if (CellType["DigitNumber"] > 0) {
+                           vsZero = "0.";
+                           for (var i = 0; i < CellType["DigitNumber"]; i++) {
+                               vsZero = vsZero + "0";
+                           }
+                       }
                    }
-                   if (text != newText) Grid1.setValue(row, col, newText);// Grid1.getCell(row, col).text(newText); //Grid1.setValue(row, col, newText);
-               },
+                   if (vsFormatter.indexOf(",") > 0 && vsZero.indexOf(".") > 0)
+                       vsFormatter = vsFormatter.replace("0.00", vsZero);
+                   
+                   else {
+                       if (vsFormatter.indexOf(",") < 0) {
+                           if (vsZero == "")
+                               vsFormatter = "0";
+                           else
+                               vsFormatter = vsZero;
+                       }
+                       else
+                       {
+                           if (vsZero == "")
+                               vsFormatter = vsFormatter.replace("0.00", "0");
+                       }
+
+                   }
+                   
+                   Grid1.getCell(row, col).formatter(vsFormatter);      
+           },
                GetRowColTextByCellType: function (text, cellType) {
                    if (text == null) return "";
                    if (cellType["CellSmbol"] == "01" || cellType["CellSmbol"] == "02") {
@@ -283,8 +308,8 @@
                    return text;
                },
                RowColChange_Event: function (e, data) {
-                   var row = data.sheet._activeRowIndex;
-                   var col = data.sheet._activeColIndex;
+                   var row =  data.newSelections[0].row;
+                   var col =  data.newSelections[0].col;
                    var tag = Grid1.getTag(row, col); // Grid1.Cell(Row, Col).Tag;
                    if (currentState.Row == row && currentState.Col == col && currentState.Tag == tag) { return; }
                    parent.mediatorManager.SetRowColInput(row, col, tag);
@@ -443,6 +468,27 @@
                    alert(data);
                }
            };
+           function exportToExcel() {
+               var fileName = getFileName();
+               var json = spread.toJSON({ includeBindingSource: true });
+               excelIO.save(json, function (blob) {
+                   saveAs(blob, fileName + ".xlsx");
+               }, function (e) {
+                   alert(e);
+               });
+           }
+               function getFileName() {
+                   function to2DigitsString(num) {
+                       return ("0" + num).substr(-2);
+                   }
+
+                   var date = new Date();
+                   return [
+                       "Export",
+                       date.getFullYear(), to2DigitsString(date.getMonth() + 1), to2DigitsString(date.getDate()),
+                       to2DigitsString(date.getHours()), to2DigitsString(date.getMinutes()), to2DigitsString(date.getSeconds())
+                   ].join("");
+               }
            
         </script>
 </body>

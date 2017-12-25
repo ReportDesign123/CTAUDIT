@@ -233,7 +233,7 @@
                     //                
                     var columnCount = gridFrame.Grid1.getColumnCount();
 
-                    gridFrame.Grid1.isPaintSuspended(true);
+                    gridFrame.Grid1.suspendPaint();
                     //                 
                     //                 gridFrame.Grid1.suspendCalcService(); 
 
@@ -284,7 +284,7 @@
                         }
                     }
                     );
-                    gridFrame.Grid1.isPaintSuspended(false);
+                    gridFrame.Grid1.resumePaint();
 
                     BBDataItems.BdqData[BBDataItems.bdMaps[bdqCode]].push(rowData);
                 } else if (bdqFormat.BdType == "2") {
@@ -498,7 +498,7 @@
                     var vsFuals = "";
                     //将现有的数据进行拷贝
                     gridFrame.Grid1.endEdit();
-                    gridFrame.Grid1.isPaintSuspended(true);
+                    gridFrame.Grid1.suspendPaint();
                     gridFrame.Grid1.setActiveCell(-1, -1);
                     $.extend(true, para.BdqData, BBDataItems.BdqData);
                     for (var i = 0; i < gridFrame.Grid1.getRowCount() ; i++) {
@@ -569,7 +569,7 @@
                     if (vsFuals.length > 0) {
                         vsFuals = vsFuals.substring(0, vsFuals.length - 1);
                     }
-                    gridFrame.Grid1.isPaintSuspended(false);
+                    gridFrame.Grid1.resumePaint();
                     var obj = { dataStr: "", BBID: "", formulaStr: "" };
 
                     obj.dataStr = JSON.stringify(para);
@@ -681,7 +681,7 @@
 
                     if (currentState.ReportCalcuFormat && currentState.ReportCalcuFormat != "") {
                         var vCalcFormatData = JSON.parse(currentState.ReportCalcuFormat);
-                        gridFrame.Grid1.isPaintSuspended(true);
+                        gridFrame.Grid1.suspendPaint();
                         $.each(vCalcFormatData.data.dataTable, function (rowIndex, row) {
                             $.each(row, function (colIndex, cell) {
                                 if (cell.formula) {
@@ -697,7 +697,7 @@
                         });
 
 
-                        gridFrame.Grid1.isPaintSuspended(false);
+                        gridFrame.Grid1.resumePaint();
                         //gridFrame.spread.refresh();
 
                     }
@@ -768,16 +768,17 @@
                 PrintPreview: function () {
 
                     var gridFrame = toolsManager.GetGridIframe();
-                    gridFrame.Grid1.PrintPreview(100);
+                    gridFrame.spread.print();
                 },
                 Print: function () {
                     var gridFrame = toolsManager.GetGridIframe();
-                    gridFrame.Grid1.DirectPrint();
+                    gridFrame.spread.print();
                 },
                 ExportExcel: function () {
                     if (!BBDataItems.Gdq) { alert("先选择一张需要操作的报表"); return; }
                     var gridFrame = toolsManager.GetGridIframe();
-                    gridFrame.Grid1.ExportToExcel("", false, false);
+                   // gridFrame.Grid1.exExportToExcel("", false, false);
+                    gridFrame.exportToExcel();
                 }
             },
 
@@ -1129,7 +1130,9 @@
                 controls.DeleteRow.css("display", "none");
             },
             SetRowColInput: function (row, col, tag) {
-                $("#rowColInput").val(row + "行" + col + "列");
+                var vsRow = row + 1;
+                var vsCol = col + 1;
+                $("#rowColInput").val(vsRow + "行" + vsCol + "列");
                 if (tag != null && tag != "" && tag.length > 0) {
                     var bdArr = tag.split("|")[0].split(";");
 
@@ -1217,7 +1220,7 @@
                     //    top.loader && top.loader.open();
 
                     gridFrame.RefreshGrid(currentState.ReportFormat);
-                    gridFrame.Grid1.isPaintSuspended(true);
+                    gridFrame.Grid1.suspendPaint();
                     $.each(BBData.bbData, function (rowIndex, row) {
                         $.each(row, function (colIndex, cell) {
 
@@ -1272,7 +1275,7 @@
                         });
                     });
                 }
-                gridFrame.Grid1.isPaintSuspended(false);
+                gridFrame.Grid1.resumePaint();
                 currentState.RowColChange = true;
 
                 mediatorManager.LoadBbData();
@@ -1435,13 +1438,13 @@
                 try {
                     if (state == "0") {
                         var gridFrame = window.frames["gridFrame"];
-                        gridFrame.Grid1.isPaintSuspended(true);
+                        gridFrame.Grid1.suspendPaint();
                         for (var i = 0; i < gridFrame.Grid1.getRowCount() ; i++) {
                             for (var j = 0; j < gridFrame.Grid1.getColumnCount() ; j++) {
                                 gridFrame.Grid1.getCell(i, j).locked(true);
                             }
                         }
-                        gridFrame.Grid1.isPaintSuspended(false);
+                        gridFrame.Grid1.resumePaint();
                     }
                 } catch (err) {
                     alert(err.Message);
@@ -1514,14 +1517,6 @@
                         height = parseInt(height.substr(0, height.length - 2), 10);
                         if (gridFrame.RefreshGrid) {
                             gridFrame.RefreshGrid(currentState.ReportFormat, width, height);
-                            //                             gridFrame.Grid1.isPaintSuspended(true);
-                            //                             for (var i = 0; i < gridFrame.Grid1.getRowCount(); i++) {
-                            //                                 for (var j = 0; j < gridFrame.Grid1.getColumnCount(); j++) {
-
-                            //                                     gridFrame.Grid1.setTag(i, j, "");
-                            //                                 }
-                            //                             }
-                            //                             gridFrame.Grid1.isPaintSuspended(false);
                             BBData = JSON2.parse(data.obj.itemStr);
                             currentState.RowColChange = false;
                             cellTextNotChangeSetCellType = true;
@@ -1529,7 +1524,7 @@
 
                             var vsBdhRow;
                             var vsBdhs = "";
-                            gridFrame.Grid1.isPaintSuspended(true);
+                            gridFrame.Grid1.suspendPaint();
                             $.each(BBData.bbData, function (rowIndex, row) {
                                 var vsFlag = toolsManager.IsOrNotBdq(rowIndex, 0);
                                 if (vsFlag != "-1") {
@@ -1581,24 +1576,10 @@
 
                             });
 
-                            gridFrame.Grid1.isPaintSuspended(false);
+                            gridFrame.Grid1.resumePaint();
 
                             currentState.RowColChange = false;
-                            //                             gridFrame.Grid1.isPaintSuspended(true);
-                            //                             for (var i = 0; i < gridFrame.Grid1.getRowCount(); i++) {
-                            //                                 for (var j = 0; j < gridFrame.Grid1.getColumnCount(); j++) {
-                            //                                     var tag = gridFrame.Grid1.getTag(i, j); // gridFrame.Grid1.Cell(i, j).Tag;
-                            //                                     if (tag == "") {
-                            //                                         gridFrame.Grid1.getCell(i, j).locked(true);
-
-                            //                                     }
-                            //                                     else {
-                            //                                         gridFrame.Grid1.getCell(i, j).locked(false);
-                            //                                     }
-                            //                                 }
-                            //                             }
-                            //                             gridFrame.Grid1.isPaintSuspended(false);
-
+                          
                             currentState.RowColChange = true;
                             cellTextNotChangeSetCellType = false;
                         } else {
@@ -1688,7 +1669,7 @@
                         currentState.BdqDataMaps = BBDataItems.rdps.bdqMaps;
                         var gridIframe = toolsManager.GetGridIframe();
                         //  gridIframe.Grid1.setIsProtected(true);
-                        gridFrame.Grid1.isPaintSuspended(true);
+                        gridFrame.Grid1.suspendPaint();
                         //固定行数据
                         $.each(data.obj.Gdq, function (cellCode, CellItem) {
                             gridFrame.GridManager.SetRowColText(CellItem.row, CellItem.col, CellItem);
@@ -1696,7 +1677,7 @@
                             mediatorManager.TextChange(CellItem.row, CellItem.col, tag);
 
                         });
-                        gridFrame.Grid1.isPaintSuspended(false);
+                        gridFrame.Grid1.resumePaint();
                         var vsKSRow;
                         var vsRowNum;
 
@@ -1728,14 +1709,14 @@
                                     vsKSRow = bdFormat.Offset + addRowData;
                                     vsRowNum = bdFormat.Offset + addRowData + rowNum - 1;
                                     
-                                    gridFrame.Grid1.isPaintSuspended(true);
+                                    gridFrame.Grid1.suspendPaint();
                                     gridFrame.Grid1.addRows(bdFormat.Offset + 1 + addRowData, rowNum - 1);
 
                                     datestart = new Date();
                                     s += "11111  " + datestart;
-                                    for (var i = bdFormat.Offset + 1 + addRowData; i <= bdFormat.Offset + addRowData + rowNum; i++) {
-                                        gridFrame.Grid1._vpCalcSheetModel.dataTable[i] = undefined;
-                                    }
+                                    //for (var i = bdFormat.Offset + 1 + addRowData; i <= bdFormat.Offset + addRowData + rowNum; i++) {
+                                    //    gridFrame.Grid1._vpCalcSheetModel.dataTable[i] = undefined;
+                                    //}
 
                                     datestart = new Date();
                                     s += "22222 " + datestart;
@@ -1745,10 +1726,10 @@
                                     var columnCount = gridFrame.Grid1.getColumnCount();
                                    
                                    // var vsRange = new gridFrame.spreadNS.Range(vsKSRow, 0, rowNum, columnCount);
-                                    gridFrame.Grid1.isPaintSuspended(false);
-                                    gridFrame.Grid1.isPaintSuspended(true);
-                                    //gridFrame.Grid1.setBorder(vsRange, lineBorder, option);
-                                    gridFrame.Grid1.getCells(bdFormat.Offset + addRowData, 0, bdFormat.Offset + addRowData + rowNum - 1, columnCount - 1).backColor("#FF99CC");
+                                    gridFrame.Grid1.resumePaint();
+                                    gridFrame.Grid1.suspendPaint();
+
+                                  //  gridFrame.Grid1.getCells(bdFormat.Offset + addRowData, 0, bdFormat.Offset + addRowData + rowNum - 1, columnCount - 1).backColor("#FF99CC");
                                     
                                     var vsCellType = gridFrame.Grid1.getStyle(bdFormat.Offset + addRowData, 0);
                                     
@@ -1760,9 +1741,9 @@
                                             gridFrame.Grid1.setStyle(i, j, vsCellType);
                                         }
                                     }
-                                    gridIframe.Grid1.getCells(bdFormat.Offset + addRowData, 0, bdFormat.Offset + addRowData + rowNum - 1, gridFrame.Grid1.getColumnCount() - 1).locked(false);
-                                    gridFrame.Grid1.isPaintSuspended(false);
-                                    gridFrame.Grid1.isPaintSuspended(true);
+                                   // gridIframe.Grid1.getCells(bdFormat.Offset + addRowData, 0, bdFormat.Offset + addRowData + rowNum - 1, gridFrame.Grid1.getColumnCount() - 1).locked(false);
+                                    gridFrame.Grid1.resumePaint();
+                                    gridFrame.Grid1.suspendPaint();
 
                                     
                                     //设置变动行中的数据格式信息
@@ -1795,7 +1776,6 @@
 
                                 }
                                
-                                //gridFrame.Grid1.isPaintSuspended(true);
                                 datestart = new Date();
                                 s += "开始setBorder " + datestart;
                                 //设置变动行数据
@@ -1961,7 +1941,7 @@
                             }
                         }
 
-                        gridFrame.Grid1.isPaintSuspended(false);
+                        gridFrame.Grid1.resumePaint();
                         //                         gridFrame.Grid1.isPaintSuspended(true);
                         //                         for (var i = 0; i < gridFrame.Grid1.getRowCount(); i++) {
 
