@@ -1594,14 +1594,14 @@
                                     $.each(BBData.bbData, function (rowIndex, row) {
                                         $.each(row, function (colIndex, cell) {
                                             if (cell && cell.CellLogicalType && cell.CellLogicalType == "02" && cell.CellDataType && cell.CellDataType != "") {
-                                                gridFrame.Grid1.Cell(rowIndex, colIndex).Text = "";
+                                                gridFrame.Grid1.getCell(rowIndex, colIndex).text = "";
                                                 var flag = toolsManager.IsOrNotBdq(rowIndex, colIndex);
                                                 if (flag == "-1") {
                                                     CellTag = "1;" + cell.CellCode + "|" + cell.CellDataType + "|" + JSON2.stringify(cell);
                                                 } else {
                                                     CellTag = "0;" + JSON2.stringify({ CellCode: cell.CellCode, bdCode: flag, index: 0 }) + "|" + cell.CellDataType + "|" + JSON2.stringify(cell);
                                                 }
-                                                gridFrame.Grid1.Cell(rowIndex, colIndex).Tag = CellTag;
+                                                gridFrame.Grid1.getCell(rowIndex, colIndex).tag = CellTag;
                                                 if (cell.CellLock == "1") {
                                                     gridFrame.Grid1.getCell(rowIndex, colIndex).locked(true);
                                                     // gridFrame.Grid1.Cell(rowIndex, colIndex).Locked = true;
@@ -1840,7 +1840,7 @@
 
                                                     //设置单元格对齐方式
                                                     if (cell.CellDataType == "01") {
-                                                        gridFrame.Grid1.Cell(rowIndex, i).Alignment = 4;
+                                                        gridFrame.Grid1.cell(rowIndex, i).Alignment = 4;
                                                     } else if (cell.CellDataType == "02") {
                                                         gridFrame.Grid1.Cell(rowIndex, i).Alignment = 12;
                                                     }
