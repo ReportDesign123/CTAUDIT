@@ -109,10 +109,11 @@ namespace AuditService.ReportAttatchment
                 Dictionary<string, string> excludes = new Dictionary<string, string>();
                 excludes.Add("AttatchNum", "AttatchNum");
                string wherSql=  BeanUtil.ConvertObjectToWhereSqls<ReportAttatchEntity>(rae,excludes);
-               if (rae.DataItem == null||rae.DataItem=="")
-               {
-                   wherSql += " and  ATTACHMENT_DATAITEM is null ";
-               }
+                //先注释掉，以后修改逻辑
+               //if (rae.DataItem == null||rae.DataItem=="")
+               //{
+               //    wherSql += " and  ATTACHMENT_DATAITEM is null ";
+               //}
               
                 string sql = "SELECT * FROM CT_DATA_ATTACHMENT WHERE 1=1 "+wherSql +" ORDER BY ATTACHMENT_TIME DESC";
                 return dbManager.ExecuteSqlReturnTType<ReportAttatchEntity>(sql);
