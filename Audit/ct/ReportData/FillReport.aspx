@@ -1187,9 +1187,10 @@
                                     align = gridFrame.spreadNS.HorizontalAlign["right"];
                                     gridFrame.Grid1.getCell(rowIndex, colIndex)["hAlign"](align);
                                 }
-                                //设置单元格类型
-                                gridFrame.GridManager.SetRowColCellType(cell, rowIndex, colIndex);
-                             
+                                //设置单元格类型 
+                               
+                               gridFrame.GridManager.SetRowColCellType(cell, rowIndex, colIndex);
+
                             } else {
                                 gridFrame.Grid1.getCell(rowIndex, colIndex).locked(true);
                             }

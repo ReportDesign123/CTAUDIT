@@ -209,10 +209,11 @@
                        if (cell.CellValue && cell.CellValue != "") {
                            var data = cell.CellValue.split(',');
                            cellType.items(data);
-                           Grid1.getCell(rowIndex, colIndex).cellType(cellType);
+                           //Grid1.getCell(rowIndex, colIndex).cellType(cellType);
+                           Grid1.setCellType(rowIndex, colIndex, cellType);
                        }
                        else {
-                          // Grid1.getCell(rowIndex, colIndex).cellType(cellType);
+                           //Grid1.getCell(rowIndex, colIndex).cellType(cellType);
                            Grid1.setCellType(rowIndex, colIndex, cellType);
                        }
                    }
