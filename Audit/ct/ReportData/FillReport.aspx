@@ -77,21 +77,6 @@
         }
         var kb = 0;
         var totalKb = 999;
-        //$(function () {
-        //    //var $topLoader = $("#topLoader").percentageLoader({ width: 256, height: 256, controllable: true, progress: 0.5, onProgressUpdate: function (val) {
-        //    //    $topLoader.setValue(Math.round(val * 100.0));
-        //    //}
-        //    //});
-
-
-        //    $("#animateButton").click(function () {
-        //        kb += 5;
-        //        $topLoader.setProgress(kb / totalKb);
-        //        $topLoader.setValue(kb.toString() + 'kb');
-
-
-        //    });
-        //});
 
         var urls = {
             fillReportUrl: "../../handler/ReportDataHandler.ashx",
@@ -213,7 +198,6 @@
                 if (parameter && parameter.ReportId) {
                     para.ReportId = parameter.ReportId;
                 }
-                // "UploadAttatch.aspx?TaskId=" + para.TaskId + "&PaperId=" + para.PaperId + "&ReportId=" + para.ReportId + "&CompanyId=" + para.CompanyId + "&Nd=" + para.Year + "&Zq="+para.Cycle
                 window.showModalDialog("UploadMiddle.aspx?TaskId=" + para.TaskId + "&PaperId=" + para.PaperId + "&ReportId=" + para.ReportId + "&CompanyId=" + para.CompanyId + "&Nd=" + para.Year + "&Zq=" + para.Cycle, para, "dialogHeight:550px;dialogWidth:600px;");
             },
             InsertRowCol_Click: function () {
@@ -228,23 +212,10 @@
                     var currentBdRows = CaculateArrayLengthFilterUndefined(BBDataItems.BdqData[BBDataItems.bdMaps[bdqCode]]);
                     var bdRowInfo = toolsManager.GetRowTagBdqInfo(currentRow);
                     var currentIndex = toolsManager.GetArrayCountBeforeCurrentIndex(BBDataItems.BdqData[BBDataItems.bdMaps[bdqCode]], bdRowInfo.index);
-                    var row = currentBdRows - currentIndex + currentRow;
-
-                    //                
+                    var row = currentBdRows - currentIndex + currentRow;              
                     var columnCount = gridFrame.Grid1.getColumnCount();
-
                     gridFrame.Grid1.suspendPaint();
-                  
                     gridFrame.Grid1.addRows(row, 1);
-                
-                    //gridFrame.Grid1.getCells(row, 0, row, columnCount).backColor("#FF99CC");
-
-                    //var option = { all: true };
-                    //var lineBorder = new gridFrame.spreadNS.LineBorder("#000000", gridFrame.spreadNS.LineStyle.thin);
-
-                    //var vsRange = new gridFrame.spreadNS.Range(row, 0, row, columnCount);
-                    //gridFrame.Grid1.setBorder(vsRange, lineBorder, option);
-
                     for (var i = 0; i <= columnCount; i++) {
                         var vsCellType = gridFrame.Grid1.getStyle(row - 1, i);
                         gridFrame.Grid1.setStyle(row, i, vsCellType);
@@ -444,16 +415,6 @@
                             mediatorManager.LoadBbData();
 
                         });
-                      
-
-                       
-                            //mediatorManager.LoadBBFormat();
-                            //mediatorManager.LoadBBCompFormat();
-                            //mediatorManager.LoadBbData();
-
-                        
-
-                       
                     }
 
                 },
@@ -514,7 +475,6 @@
 
                                     if (cellValue != BBDataItems.Gdq[gdBdArr[1]].value || (cellFormat.CellMacro != undefined && cellFormat.CellMacro != "")) {
 
-                                        // BBDataItems.Gdq[gdBdArr[1]].value = cellValue;
                                         var item = toolsManager.CreateDataItem();
                                         item.value = cellValue;
                                         item.cellDataType = cellConArr[1];
@@ -1228,12 +1188,8 @@
                                     gridFrame.Grid1.getCell(rowIndex, colIndex)["hAlign"](align);
                                 }
                                 //设置单元格类型
-                                //gridFrame.GridManager.SetRowColCellType(cell, rowIndex, colIndex);
-                                //if (cell.CellType == "02") {
-                                //    gridFrame.Grid1.Cell(rowIndex, colIndex).CellType = 1;
-                                //} else if (cell.CellType == "03") {
-                                //    gridFrame.Grid1.Cell(rowIndex, colIndex).CellType = 4;
-                                //}
+                                gridFrame.GridManager.SetRowColCellType(cell, rowIndex, colIndex);
+                             
                             } else {
                                 gridFrame.Grid1.getCell(rowIndex, colIndex).locked(true);
                             }
