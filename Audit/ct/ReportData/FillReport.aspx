@@ -1216,16 +1216,11 @@
                 currentState.RowColChange = false;
                 if (currentState.navigatorData.currentReportId == "home" || currentState.navigatorData.currentReportId == "") { mediatorManager.RefreshHome(); return; }
                 if (BBData.bdq.bdNum > 0) {
-
-                    //    top.loader && top.loader.open();
-
                     gridFrame.RefreshGrid(currentState.ReportFormat);
                     gridFrame.Grid1.suspendPaint();
                     $.each(BBData.bbData, function (rowIndex, row) {
                         $.each(row, function (colIndex, cell) {
-
                             if (cell && cell.CellLogicalType && cell.CellLogicalType == "02" && cell.CellDataType && cell.CellDataType != "") {
-
                                 var flag = toolsManager.IsOrNotBdq(rowIndex, colIndex);
                                 if (flag == "-1") {
                                     CellTag = "1;" + cell.CellCode + "|" + cell.CellDataType + "|" + JSON2.stringify(cell);
@@ -1243,11 +1238,12 @@
                                     gridFrame.Grid1.getCell(rowIndex, colIndex)["hAlign"](align);
                                 }
                                 //设置单元格类型
-                                if (cell.CellType == "02") {
-                                    gridFrame.Grid1.Cell(rowIndex, colIndex).CellType = 1;
-                                } else if (cell.CellType == "03") {
-                                    gridFrame.Grid1.Cell(rowIndex, colIndex).CellType = 4;
-                                }
+                                //gridFrame.GridManager.SetRowColCellType(cell, rowIndex, colIndex);
+                                //if (cell.CellType == "02") {
+                                //    gridFrame.Grid1.Cell(rowIndex, colIndex).CellType = 1;
+                                //} else if (cell.CellType == "03") {
+                                //    gridFrame.Grid1.Cell(rowIndex, colIndex).CellType = 4;
+                                //}
                             } else {
                                 gridFrame.Grid1.getCell(rowIndex, colIndex).locked(true);
                             }
@@ -1684,8 +1680,6 @@
                         var rowChangeFlag = {};
                         var colChangeFlag = {};
 
-                        //                         gridFrame.Grid1.suspendCalcService(false);
-
                         //变动表数据
                         $.each(data.obj.BdqData, function (bdqIndex, bdqData) {
 
@@ -1714,10 +1708,6 @@
 
                                     datestart = new Date();
                                     s += "11111  " + datestart;
-                                    //for (var i = bdFormat.Offset + 1 + addRowData; i <= bdFormat.Offset + addRowData + rowNum; i++) {
-                                    //    gridFrame.Grid1._vpCalcSheetModel.dataTable[i] = undefined;
-                                    //}
-
                                     datestart = new Date();
                                     s += "22222 " + datestart;
                                     var columnCount = gridFrame.Grid1.getColumnCount();
@@ -1731,12 +1721,12 @@
 
                                   //  gridFrame.Grid1.getCells(bdFormat.Offset + addRowData, 0, bdFormat.Offset + addRowData + rowNum - 1, columnCount - 1).backColor("#FF99CC");
                                     
-                                    var vsCellType = gridFrame.Grid1.getStyle(bdFormat.Offset + addRowData, 0);
-                                    
+                                  
 
-                                    for (var i = bdFormat.Offset + addRowData; i <= bdFormat.Offset + addRowData + rowNum - 1; i++) {
+                                    for (var i = bdFormat.Offset + addRowData+1; i <= bdFormat.Offset + addRowData + rowNum - 1; i++) {
 
                                         for (var j = 0; j < gridFrame.Grid1.getColumnCount() ; j++) {
+                                            var vsCellType = gridFrame.Grid1.getStyle(bdFormat.Offset + addRowData, j);
                                             gridIframe.Grid1.getCell(i, j).locked(false);
                                             gridFrame.Grid1.setStyle(i, j, vsCellType);
                                         }
@@ -1748,6 +1738,8 @@
                                     
                                     //设置变动行中的数据格式信息
                                     $.each(BBData.bbData[bdFormat.Offset], function (columnIndex, cell) {
+                                        
+                                        var dd = "";
                                         for (var i = bdFormat.Offset + 1 + addRowData - 1; i <= bdFormat.Offset + rowNum + addRowData - 1; i++) {
                                             var cellCode = cell["CellCode"];
 
@@ -1775,7 +1767,6 @@
                                     rowChangeFlag[bdFormat.Offset] = rowNum - 1;
 
                                 }
-                               
                                 datestart = new Date();
                                 s += "开始setBorder " + datestart;
                                 //设置变动行数据
@@ -1894,14 +1885,6 @@
                             for (var i = 0; i < vsCalcformula.length; i++) {
                                 gridFrame.Grid1.setFormula(parseInt(vsCalcformula[i].split('$')[0]), parseInt(vsCalcformula[i].split('$')[1]), vsCalcformula[i].split('$')[2]);
                             }
-                            /*   var vCalcFormatData = JSON.parse(currentState.ReportCalcuFormat);
-                            $.each(vCalcFormatData.data.dataTable, function (rowIndex, row) {
-                            $.each(row, function (colIndex, cell) {
-                            if (cell.formula) {
-                            gridFrame.Grid1.setFormula(parseInt(rowIndex), parseInt(colIndex), cell.formula);
-                            }
-                            });
-                            });*/
                         }
                         else {
                             if (currentState.ReportFormat && currentState.ReportFormat != "") {
@@ -1942,16 +1925,7 @@
                         }
 
                         gridFrame.Grid1.resumePaint();
-                        //                         gridFrame.Grid1.isPaintSuspended(true);
-                        //                         for (var i = 0; i < gridFrame.Grid1.getRowCount(); i++) {
-
-                        //                             for (var j = 0; j < gridFrame.Grid1.getColumnCount(); j++) {
-                        //                                 var tag = gridFrame.Grid1.getTag(i, j);
-                        //                                 mediatorManager.TextChange(i, j, tag);
-                        //                             }
-
-                        //                         }
-                        //                         gridFrame.Grid1.isPaintSuspended(false);
+                     
                         //设置报表状态
 
                         currentState.IsOrNotWriteLock = data.obj.IsOrNotLock;
