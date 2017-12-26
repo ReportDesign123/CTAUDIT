@@ -202,15 +202,17 @@
                    }
                },
                SetRowColCellType: function (cell, rowIndex, colIndex) {
-
+                   if (cell.CellType == "" || cell.CellType == undefined)
+                       return;
                    if (cell.CellType == "02") {
-                       var cellType = new GcSpread.Sheets.ComboBoxCellType();
+                       var cellType =  new spreadNS.CellTypes.ComboBox();
                        if (cell.CellValue && cell.CellValue != "") {
                            var data = cell.CellValue.split(',');
                            cellType.items(data);
                            Grid1.getCell(rowIndex, colIndex).cellType(cellType);
                        }
                        else {
+                          // Grid1.getCell(rowIndex, colIndex).cellType(cellType);
                            Grid1.setCellType(rowIndex, colIndex, cellType);
                        }
                    }
@@ -219,22 +221,17 @@
                    }
                    else if (cell.CellType == "04") {
 
-                       var defaultHyperlink = new GcSpread.Sheets.HyperLinkCellType();
+                       var defaultHyperlink =  new spreadNS.CellTypes.HyperLink();
                        if (cell.CellValue && cell.CellValue != "") {
 
                            defaultHyperlink.text(cell.CellValue);
                            Grid1.getCell(rowIndex, colIndex).cellType(defaultHyperlink).value(cell.CellValue);
-
-
-
                        }
                        else {
 
                            Grid1.setCellType(rowIndex, colIndex, defaultHyperlink);
                        }
                    }
-
-
                },
 
                SetRowColTextByRowCol: function (row, col, CellItem) {
