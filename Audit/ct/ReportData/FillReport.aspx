@@ -234,31 +234,21 @@
                     var columnCount = gridFrame.Grid1.getColumnCount();
 
                     gridFrame.Grid1.suspendPaint();
-                    //                 
-                    //                 gridFrame.Grid1.suspendCalcService(); 
-
+                  
                     gridFrame.Grid1.addRows(row, 1);
-                    gridFrame.Grid1._vpCalcSheetModel.dataTable[row] = undefined;
+                
+                    //gridFrame.Grid1.getCells(row, 0, row, columnCount).backColor("#FF99CC");
 
-                    //  
-                    //              gridFrame.Grid1.setRowCount(gridFrame.Grid1.getRowCount());
-                    //                 gridFrame.Grid1.copyTo(row-1, -1, row, -1, 1, columnCount, gridFrame.GcSpread.Sheets.CopyToOption.All);
-                    // gridFrame.Grid1.refresh()
+                    //var option = { all: true };
+                    //var lineBorder = new gridFrame.spreadNS.LineBorder("#000000", gridFrame.spreadNS.LineStyle.thin);
 
-                    //                 gridFrame.Grid1.isPaintSuspended(false);
-                    //                 gridFrame.Grid1.resumeCalcService();
+                    //var vsRange = new gridFrame.spreadNS.Range(row, 0, row, columnCount);
+                    //gridFrame.Grid1.setBorder(vsRange, lineBorder, option);
 
-
-                    //                 gridFrame.Grid1.isPaintSuspended(true);
-                    // var columnCount = gridFrame.Grid1.getColumnCount();
-
-                    gridFrame.Grid1.getCells(row, 0, row, columnCount).backColor("#FF99CC");
-
-                    var option = { all: true };
-                    var lineBorder = new gridFrame.spreadNS.LineBorder("#000000", gridFrame.spreadNS.LineStyle.thin);
-
-                    var vsRange = new gridFrame.spreadNS.Range(row, 0, row, columnCount);
-                    gridFrame.Grid1.setBorder(vsRange, lineBorder, option);
+                    for (var i = 0; i <= columnCount; i++) {
+                        var vsCellType = gridFrame.Grid1.getStyle(row - 1, i);
+                        gridFrame.Grid1.setStyle(row, i, vsCellType);
+                    }
 
                     for (var i = 0; i < columnCount; i++) {
                         gridFrame.Grid1.getCell(row, i).locked(false);
@@ -324,7 +314,7 @@
                     var bdFlag = false;
                     for (var i = 0; i < gridFrame.Grid1.getColumnCount() ; i++) {
                         var tag = gridFrame.Grid1.getTag(row, i); // gridFrame.Grid1.Cell(row, i).Tag;
-                        if (tag != "") {
+                        if (tag != "" && tag != undefined) {
                             if (tag.substr(0, 1) == "0") {
                                 bdFlag = true; break;
                             }
