@@ -258,9 +258,9 @@
                    var text = Grid1.getCell(row, col).text();
                    if (isNaN(text))
                    {
-                       alert("请输入数字！");
-                       Grid1.setValue(row, col, "");
-                       return;
+                       //alert("请输入数字！");
+                       //Grid1.setValue(row, col, "");
+                       //return;
                    }
                        
                    if (text == undefined || text.length == 0) return;
