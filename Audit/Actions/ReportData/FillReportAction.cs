@@ -454,8 +454,8 @@ namespace Audit.Actions.ReportData
             {
                 ReportDataStruct rds = JsonTool.DeserializeObject<ReportDataStruct>(dataStr);
                 fillReportService.SaveReportDatas(rds);
-                if (SessoinUtil.GetCurrentUser().Code == "9999")
-                    fillReportService.SaveReportFormat(BBID, strFormula);
+                //if (SessoinUtil.GetCurrentUser().Code == "9999")
+                  //  fillReportService.SaveReportFormat(BBID, strFormula);
                 js.obj = fillReportService.LoadReportDatas(rds.rdps);
                 js.success = true;
                 js.sMeg = "保存成功";

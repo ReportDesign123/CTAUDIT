@@ -53,7 +53,7 @@
            
                 currentState.Row = "";
                 currentState.Col = "";
-                $("#ss").height(height - 55);
+                $("#ss").height(height-55 );
                 $("#ss").width(width - 10) ;
                 
                
@@ -94,9 +94,7 @@
                 var option = Grid1.options.protectionOptions;
                 option.allowResizeColumns = "allowResizeColumns";
          
-              
-
-               
+ 
                 Grid1.suspendPaint();
 
                 var filter = new spreadNS.Filter.HideRowFilter(new spreadNS.Range(-1, 0, -1, 2));
@@ -106,7 +104,7 @@
                     Grid1.bind(spreadNS.Events.ColumnChanged, ClearFilter);
                     Grid1.bind(spreadNS.Events.ValueChanged, GridManager.CellChange_Event);
                     Grid1.bind(spreadNS.Events.SelectionChanged, GridManager.RowColChange_Event);
-
+                    spread.bind(GC.Spread.Sheets.Events.ButtonClicked, GridManager.GridButtonClick);
 
                 }
                 Grid1.resumePaint();
@@ -138,6 +136,7 @@
                         Grid1.bind(spreadNS.Events.ColumnChanged, ClearFilter);
                         Grid1.bind(spreadNS.Events.ValueChanged, GridManager.CellChange_Event);
                         Grid1.bind(spreadNS.Events.SelectionChanged, GridManager.RowColChange_Event);
+                       // spread.bind(GC.Spread.Sheets.Events.ButtonClicked, GridManager.GridButtonClick);
                     }
                     Grid1.resumePaint();
                     ClearFilter();
@@ -219,6 +218,10 @@
                    }
                    else if (cell.CellType == "03") {
                        //帮助
+                       var cellType = Grid1.getCellType(rowIndex, colIndex);
+                       var ButtonCellType = new spreadNS.CellTypes.Button();
+                       ButtonCellType.buttonBackColor("#DCDCDC");
+                       Grid1.setCellType(rowIndex, colIndex, ButtonCellType);
                    }
                    else if (cell.CellType == "04") {
 
@@ -226,7 +229,8 @@
                        if (cell.CellValue && cell.CellValue != "") {
 
                            defaultHyperlink.text(cell.CellValue);
-                           Grid1.getCell(rowIndex, colIndex).cellType(defaultHyperlink).value(cell.CellValue);
+                          // Grid1.getCell(rowIndex, colIndex).cellType(defaultHyperlink).value(cell.CellValue);
+                           Grid1.setCellType(rowIndex, colIndex, defaultHyperlink);
                        }
                        else {
 
@@ -239,6 +243,9 @@
 
                    if (CellItem.value != undefined) {
                        Grid1.setValue(row, col, CellItem.value);
+                       var cellType = Grid1.getCellType(row, col);
+                       if (cellType instanceof GC.Spread.Sheets.CellTypes.Button)
+                           cellType.text(CellItem.value);
                    }
                    else {
                        Grid1.setValue(row, col, "");
@@ -249,6 +256,13 @@
                SetRowColTextByCellType: function (row, col, CellType) {
                    if (CellType["CellDataType"] == "01") return;
                    var text = Grid1.getCell(row, col).text();
+                   if (isNaN(text))
+                   {
+                       alert("请输入数字！");
+                       Grid1.setValue(row, col, "");
+                       return;
+                   }
+                       
                    if (text == undefined || text.length == 0) return;
                    var vsFormatter="0";
                    var newText = text;
@@ -257,8 +271,6 @@
 
                    } else if (CellType["CellSmbol"] == "02") {
                        vsFormatter = "$#,##0.00";
-                       // newText = "$" + newText;
-
                    }
                    if (CellType["CellThousand"] == "1") {
                        if (vsFormatter.indexOf(",") <= 0)
@@ -369,32 +381,57 @@
                        alert(err.Message);
                    }
                },
-               GridButtonClick: function (row, col) {
-                   try {
-
-                       var tag = Grid1.Cell(row, col).Tag;
-                       if (tag.split("|")[2]) {
-                           var cellFormat = JSON2.parse(tag.split("|")[2]);
-                           if (cellFormat["CellHelp"]) {
-                               if (cellFormat["CellType"] == "03") {
-                                   var paras = { url: "", columns: [], sortName: "", sortOrder: "" };
-                                   paras.url = "../../handler/BasicHandler.ashx?ActionType=" + BasicAction.ActionType.Grid + "&MethodName=GetDictionaryDataGridByClassType&FunctionName=" + BasicAction.Functions.DictionaryManager + "&ClassType=" + cellFormat["CellHelp"];
-                                   paras.columns = [[
-                    { field: "Code", title: "编号", width: 80 },
-                     { field: "Name", title: "名称", width: 80 }
-                    ]];
-                                   paras.sortName = "Code";
-                                   paras.sortOrder = "ASC";
-                                   var result = window.showModalDialog("../pub/HelpDialog.aspx", paras, "dialogHeight:350px;dialogWidth:300px");
-                                   if (result && result.Code) {
-                                       Grid1.Cell(row, col).Text = result.Name;
-
+               GridButtonClick: function (e, args) {
+                  
+                   var sheet = args.sheet,
+                       row = args.row,
+                       col = args.col;
+                   var cellType = Grid1.getCellType(row, col);
+                   if (cellType instanceof GC.Spread.Sheets.CellTypes.Button) {
+                       try
+                       {
+                           var tag = Grid1.getTag(row, col);
+                           if (tag.split("|")[2]) {
+                               var cellFormat = JSON2.parse(tag.split("|")[2]);
+                               if (cellFormat["CellHelp"]) {
+                                   if (cellFormat["CellType"] == "03") {
+                                       var paras = { url: "", columns: [], sortName: "", sortOrder: "" };
+                                       paras.url = "../../handler/BasicHandler.ashx?ActionType=" + BasicAction.ActionType.Grid + "&MethodName=GetDictionaryDataGridByClassType&FunctionName=" + BasicAction.Functions.DictionaryManager + "&ClassType=" + cellFormat["CellHelp"];
+                                       paras.columns = [[
+                        { field: "Code", title: "编号", width: 80 },
+                         { field: "Name", title: "名称", width: 80 }
+                                       ]];
+                                       paras.sortName = "Code";
+                                       paras.sortOrder = "ASC";
+                                       var result = window.showModalDialog("../pub/HelpDialog.aspx", paras, "dialogHeight:350px;dialogWidth:300px");
+                                       if (result && result.Code) {
+                                           cellType.text(result.Name);
+                                           Grid1.setValue(row, col, result.Name);
+                                           Grid1.getCell(row, col).text(result.Name);
+                                       }
                                    }
                                }
                            }
                        }
-                   } catch (err) {
-                       alert(err.Message);
+                           catch (err) {
+                               alert(err.Message);
+                           }
+                       }
+               },
+               DealCellLock:function ()
+               {
+                   if (Grid1) {
+                       for (var i = 0; i < Grid1.getRowCount() ; i++) {
+                           for (var j = 0; j < Grid1.getColumnCount() ; j++) {
+                               var tag = Grid1.getTag(i, j);
+                               if (tag == null || tag == "") {
+                                   Grid1.getCell(i, j).locked(true);
+                               }
+                               else {
+                                   Grid1.getCell(i, j).locked(false);
+                               }
+                           }
+                       }
                    }
                },
                AddGridHelp: function (cellHelp) {
@@ -487,7 +524,6 @@
                        to2DigitsString(date.getHours()), to2DigitsString(date.getMinutes()), to2DigitsString(date.getSeconds())
                    ].join("");
                }
-           
         </script>
 </body>
 </html>

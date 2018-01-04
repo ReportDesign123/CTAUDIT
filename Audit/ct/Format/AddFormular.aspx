@@ -197,7 +197,7 @@
                 Grid1 = new spreadNS.Sheet("Cell");
                 spread.removeSheet(0);
                 spread.addSheet(spread.getSheetCount(), Grid1);
-                Grid1.setIsProtected(true); //是否锁定
+               // Grid1.setIsProtected(true); //是否锁定
                 InitializeFlexCell(8, 5);
 
                 
@@ -286,8 +286,9 @@
                 var endRow;
                 var endCol;
 
-                endRow = row + sels[0].rowCount - 1; // Grid1.Selection.LastRow;
-                endCol = col + sels[0].colCount - 1; //Grid1.Selection.LastCol;
+
+                endRow = sels[0].row + sels[0].rowCount - 1; // Grid1.Selection.LastRow;
+                endCol = sels[0].col + sels[0].colCount - 1; //Grid1.Selection.LastCol;
                 for (var i = Grid1.getActiveRowIndex(); i <= endRow; i++) {
                     for (var j = Grid1.getActiveColumnIndex(); j <= endCol; j++) {
                         func(i, j, i, j, value);

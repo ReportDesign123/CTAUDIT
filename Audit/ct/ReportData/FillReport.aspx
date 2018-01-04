@@ -445,7 +445,6 @@
                     para.bdMaps = BBDataItems.bdMaps;
                     para.bdTableNames = BBDataItems.bdTableNames;
                     var gridIframe = toolsManager.GetGridIframe();
-                    //var dirtyCells = gridFrame.Grid1.getDirtyCells(); //所有改变的单元格
                     var vsFuals = "";
                     //将现有的数据进行拷贝
                     gridFrame.Grid1.endEdit();
@@ -591,70 +590,43 @@
                         DataManager.sendData(urls.fillReportUrl, obj, resultManager.DesrializeFatchFormular_Success, resultManager.FailResult, false);
 
                     },BBDataItems);
-
-                    //var para = { Gdq: {}, BdqData: [], bdMaps: {}, rdps: {}, GdbId: "", GdbTableName: "", bdIds: {}, bdTableNames: {} };
-                    //para.GdbId = BBDataItems.GdbId;
-                    //para.GdbTableName = BBDataItems.GdbTableName;
-                    //para.rdps = toolsManager.GetReportParameter();
-                    //para.bdMaps = BBDataItems.bdMaps;
-                    //para.bdTableNames = BBDataItems.bdTableNames;
-                    //para.Gdq = BBDataItems.Gdq;
-
-                    //var gridIframe = toolsManager.GetGridIframe();
-                    ////将现有的数据进行拷贝
-                    //$.extend(true, para.BdqData, BBDataItems.BdqData);
-
-                    //$.each(para.Gdq, function (index, item) {
-                    //    item.value = "";
-                    //});
-                    //$.each(para.BdqData, function (bdqIndex, bdqData) {
-                    //    $.each(bdqData, function (rowIndex, rowData) {
-                    //        if (rowData) {
-                    //            $.each(rowData, function (cellCode, item) {
-                    //                if (cellCode != "DATA_ID")
-                    //                    item.value = "";
-                    //            });
-                    //        }
-                    //    });
-                    //});
-
-                    //var obj = { dataStr: "" };
-                    //obj.dataStr = JSON.stringify(para);
-                    //obj = CreateParameter(ReportDataAction.ActionType.Post, ReportDataAction.Functions.FillReport, ReportDataAction.Methods.FillReportMethods.DeserializeFatchFormular, obj);
-                    //DataManager.sendData(urls.fillReportUrl, obj, resultManager.DesrializeFatchFormular_Success, resultManager.FailResult, true);
-
                 },
                 DeserializeCaculateFormular: function () {
-
                     if (!BBDataItems.Gdq) { alert("先选择一张需要操作的报表"); return; }
                     if (currentState.IsOrNotWriteLock == "0") { alert("报表已被锁定，无法执行操作"); return; }
+                    // LoadingMessage = window.showModelessDialog("../pub/Progress.htm", null, "DialogHeight:120px;DialogWidth:450px;help:no;status:no;scroll:no;");
+                    callbackRun(function (BBDataItems){
+                    var para = { Gdq: {}, BdqData: [], bdMaps: {}, rdps: {}, GdbId: "", GdbTableName: "", bdIds: {}, bdTableNames: {} };
+                    para.GdbId = BBDataItems.GdbId;
+                    para.GdbTableName = BBDataItems.GdbTableName;
+                    para.rdps = toolsManager.GetReportParameter();
+                    para.bdMaps = BBDataItems.bdMaps;
+                    para.bdTableNames = BBDataItems.bdTableNames;
+                    para.Gdq = BBDataItems.Gdq;
 
-                    if (currentState.ReportCalcuFormat && currentState.ReportCalcuFormat != "") {
-                        var vCalcFormatData = JSON.parse(currentState.ReportCalcuFormat);
-                        gridFrame.Grid1.suspendPaint();
-                        $.each(vCalcFormatData.data.dataTable, function (rowIndex, row) {
-                            $.each(row, function (colIndex, cell) {
-                                if (cell.formula) {
+                    var gridIframe = toolsManager.GetGridIframe();
+                    //将现有的数据进行拷贝
+                    $.extend(true, para.BdqData, BBDataItems.BdqData);
 
-                                    gridFrame.Grid1.getCell(rowIndex, colIndex).text(null);
-                                    gridFrame.Grid1.setValue(rowIndex, colIndex, null);
-                                    gridFrame.Grid1.setFormula(rowIndex, colIndex, null);
-                                    // gridFrame.Grid1.setFormula(rowIndex, colIndex, cell.formula);
-                                    //  gridFrame.Grid1.getCell(rowIndex, colIndex).formula("=MAX(A3:A6)"); //+cell.formula
-
-                                }
-                            });
+                    $.each(para.Gdq, function (index, item) {
+                        item.value = "";
+                    });
+                    $.each(para.BdqData, function (bdqIndex, bdqData) {
+                        $.each(bdqData, function (rowIndex, rowData) {
+                            if (rowData) {
+                                $.each(rowData, function (cellCode, item) {
+                                    if (cellCode != "DATA_ID")
+                                        item.value = "";
+                                });
+                            }
                         });
+                    });
 
-
-                        gridFrame.Grid1.resumePaint();
-                        //gridFrame.spread.refresh();
-
-                    }
-                    /*  var obj = { dataStr: "" };
+                    var obj = { dataStr: "" };
                     obj.dataStr = JSON.stringify(para);
                     obj = CreateParameter(ReportDataAction.ActionType.Post, ReportDataAction.Functions.FillReport, ReportDataAction.Methods.FillReportMethods.DeserializeCaculateFormular, obj);
-                    DataManager.sendData(urls.fillReportUrl, obj, resultManager.DeserializeCaculateFormular_Success, resultManager.FailResult, true);*/
+                    DataManager.sendData(urls.fillReportUrl, obj, resultManager.DeserializeCaculateFormular_Success, resultManager.FailResult, true);
+                    }, BBDataItems);
                 },
                 DeserializeVarifyFormular: function () {
                     if (!BBDataItems.Gdq) { alert("先选择一张需要操作的报表"); return; }
@@ -1197,17 +1169,7 @@
 
                         });
                     });
-                    for (var i = 0; i < gridFrame.Grid1.getRowCount() ; i++) {
-                        for (var j = 0; j < gridFrame.Grid1.getColumnCount() ; j++) {
-                            var tag = gridFrame.Grid1.getTag(i, j);
-                            if (tag == null || tag == "") {
-                                gridFrame.Grid1.getCell(i, j).locked(true);
-                            }
-                            else {
-                                gridFrame.Grid1.getCell(i, j).locked(false);
-                            }
-                        }
-                    }
+                    gridFrame.GridManager.DealCellLock();
                 } else {
                     $.each(BBData.bbData, function (rowIndex, row) {
                         $.each(row, function (colIndex, cell) {
@@ -1518,7 +1480,9 @@
 
 
                             });
+                            
 
+                            gridFrame.GridManager.DealCellLock();
                             gridFrame.Grid1.resumePaint();
 
                             currentState.RowColChange = false;
@@ -1949,7 +1913,7 @@
                 } else {
                     alert(data.sMeg);
                 }
-                //    top.loader && top.loader.close();
+               
             },
             DeserializeVerifyFormular_Success: function (data) {
 
