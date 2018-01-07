@@ -625,7 +625,7 @@
                     var obj = { dataStr: "" };
                     obj.dataStr = JSON.stringify(para);
                     obj = CreateParameter(ReportDataAction.ActionType.Post, ReportDataAction.Functions.FillReport, ReportDataAction.Methods.FillReportMethods.DeserializeCaculateFormular, obj);
-                    DataManager.sendData(urls.fillReportUrl, obj, resultManager.DeserializeCaculateFormular_Success, resultManager.FailResult, true);
+                    DataManager.sendData(urls.fillReportUrl, obj, resultManager.DeserializeCaculateFormular_Success, resultManager.FailResult, false);
                     }, BBDataItems);
                 },
                 DeserializeVarifyFormular: function () {
