@@ -447,7 +447,7 @@
                     var gridIframe = toolsManager.GetGridIframe();
                     var vsFuals = "";
                     //将现有的数据进行拷贝
-                    gridFrame.Grid1.endEdit();
+                   gridFrame.Grid1.endEdit();
                     gridFrame.Grid1.suspendPaint();
                     gridFrame.Grid1.setActiveCell(-1, -1);
                     $.extend(true, para.BdqData, BBDataItems.BdqData);

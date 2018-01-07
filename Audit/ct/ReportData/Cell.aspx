@@ -93,8 +93,9 @@
                 Grid1.options.isProtected = true;//是否锁定
                 var option = Grid1.options.protectionOptions;
                 option.allowResizeColumns = "allowResizeColumns";
-         
- 
+                Grid1.options.protectionOptions.clipBoardOptions = GC.Spread.Sheets.ClipboardPasteOptions.values;
+                Grid1.options.clipBoardOptions = GC.Spread.Sheets.ClipboardPasteOptions.values;
+                //spreadNS.ClipboardPasteOptions(GC.Spread.Sheets.ClipboardPasteOptions.values);
                 Grid1.suspendPaint();
 
                 var filter = new spreadNS.Filter.HideRowFilter(new spreadNS.Range(-1, 0, -1, 2));
@@ -104,6 +105,7 @@
                     Grid1.bind(spreadNS.Events.ColumnChanged, ClearFilter);
                     Grid1.bind(spreadNS.Events.ValueChanged, GridManager.CellChange_Event);
                     Grid1.bind(spreadNS.Events.SelectionChanged, GridManager.RowColChange_Event);
+                    Grid1.bind(spreadNS.Events.ClipboardPasted, GridManager.GridClipboardChanged);
                     spread.bind(GC.Spread.Sheets.Events.ButtonClicked, GridManager.GridButtonClick);
 
                 }
@@ -129,6 +131,7 @@
                     Grid1 = new spreadNS.Worksheet("Cell");
                     spread.addSheet(spread.getSheetCount(), Grid1);
                     Grid1.options.isProtected = true;//是否锁定
+                    
                     Grid1.suspendPaint();
                     Grid1.setColumnCount(0);
                     Grid1.setRowCount(0);
@@ -136,6 +139,7 @@
                         Grid1.bind(spreadNS.Events.ColumnChanged, ClearFilter);
                         Grid1.bind(spreadNS.Events.ValueChanged, GridManager.CellChange_Event);
                         Grid1.bind(spreadNS.Events.SelectionChanged, GridManager.RowColChange_Event);
+                        Grid1.bind(spreadNS.Events.ClipboardPasted, GridManager.GridClipboardChanged);
                        // spread.bind(GC.Spread.Sheets.Events.ButtonClicked, GridManager.GridButtonClick);
                     }
                     Grid1.resumePaint();
@@ -150,6 +154,9 @@
                 Grid1.options.isProtected = true;//是否锁定
                 var option = Grid1.options.protectionOptions;
                 option.allowResizeColumns = "allowResizeColumns";
+                
+                Grid1.options.protectionOptions.clipBoardOptions = GC.Spread.Sheets.ClipboardPasteOptions.values;
+                Grid1.options.clipBoardOptions = GC.Spread.Sheets.ClipboardPasteOptions.values;
                 spread.refresh();
             }
             function InitGrid()
@@ -308,13 +315,12 @@
            },
                GetRowColTextByCellType: function (text, cellType) {
                    if (text == null) return "";
-                   if (cellType["CellSmbol"] == "01" || cellType["CellSmbol"] == "02") {
-                       text = GridManager.GetSmboText(text);
-                   }
-                   if (cellType["CellThousand"] == "1") {
-                       text = text + "";
-                       text = Ct_Tool.RemoveDecimalPoint(text);
-                   }
+                   //if (cellType["CellSmbol"] == "01" || cellType["CellSmbol"] == "02") {
+                   //    text = GridManager.GetSmboText(text);
+                   //}
+                   //if (cellType["CellThousand"] == "1") {
+                   //    text = Ct_Tool.RemoveDecimalPoint(text);
+                   //}
                    return text;
                },
                RowColChange_Event: function (e, data) {
@@ -434,6 +440,13 @@
                        }
                    }
                },
+               GridClipboardChanged: function (e, args)
+               {
+                  // Grid1.setValue(args.cellRange.row, args.cellRange.col, value);
+                   args.sheet.getCell(args.cellRange.row, 20).tag(null);
+                 
+               }
+               ,
                AddGridHelp: function (cellHelp) {
                    $.each(cellHelp, function (index, item) {
                        Grid1.ComboBox(0).AddItem(item.Name);

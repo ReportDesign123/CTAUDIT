@@ -8,12 +8,12 @@
      <meta http-equiv="X-UA-Compatible" content="IE=8" />
      <meta http-equiv="X-UA-Compatible" content="IE=7" />
      <link href="../../lib/ligerUI/skins/Aqua/css/ligerui-all.css" rel="stylesheet" type="text/css" />
-         <link href="../../Styles/default.css" rel="stylesheet" type="text/css" />
-             <link href="../../Styles/FormatManager.css" rel="stylesheet" type="text/css" />
+     <link href="../../Styles/default.css" rel="stylesheet" type="text/css" />
+     <link href="../../Styles/FormatManager.css" rel="stylesheet" type="text/css" />
    
     
     <link rel="stylesheet" href="../../lib/SpreadCSS/gcspread.sheets.excel2013white.9.40.20153.0.css" title="spread-theme" />
-      <script type="text/javascript" src="../../lib/jquery/jquery-1.11.1.min.js"></script>
+    <script type="text/javascript" src="../../lib/jquery/jquery-1.11.1.min.js"></script>
     <script src="../../lib/jquery/jquery-ui-1.10.3.custom.min.js" type="text/javascript"></script>
      <script type="text/javascript" src="../../lib/SpreadJS/gcspread.sheets.all.9.40.20153.0.min.js"></script>
      <script type="text/javascript" src="../../lib/SpreadJS/gcspread.sheets.print.9.40.20153.0.min.js"></script>
@@ -198,7 +198,7 @@
                 spread.removeSheet(0);
                 spread.addSheet(spread.getSheetCount(), Grid1);
                // Grid1.setIsProtected(true); //是否锁定
-                InitializeFlexCell(8, 5);
+                InitializeFlexCell(8, 20);
 
                 
 
@@ -1041,6 +1041,7 @@
                     //Grid1.LoadFromXMLString(Base64.fromBase64(data.obj.formatStr));
 
                     Grid1.fromJSON(JSON.parse(data.obj.formatStr));
+                    InitializeFlexCell(Grid1.getRowCount(), Grid1.getColumnCount());
                     if (Grid1.bind) {
                         Grid1.bind(spreadNS.Events.SelectionChanging, GridManager.RowColChange_Event);
 
@@ -1459,7 +1460,7 @@
 </div>
     
 	<div id="layout1">
-	<div id="ss" position="center">
+	<div id="ss" position="center"  style="height: 100%; width:100%">
 		</div>
 		<div position="right"title="平衡公式：" id="layout-right"  >
             <div id="main" style="margin: 0px; height: 100%; width:100%">
