@@ -933,7 +933,7 @@ namespace AuditService
                 {
                     rrce.DataCode = "";
                 }
-                if (bdq.SortRow != 0)
+                if (bdq.SortRow >= 0)
                 {
                     rrce.RowSort = bbData.bbData[bdq.Offset][bdq.SortRow].CellCode;
                 }

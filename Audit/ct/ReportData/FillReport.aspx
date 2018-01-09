@@ -1567,311 +1567,315 @@
             },
 
             LoadReportData_Success: function (data) {
-                datestart = new Date();
-                s += "开始LoadReportData_Success" + datestart;
-                if (data.success) {
-                    if (data.obj) {
+                try
+                {
+                    datestart = new Date();
+                    s += "开始LoadReportData_Success" + datestart;
+                    if (data.success) {
+                        if (data.obj) {
 
-                        BBDataItems = data.obj;
-                        currentState.BdqDataMaps = BBDataItems.rdps.bdqMaps;
-                        var gridIframe = toolsManager.GetGridIframe();
-                        //  gridIframe.Grid1.setIsProtected(true);
-                        gridFrame.Grid1.suspendPaint();
-                        //固定行数据
-                        $.each(data.obj.Gdq, function (cellCode, CellItem) {
-                            gridFrame.GridManager.SetRowColText(CellItem.row, CellItem.col, CellItem);
-                            var tag = gridFrame.Grid1.getTag(CellItem.row, CellItem.col);
-                            mediatorManager.TextChange(CellItem.row, CellItem.col, tag);
+                            BBDataItems = data.obj;
+                            currentState.BdqDataMaps = BBDataItems.rdps.bdqMaps;
+                            var gridIframe = toolsManager.GetGridIframe();
+                            //  gridIframe.Grid1.setIsProtected(true);
+                            gridFrame.Grid1.suspendPaint();
+                            //固定行数据
+                            $.each(data.obj.Gdq, function (cellCode, CellItem) {
+                                gridFrame.GridManager.SetRowColText(CellItem.row, CellItem.col, CellItem);
+                                var tag = gridFrame.Grid1.getTag(CellItem.row, CellItem.col);
+                                mediatorManager.TextChange(CellItem.row, CellItem.col, tag);
 
-                        });
-                        gridFrame.Grid1.resumePaint();
-                        var vsKSRow;
-                        var vsRowNum;
+                            });
+                            gridFrame.Grid1.resumePaint();
+                            var vsKSRow;
+                            var vsRowNum;
 
-                        var rowChangeFlag = {};
-                        var colChangeFlag = {};
+                            var rowChangeFlag = {};
+                            var colChangeFlag = {};
 
-                        //变动表数据
-                        $.each(data.obj.BdqData, function (bdqIndex, bdqData) {
+                            //变动表数据
+                            $.each(data.obj.BdqData, function (bdqIndex, bdqData) {
 
-                            var bdqCode = BBDataItems.bdIndexMaps[bdqIndex.toString()];
-                            var bdFormat = BBData.bdq.Bdqs[BBData.bdq.BdqMaps[bdqCode]];
-                            bdCodeCountMaps[bdqCode] = rowNum;
-                            if (bdFormat.BdType == "1") {
-                                var rowNum = bdqData.length;
-                                // bdCodeCountMaps[bdqCode] = rowNum;
-                                //变动行
-                                var addRowData = 0;
-                                $.each(rowChangeFlag, function (index, item) {
-                                    if (index < bdFormat.Offset) {
-                                        addRowData += item;
-                                    }
+                                var bdqCode = BBDataItems.bdIndexMaps[bdqIndex.toString()];
+                                var bdFormat = BBData.bdq.Bdqs[BBData.bdq.BdqMaps[bdqCode]];
+                                bdCodeCountMaps[bdqCode] = rowNum;
+                                if (bdFormat.BdType == "1") {
+                                    var rowNum = bdqData.length;
+                                    // bdCodeCountMaps[bdqCode] = rowNum;
+                                    //变动行
+                                    var addRowData = 0;
+                                    $.each(rowChangeFlag, function (index, item) {
+                                        if (index < bdFormat.Offset) {
+                                            addRowData += item;
+                                        }
 
-                                });
-                                if (rowNum > 1) {
-                                    datestart = new Date();
-                                    s += "11111  " + datestart;
-                                    vsKSRow = bdFormat.Offset + addRowData;
-                                    vsRowNum = bdFormat.Offset + addRowData + rowNum - 1;
+                                    });
+                                    if (rowNum > 1) {
+                                        datestart = new Date();
+                                        s += "11111  " + datestart;
+                                        vsKSRow = bdFormat.Offset + addRowData;
+                                        vsRowNum = bdFormat.Offset + addRowData + rowNum - 1;
                                     
-                                    gridFrame.Grid1.suspendPaint();
-                                    gridFrame.Grid1.addRows(bdFormat.Offset + 1 + addRowData, rowNum - 1);
+                                        gridFrame.Grid1.suspendPaint();
+                                        gridFrame.Grid1.addRows(bdFormat.Offset + 1 + addRowData, rowNum - 1);
 
-                                    datestart = new Date();
-                                    s += "11111  " + datestart;
-                                    datestart = new Date();
-                                    s += "22222 " + datestart;
-                                    var columnCount = gridFrame.Grid1.getColumnCount();
-                                    var option = { all: true };
-                                    //var lineBorder = new gridFrame.spreadNS.LineBorder("#000000", gridFrame.spreadNS.LineStyle.thick);
-                                    var columnCount = gridFrame.Grid1.getColumnCount();
+                                        datestart = new Date();
+                                        s += "11111  " + datestart;
+                                        datestart = new Date();
+                                        s += "22222 " + datestart;
+                                        var columnCount = gridFrame.Grid1.getColumnCount();
+                                        var option = { all: true };
+                                        //var lineBorder = new gridFrame.spreadNS.LineBorder("#000000", gridFrame.spreadNS.LineStyle.thick);
+                                        var columnCount = gridFrame.Grid1.getColumnCount();
                                    
-                                   // var vsRange = new gridFrame.spreadNS.Range(vsKSRow, 0, rowNum, columnCount);
-                                    gridFrame.Grid1.resumePaint();
-                                    gridFrame.Grid1.suspendPaint();
+                                        gridFrame.Grid1.resumePaint();
+                                        gridFrame.Grid1.suspendPaint();
 
-                                  //  gridFrame.Grid1.getCells(bdFormat.Offset + addRowData, 0, bdFormat.Offset + addRowData + rowNum - 1, columnCount - 1).backColor("#FF99CC");
-                                    
-                                  
+                                      
 
-                                    for (var i = bdFormat.Offset + addRowData+1; i <= bdFormat.Offset + addRowData + rowNum - 1; i++) {
+                                        for (var i = bdFormat.Offset + addRowData+1; i <= bdFormat.Offset + addRowData + rowNum - 1; i++) {
 
-                                        for (var j = 0; j < gridFrame.Grid1.getColumnCount() ; j++) {
-                                            var vsCellType = gridFrame.Grid1.getStyle(bdFormat.Offset + addRowData, j);
-                                            gridIframe.Grid1.getCell(i, j).locked(false);
-                                            gridFrame.Grid1.setStyle(i, j, vsCellType);
-                                        }
-                                    }
-                                   // gridIframe.Grid1.getCells(bdFormat.Offset + addRowData, 0, bdFormat.Offset + addRowData + rowNum - 1, gridFrame.Grid1.getColumnCount() - 1).locked(false);
-                                    gridFrame.Grid1.resumePaint();
-                                    gridFrame.Grid1.suspendPaint();
-
-                                    
-                                    //设置变动行中的数据格式信息
-                                    $.each(BBData.bbData[bdFormat.Offset], function (columnIndex, cell) {
-                                        
-                                        var dd = "";
-                                        for (var i = bdFormat.Offset + 1 + addRowData - 1; i <= bdFormat.Offset + rowNum + addRowData - 1; i++) {
-                                            var cellCode = cell["CellCode"];
-
-                                            if (cellCode) {
-                                                var index = i - bdFormat.Offset - addRowData;
-                                                CellTag = "0;" + JSON2.stringify({ CellCode: cellCode, bdCode: bdqCode, index: index }) + "|" + cell.CellDataType + "|" + JSON2.stringify(cell);
-                                                gridFrame.Grid1.setTag(i, columnIndex, CellTag);
-
-                                                //设置单元格类型
-                                                gridFrame.GridManager.SetRowColCellType(cell, i, columnIndex);
-                                                var align;
-
-                                                //设置单元格对齐方式
-                                                if (cell.CellDataType == "01") {
-                                                    align = gridFrame.spreadNS.HorizontalAlign["left"];
-                                                    gridFrame.Grid1.getCell(i, columnIndex)["hAlign"](align);
-                                                } else if (cell.CellDataType == "02") {
-                                                    align = gridFrame.spreadNS.HorizontalAlign["right"];
-                                                    gridFrame.Grid1.getCell(i, columnIndex)["hAlign"](align);
-                                                }
+                                            for (var j = 0; j < gridFrame.Grid1.getColumnCount() ; j++) {
+                                                var vsCellType = gridFrame.Grid1.getStyle(bdFormat.Offset + addRowData, j);
+                                                gridIframe.Grid1.getCell(i, j).locked(false);
+                                                gridFrame.Grid1.setStyle(i, j, vsCellType);
                                             }
                                         }
-                                    });
-                                    //设置增量记录
-                                    rowChangeFlag[bdFormat.Offset] = rowNum - 1;
+                                        // gridIframe.Grid1.getCells(bdFormat.Offset + addRowData, 0, bdFormat.Offset + addRowData + rowNum - 1, gridFrame.Grid1.getColumnCount() - 1).locked(false);
+                                        gridFrame.Grid1.resumePaint();
+                                        gridFrame.Grid1.suspendPaint();
 
-                                }
-                                datestart = new Date();
-                                s += "开始setBorder " + datestart;
-                                //设置变动行数据
-                                if (bdqData && bdqData.length > 0) {
-                                    $.each(bdqData, function (bdRowIndex, bdRow) {
+                                    
+                                        //设置变动行中的数据格式信息
                                         $.each(BBData.bbData[bdFormat.Offset], function (columnIndex, cell) {
-                                            if (cell.CellCode) {
-                                                var row = bdFormat.Offset + bdRowIndex + addRowData;
-                                                if (bdRow && bdRow[cell.CellCode]) {
-                                                    gridFrame.GridManager.SetRowColText(row, columnIndex, bdRow[cell.CellCode]);
-                                                } else {
-                                                    var cellItem = { value: "", cellDataType: cell.CellDataType, isOrNotUpdate: "0" };
-                                                    gridFrame.GridManager.SetRowColTextByRowCol(row, columnIndex, cellItem);
-                                                }
-                                                var tag = gridFrame.Grid1.getTag(row, columnIndex);
-                                                mediatorManager.TextChange(row, columnIndex, tag);
-                                            }
-
-                                        });
-
-                                    });
-                                } else {
-
-                                    $.each(BBData.bbData[bdFormat.Offset], function (columnIndex, cell) {
-                                        var row = bdFormat.Offset + addRowData;
-                                        var rowColCode = cell["CellCode"];
-                                        if (rowColCode) {
-                                            var cellItem = { value: "", cellDataType: cell.CellDataType, isOrNotUpdate: "0" };
-                                            gridFrame.GridManager.SetRowColTextByRowCol(row, columnIndex, cellItem);
-                                        }
-
-                                    });
-                                }
-                                datestart = new Date();
-                                s += "结束setBorder " + datestart;
-                            }
-                            else if (bdFormat.BdType == "2") {
-                                //变动列
-                                var colNum = bdqData.length;
-                                //变动行
-                                var addColIndex = 0;
-                                $(colChangeFlag, function (index, item) {
-                                    if (item < bdFormat.Offset) {
-                                        addColIndex += item;
-                                    }
-                                });
-                                if (colNum > 1) {
-
-                                    gridIframe.Grid1.InsertCol(bdFormat.Offset + addColIndex + 1, colNum - 1);
-                                    gridFrame.Grid1.Range(1, bdFormat.Offset + 1 + addColIndex, gridIframe.Grid1.Rows - 1, bdFormat.Offset + addColIndex + colNum - 1).BackColor = toolsManager.CovertColorStr("#FF99CC");
-
-                                    //设置变动列中的数据格式信息
-                                    $.each(BBData.bbData, function (rowIndex, RowData) {
-                                        if (RowData[bdFormat.Offset]) {
-                                            var cell = RowData[bdFormat.Offset];
-                                            for (var i = bdFormat.Offset + addColIndex + 1; i <= bdFormat.Offset + addColIndex + colNum - 1; i++) {
+                                        
+                                            var dd = "";
+                                            for (var i = bdFormat.Offset + 1 + addRowData - 1; i <= bdFormat.Offset + rowNum + addRowData - 1; i++) {
                                                 var cellCode = cell["CellCode"];
+
                                                 if (cellCode) {
-                                                    var index = i - bdFormat.Offset - addColIndex;
-                                                    CellTag = "0;" + JSON2.stringify({ CellCode: cell.CellCode, bdCode: flag, index: index }) + "|" + cell.CellDataType + "|" + JSON2.stringify(cell);;
-                                                    gridFrame.Grid1.Cell(rowIndex, i).Tag = CellTag;
+                                                    var index = i - bdFormat.Offset - addRowData;
+                                                    CellTag = "0;" + JSON2.stringify({ CellCode: cellCode, bdCode: bdqCode, index: index }) + "|" + cell.CellDataType + "|" + JSON2.stringify(cell);
+                                                    gridFrame.Grid1.setTag(i, columnIndex, CellTag);
+
+                                                    //设置单元格类型
+                                                    gridFrame.GridManager.SetRowColCellType(cell, i, columnIndex);
+                                                    var align;
 
                                                     //设置单元格对齐方式
                                                     if (cell.CellDataType == "01") {
-                                                        gridFrame.Grid1.cell(rowIndex, i).Alignment = 4;
+                                                        align = gridFrame.spreadNS.HorizontalAlign["left"];
+                                                        gridFrame.Grid1.getCell(i, columnIndex)["hAlign"](align);
                                                     } else if (cell.CellDataType == "02") {
-                                                        gridFrame.Grid1.Cell(rowIndex, i).Alignment = 12;
+                                                        align = gridFrame.spreadNS.HorizontalAlign["right"];
+                                                        gridFrame.Grid1.getCell(i, columnIndex)["hAlign"](align);
+                                                    }
+                                                }
+                                            }
+                                        });
+                                        //设置增量记录
+                                        rowChangeFlag[bdFormat.Offset] = rowNum - 1;
+
+                                    }
+                                    datestart = new Date();
+                                    s += "开始setBorder " + datestart;
+                                    //设置变动行数据
+                                    if (bdqData && bdqData.length > 0) {
+                                        $.each(bdqData, function (bdRowIndex, bdRow) {
+                                            $.each(BBData.bbData[bdFormat.Offset], function (columnIndex, cell) {
+                                                if (cell.CellCode) {
+                                                    var row = bdFormat.Offset + bdRowIndex + addRowData;
+                                                    if (bdRow && bdRow[cell.CellCode]) {
+                                                        gridFrame.GridManager.SetRowColText(row, columnIndex, bdRow[cell.CellCode]);
+                                                    } else {
+                                                        var cellItem = { value: "", cellDataType: cell.CellDataType, isOrNotUpdate: "0" };
+                                                        gridFrame.GridManager.SetRowColTextByRowCol(row, columnIndex, cellItem);
+                                                    }
+                                                    var tag = gridFrame.Grid1.getTag(row, columnIndex);
+                                                    mediatorManager.TextChange(row, columnIndex, tag);
+                                                }
+
+                                            });
+
+                                        });
+                                    } else {
+
+                                        $.each(BBData.bbData[bdFormat.Offset], function (columnIndex, cell) {
+                                            var row = bdFormat.Offset + addRowData;
+                                            var rowColCode = cell["CellCode"];
+                                            if (rowColCode) {
+                                                var cellItem = { value: "", cellDataType: cell.CellDataType, isOrNotUpdate: "0" };
+                                                gridFrame.GridManager.SetRowColTextByRowCol(row, columnIndex, cellItem);
+                                            }
+
+                                        });
+                                    }
+                                    datestart = new Date();
+                                    s += "结束setBorder " + datestart;
+                                }
+                                else if (bdFormat.BdType == "2") {
+                                    //变动列
+                                    var colNum = bdqData.length;
+                                    //变动行
+                                    var addColIndex = 0;
+                                    $(colChangeFlag, function (index, item) {
+                                        if (item < bdFormat.Offset) {
+                                            addColIndex += item;
+                                        }
+                                    });
+                                    if (colNum > 1) {
+
+                                        gridIframe.Grid1.InsertCol(bdFormat.Offset + addColIndex + 1, colNum - 1);
+                                        gridFrame.Grid1.Range(1, bdFormat.Offset + 1 + addColIndex, gridIframe.Grid1.Rows - 1, bdFormat.Offset + addColIndex + colNum - 1).BackColor = toolsManager.CovertColorStr("#FF99CC");
+
+                                        //设置变动列中的数据格式信息
+                                        $.each(BBData.bbData, function (rowIndex, RowData) {
+                                            if (RowData[bdFormat.Offset]) {
+                                                var cell = RowData[bdFormat.Offset];
+                                                for (var i = bdFormat.Offset + addColIndex + 1; i <= bdFormat.Offset + addColIndex + colNum - 1; i++) {
+                                                    var cellCode = cell["CellCode"];
+                                                    if (cellCode) {
+                                                        var index = i - bdFormat.Offset - addColIndex;
+                                                        CellTag = "0;" + JSON2.stringify({ CellCode: cell.CellCode, bdCode: flag, index: index }) + "|" + cell.CellDataType + "|" + JSON2.stringify(cell);;
+                                                        gridFrame.Grid1.Cell(rowIndex, i).Tag = CellTag;
+
+                                                        //设置单元格对齐方式
+                                                        if (cell.CellDataType == "01") {
+                                                            gridFrame.Grid1.cell(rowIndex, i).Alignment = 4;
+                                                        } else if (cell.CellDataType == "02") {
+                                                            gridFrame.Grid1.Cell(rowIndex, i).Alignment = 12;
+                                                        }
+                                                    }
+
+                                                }
+                                            }
+                                        });
+                                        //设置增量记录
+                                        colChangeFlag[bdFormat.Offset] = colNum - 1;
+                                    }
+                                    //                                 gridFrame.Grid1.isPaintSuspended(false);
+                                    //设置变动列数据
+                                    if (bdqData && bdqData.length > 0) {
+                                        $.each(bdqData, function (bdColIndex, bdCol) {
+                                            $.each(BBData.bbData, function (rowIndex, rowData) {
+                                                if (rowData[bdFormat.Offset]) {
+                                                    var cell = rowData[bdFormat.Offset];
+                                                    var col = bdFormat.Offset + bdColIndex + addColIndex;
+                                                    if (bdCol && bdCol[cell.CellCode]) {
+                                                        gridFrame.GridManager.SetRowColTextByRowCol(rowIndex, col, bdRow[cell.CellCode]);
+                                                    } else {
+                                                        var cellItem = { value: "", cellDataType: cell.CellDataType, isOrNotUpdate: "0" };
+                                                        gridFrame.GridManager.SetRowColTextByRowCol(rowIndex, col, cellItem);
                                                     }
                                                 }
 
-                                            }
-                                        }
-                                    });
-                                    //设置增量记录
-                                    colChangeFlag[bdFormat.Offset] = colNum - 1;
-                                }
-                                //                                 gridFrame.Grid1.isPaintSuspended(false);
-                                //设置变动列数据
-                                if (bdqData && bdqData.length > 0) {
-                                    $.each(bdqData, function (bdColIndex, bdCol) {
+                                            });
+
+                                        });
+                                    } else {
+
                                         $.each(BBData.bbData, function (rowIndex, rowData) {
                                             if (rowData[bdFormat.Offset]) {
                                                 var cell = rowData[bdFormat.Offset];
-                                                var col = bdFormat.Offset + bdColIndex + addColIndex;
-                                                if (bdCol && bdCol[cell.CellCode]) {
-                                                    gridFrame.GridManager.SetRowColTextByRowCol(rowIndex, col, bdRow[cell.CellCode]);
-                                                } else {
+                                                var col = bdFormat.Offset + addColIndex;
+                                                var rowColCode = cell["CellCode"];
+                                                if (rowColCode) {
                                                     var cellItem = { value: "", cellDataType: cell.CellDataType, isOrNotUpdate: "0" };
                                                     gridFrame.GridManager.SetRowColTextByRowCol(rowIndex, col, cellItem);
                                                 }
                                             }
-
                                         });
-
-                                    });
-                                } else {
-
-                                    $.each(BBData.bbData, function (rowIndex, rowData) {
-                                        if (rowData[bdFormat.Offset]) {
-                                            var cell = rowData[bdFormat.Offset];
-                                            var col = bdFormat.Offset + addColIndex;
-                                            var rowColCode = cell["CellCode"];
-                                            if (rowColCode) {
-                                                var cellItem = { value: "", cellDataType: cell.CellDataType, isOrNotUpdate: "0" };
-                                                gridFrame.GridManager.SetRowColTextByRowCol(rowIndex, col, cellItem);
-                                            }
-                                        }
-                                    });
+                                    }
+                                }
+                            });
+                            datestart = new Date();
+                            s += "完成赋值" + datestart;
+                            if (currentState.ReportCalcuFormat && currentState.ReportCalcuFormat != "") {
+                                var vsCalcformula = currentState.ReportCalcuFormat.split(',');
+                                for (var i = 0; i < vsCalcformula.length; i++) {
+                                    gridFrame.Grid1.setFormula(parseInt(vsCalcformula[i].split('$')[0]), parseInt(vsCalcformula[i].split('$')[1]), vsCalcformula[i].split('$')[2]);
                                 }
                             }
-                        });
-                        datestart = new Date();
-                        s += "完成赋值" + datestart;
-                        if (currentState.ReportCalcuFormat && currentState.ReportCalcuFormat != "") {
-                            var vsCalcformula = currentState.ReportCalcuFormat.split(',');
-                            for (var i = 0; i < vsCalcformula.length; i++) {
-                                gridFrame.Grid1.setFormula(parseInt(vsCalcformula[i].split('$')[0]), parseInt(vsCalcformula[i].split('$')[1]), vsCalcformula[i].split('$')[2]);
-                            }
-                        }
-                        else {
-                            if (currentState.ReportFormat && currentState.ReportFormat != "") {
-                                var vCalcFormatData = JSON.parse(currentState.ReportFormat);
-                                $.each(vCalcFormatData.data.dataTable, function (rowIndex, row) {
-                                    $.each(row, function (colIndex, cell) {
-                                        if (cell.formula) {
-                                            for (var i = vsKSRow; i <= vsRowNum; i++) {
-                                                var newF = cell.formula;
-                                                var reg = new RegExp("/\D+\d+", "g");
-                                                var array = cell.formula.match(/[A-Za-z]+\d+/g);
-                                                for (var j = 0; j < array.length; j++) {
-                                                    var one = array[j];
-                                                    var rowReg = /\d+/.exec(one);
-                                                    if (rowReg) {
-                                                        var rowIndex = parseInt(rowReg[0]) - 1;
-                                                        var colIndexStr = /[A-Za-z]+/.exec(one);
-                                                        if (colIndexStr) {
-                                                            colIndexStr = colIndexStr[0];
-                                                            var colIndexInt = convertToIndex(colIndexStr);
-                                                            var tag = gridFrame.Grid1.getTag(rowIndex, colIndexInt);
-                                                            if (tag && tag.indexOf("0;") == 0) {
-                                                                //变动行
-                                                                newF = newF.replace(one, colIndexStr +( i+1));
+                            else {
+                                if (currentState.ReportFormat && currentState.ReportFormat != "") {
+                                    var vCalcFormatData = JSON.parse(currentState.ReportFormat);
+                                    $.each(vCalcFormatData.data.dataTable, function (rowIndex, row) {
+                                        $.each(row, function (colIndex, cell) {
+                                            if (cell.formula) {
+                                                for (var i = vsKSRow; i <= vsRowNum; i++) {
+                                                    var newF = cell.formula;
+                                                    var reg = new RegExp("/\D+\d+", "g");
+                                                    var array = cell.formula.match(/[A-Za-z]+\d+/g);
+                                                    for (var j = 0; j < array.length; j++) {
+                                                        var one = array[j];
+                                                        var rowReg = /\d+/.exec(one);
+                                                        if (rowReg) {
+                                                            var rowIndex = parseInt(rowReg[0]) - 1;
+                                                            var colIndexStr = /[A-Za-z]+/.exec(one);
+                                                            if (colIndexStr) {
+                                                                colIndexStr = colIndexStr[0];
+                                                                var colIndexInt = convertToIndex(colIndexStr);
+                                                                var tag = gridFrame.Grid1.getTag(rowIndex, colIndexInt);
+                                                                if (tag && tag.indexOf("0;") == 0) {
+                                                                    //变动行
+                                                                    newF = newF.replace(one, colIndexStr +( i+1));
+                                                                }
                                                             }
-                                                        }
                                                        
-                                                    }
+                                                        }
                                                     
-                                                } 
-                                                gridFrame.Grid1.setFormula(parseInt(i), parseInt(colIndex), newF); //cell.formula.replace(/\d+/g, i)
+                                                    } 
+                                                    gridFrame.Grid1.setFormula(parseInt(i), parseInt(colIndex), newF); //cell.formula.replace(/\d+/g, i)
+                                                }
+
                                             }
-
-                                        }
+                                        });
                                     });
-                                });
-                            }
-                        }
-
-                        gridFrame.Grid1.resumePaint();
-                     
-                        //设置报表状态
-
-                        currentState.IsOrNotWriteLock = data.obj.IsOrNotLock;
-                        mediatorManager.SetReportState(data.obj.IsOrNotLock);
-                        //附加报表状态
-                        if (data.obj.rdps.ReportId != "home") {
-                            var state = ""
-                            if (data.obj.IsOrNotLock == "0") {
-                                state = "(只读)";
-                            } else if (data.obj.IsOrNotLock == "1") {
-                                state = "(可写)";
-                            }
-                            var tab = liger.get("ReportsTab");
-                            var report = {};
-                            for (var i = 0; i < currentState.TabDatas.length; i++) {
-                                if (currentState.TabDatas[i].Id == data.obj.rdps.ReportId) {
-                                    report = currentState.TabDatas[i];
-                                    break;
                                 }
                             }
-                            tab.setHeader(data.obj.rdps.ReportId, report.bbName + state);
+
+                            gridFrame.Grid1.resumePaint();
+                     
+                            //设置报表状态
+
+                            currentState.IsOrNotWriteLock = data.obj.IsOrNotLock;
+                            mediatorManager.SetReportState(data.obj.IsOrNotLock);
+                            //附加报表状态
+                            if (data.obj.rdps.ReportId != "home") {
+                                var state = ""
+                                if (data.obj.IsOrNotLock == "0") {
+                                    state = "(只读)";
+                                } else if (data.obj.IsOrNotLock == "1") {
+                                    state = "(可写)";
+                                }
+                                var tab = liger.get("ReportsTab");
+                                var report = {};
+                                for (var i = 0; i < currentState.TabDatas.length; i++) {
+                                    if (currentState.TabDatas[i].Id == data.obj.rdps.ReportId) {
+                                        report = currentState.TabDatas[i];
+                                        break;
+                                    }
+                                }
+                                tab.setHeader(data.obj.rdps.ReportId, report.bbName + state);
+                            }
+
+
+
                         }
 
-
-
+                        $(".l-tab-content").css("display", "none");
+                        $("#LoadInf").css("display", "none");
+                        $("#LoadAll").css("display", "none");
+                        datestart = new Date();
+                        s += "完成" + datestart;
+                        // alert(s);
+                    } else {
+                        alert(data.sMeg);
                     }
-
-                    $(".l-tab-content").css("display", "none");
-                    $("#LoadInf").css("display", "none");
-                    $("#LoadAll").css("display", "none");
-                    datestart = new Date();
-                    s += "完成" + datestart;
-                    // alert(s);
-                } else {
-                    alert(data.sMeg);
+                }
+                catch(e)
+                {
+                    alert("ddddd");
                 }
             }, SaveReport_Success: function (data) {
                 if (data.success) {
