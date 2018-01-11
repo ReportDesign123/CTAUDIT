@@ -130,6 +130,50 @@ namespace AuditService
             }
         }
 
+        public string DeserializeCellFormular(string formular)
+        {
+            string formularContent = formular;
+            StringBuilder sb = new StringBuilder();
+            int startIndex, lastIndex;
+            startIndex = 0;
+            lastIndex = 0;
+            while (formularContent.IndexOf("[") != -1)
+            {
+                startIndex = formularContent.IndexOf("[");
+                lastIndex = formularContent.IndexOf("]", startIndex);
+                string formularCell = formularContent.Substring(startIndex + 1, lastIndex - startIndex - 1);
+
+                if (formularCell.IndexOf(":") != -1)
+                {
+                    string[] befAft = formularCell.Split(':');
+                    string[] befCell = befAft[0].Split(',');
+                    string[] aftCell = befAft[1].Split(',');
+                    int befRow = Convert.ToInt32(befCell[0]);
+                    int befCol = Convert.ToInt32(befCell[1]);
+
+                    int aftRow = Convert.ToInt32(aftCell[0]);
+                    int aftCol = Convert.ToInt32(aftCell[1]);
+                    for (int i = befRow; i <= aftRow; i++)
+                    {
+                        for (int j = befCol; j <= aftCol; j++)
+                        {
+                            string code = i.ToString() + "," + j.ToString();
+                            sb.Append(code);
+                            sb.Append(";");
+                        }
+                    }
+                }
+                else
+                {
+                    sb.Append(formularCell);
+                    sb.Append(";");
+                }
+
+                formularContent = formularContent.Substring(lastIndex + 1);
+            }
+            if (sb.Length > 0) sb.Length--;
+            return sb.ToString();
+        }
         public string DeserializeFormular(FormularEntity fe,BBData bbData)
         {
             try
@@ -700,6 +744,7 @@ namespace AuditService
         {
             try
             {
+                string strFullformularConten = string.Empty;
                 string nmFcode = "";//公式左边行列内码
 
                 //针对固定表、变动表的混合进行操作；获取公式相关单元格的内容；<变动表名，<数据项编号，数据项位置>>
@@ -735,6 +780,7 @@ namespace AuditService
 
                         //解析报表公式
                         string formularContenTemp=Base64.Decode64(fe.content);
+                        
                         FormularDeserializeStruct fds = cbfd.DeserializeCacularFormular(formularContenTemp, dt, bbData);
                         formularContenTemp = fds.FormularCondent;
 
@@ -826,7 +872,8 @@ namespace AuditService
                     else
                     {
                         //块公式解析
-                        formularContent = Base64.Decode64(fe.content);    
+                        formularContent = Base64.Decode64(fe.content);
+                        strFullformularConten = formularContent;
                         Boolean isOrNotIf = formularContent.Substring(0, 2).ToUpper() == "IF" ? true : false;
                         FormularDeserializeStruct fds = new FormularDeserializeStruct();
                         //固定区单元格数据的计算
@@ -863,13 +910,20 @@ namespace AuditService
                                 formularContent = ReplaceGdFormular(formularContent, dt, gdItems[tableName][itemCode], itemCode);
                             }
                         }
-                        
-                            //固定区公式中含有变动区数据的单元格
-                            foreach (string tName in bdItems.Keys)
+
+                        //固定区公式中含有变动区数据的单元格 
+                        //区分取数单元格和条件单元格
+
+                        string GDCellNum = DeserializeCellFormular(strFullformularConten.Split(';')[0]);
+                        string BDCellNum = DeserializeCellFormular(strFullformularConten.Split(';')[1]);
+                        foreach (string tName in bdItems.Keys)
+                        {
+                            itemsSql.Length = 0;
+                            StringBuilder whereSql = new StringBuilder();
+                            //解析取数单元格
+                            foreach (string itemCode in bdItems[tName].Keys)
                             {
-                                itemsSql.Length = 0;
-                                StringBuilder whereSql = new StringBuilder();
-                                foreach (string itemCode in bdItems[tName].Keys)
+                                if (GDCellNum.Contains(bdItems[tName][itemCode]))
                                 {
                                     itemsSql.Append(fds.BdHzType);
                                     itemsSql.Append("([");
@@ -877,37 +931,42 @@ namespace AuditService
                                     itemsSql.Append("]) AS [");
                                     itemsSql.Append(itemCode);
                                     itemsSql.Append("],");
+                                }
+                                if (BDCellNum.Contains(bdItems[tName][itemCode]))
+                                {
                                     if (fds.FormularCondition != "")
                                     {
                                         whereSql.Append(" AND ");
                                         fds.FormularCondition = fds.FormularCondition.Replace("==", "=");
-                                        whereSql.Append("[" + itemCode + "]" + fds.FormularCondition);
+                                        // whereSql.Append("[" + itemCode + "]" + fds.FormularCondition);
+                                        whereSql.Append(fds.FormularCondition.Replace("["+ bdItems[tName][itemCode]+"]","["+ itemCode+"]"));
                                     }
                                 }
-                                //获取变动区数据，并替换相应的数据
-                                if (itemsSql.Length > 0) itemsSql.Length--;
-                                dt = fillReportService.LoadReportItems(itemsSql.ToString(), tName, rds.rdps, whereSql.ToString());
+                            }
+                            //获取变动区数据，并替换相应的数据
+                            if (itemsSql.Length > 0) itemsSql.Length--;
+                            dt = fillReportService.LoadReportItems(itemsSql.ToString(), tName, rds.rdps, whereSql.ToString());
 
-                             
-                                foreach (string itemCode in bdItems[tName].Keys)
-                                {
-                                    //固定区中变动单元格数据进行替换；
-                                    formularContent = ReplaceGdFormular(formularContent, dt, bdItems[tName][itemCode], itemCode);
-                                }
-                          
+
+                            foreach (string itemCode in bdItems[tName].Keys)
+                            {
+                                //固定区中变动单元格数据进行替换；
+                                formularContent = ReplaceGdFormular(formularContent, dt, bdItems[tName][itemCode], itemCode);
+                            }
+
                         }
-                            if (isOrNotIf)
-                            {
-                                //If公式计算
-                                rds.Gdq[nmFcode].value = cifd.DeserializeIfFormular(formularContent, formularFactory);
-                            }
-                            else
-                            {
-                                //普通公式计算
-                                rds.Gdq[nmFcode].value = formularFactory.ExpressParse(formularContent);
-                            }
+                        if (isOrNotIf)
+                        {
+                            //If公式计算
+                            rds.Gdq[nmFcode].value = cifd.DeserializeIfFormular(formularContent, formularFactory);
+                        }
+                        else
+                        {
+                            //普通公式计算
+                            rds.Gdq[nmFcode].value = formularFactory.ExpressParse(formularContent);
+                        }
 
-                            rds.Gdq[nmFcode].isOrNotUpdate = "1";
+                        rds.Gdq[nmFcode].isOrNotUpdate = "1";
                     }
                     //保存计算结果
                     fillReportService.SaveReportDatas(rds);
@@ -958,7 +1017,7 @@ namespace AuditService
         {
             try
             {
-                if (dt!=null&&dt.Rows.Count > 0 && Convert.ToString(dt.Rows[0][code]) != "")
+                if (dt!=null&&dt.Rows.Count > 0 && dt.Columns.Contains(code) && Convert.ToString(dt.Rows[0][code]) != "")
                 {
                     formularContent = formularContent.Replace("[" + sourceNm + "]", Convert.ToString(dt.Rows[0][code]));
                 }
