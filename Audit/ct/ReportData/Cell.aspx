@@ -168,15 +168,13 @@
            var GridManager = {
 
                SetRowColText: function (row, col, CellItem) {
-
-                   if (Grid1.getCellType(row, col)._link == undefined) {
-                       GridManager.SetRowColTextByRowCol(row, col, CellItem);
-                   }
-                   else {
-
+                   var cellType = Grid1.getCellType(row, col);
+                   if(cellType instanceof GC.Spread.Sheets.CellTypes.HyperLink)
+                   {
                        var vsBBName;
                        CellItem.ParaValue = GetRequest(CellItem.ParaValue, row, col);
                        var vsUrl;
+                       //  var cellType = new spreadNS.CellTypes.HyperLink();
                        if (CellItem.ParaValue.indexOf("BB$") >= 0) {
 
                            var vsBBArry = CellItem.ParaValue.split("$");
@@ -192,20 +190,21 @@
                            else
                                vsUrl += "&AuditDate=" + parent.currentState.ReportState.AuditDate.value;
                            vsUrl += "&Company=" + parent.currentState.CompanyId;
-                        
+                          
                            Grid1.setValue(row, col, vsUrl);
                            Grid1.getCellType(row, col)._text = vsBBName;
                        }
                        else
                        {
-                           Grid1.setValue(row, col, CellItem.ParaValue);
-                           Grid1.getCellType(row, col)._text = CellItem.ParaValue;
+                           cellType.text(CellItem.ParaValue);
+                           Grid1.getCell(row, col).cellType(cellType).value(CellItem.ParaValue);
+                           //Grid1.setValue(row, col, CellItem.ParaValue);
+                           //Grid1.getCellType(row, col)._text = CellItem.ParaValue;
                        }
-                          
-                     
-                       
-
                    }
+                   else {
+                       GridManager.SetRowColTextByRowCol(row, col, CellItem);
+                   } 
                },
                SetRowColCellType: function (cell, rowIndex, colIndex) {
                    if (cell.CellType == "" || cell.CellType == undefined)
