@@ -914,8 +914,12 @@ namespace AuditService
                         //固定区公式中含有变动区数据的单元格 
                         //区分取数单元格和条件单元格
 
-                        string GDCellNum = DeserializeCellFormular(strFullformularConten.Split(';')[0]);
-                        string BDCellNum = DeserializeCellFormular(strFullformularConten.Split(';')[1]);
+                        string GDCellNum = string.Empty;
+                        string BDCellNum = string.Empty;
+                        if (strFullformularConten.Split(';').Length > 0)
+                            GDCellNum = DeserializeCellFormular(strFullformularConten.Split(';')[0]);
+                        if (strFullformularConten.Split(';').Length > 1)
+                            BDCellNum = DeserializeCellFormular(strFullformularConten.Split(';')[1]);
                         foreach (string tName in bdItems.Keys)
                         {
                             itemsSql.Length = 0;
