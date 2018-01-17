@@ -15,7 +15,7 @@ namespace Audit.handler
     /// </summary>
     public class FormatHandler : IHttpHandler, IRequiresSessionState
     {
-
+        
         public void ProcessRequest(HttpContext context)
         {
             context.Response.ContentType = "text/plain";
@@ -57,7 +57,6 @@ namespace Audit.handler
                 return false;
             }
         }
-
         private string getParam(string param, HttpContext context)
         {
             string value = Convert.ToString(context.Request.QueryString[param]);

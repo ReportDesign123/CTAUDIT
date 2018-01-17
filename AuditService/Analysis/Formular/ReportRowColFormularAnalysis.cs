@@ -70,6 +70,10 @@ namespace AuditService.Analysis.Formular
                     {
                         parameters["zq"] = rdps.Cycle;
                     }
+                    if(int.Parse(parameters["zq"])<0)
+                    {
+                        parameters["zq"] = (int.Parse(rdps.Cycle)+int.Parse(parameters["zq"])).ToString();
+                    }
                     if (StringUtil.IsNullOrEmpty(parameters["task"]))
                     {
                         parameters["task"] = rdps.TaskId;

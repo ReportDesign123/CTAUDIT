@@ -706,6 +706,9 @@ namespace AuditService.ReportData
                 string sql = "";
                 if (ReportGlobalConst.IsOrNotRelationTaskAndPaper)
                 {
+                    //string strCylcle = string.Empty;
+                    //if(int.Parse(rdps.Cycle)<0)
+
                     sql = " WHERE DATA_TASKID='" + rdps.TaskId + "' AND DATA_MANUSCRIPT='" + rdps.PaperId + "' AND DATA_COMPANYID='" + rdps.CompanyId + "' AND DATA_REPORTID='" + rdps.ReportId + "' AND DATA_YEAR='" + rdps.Year + "' AND DATA_CYCLE='" + rdps.Cycle + "' " ;
                 }
                 else

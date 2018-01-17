@@ -363,9 +363,9 @@ namespace AuditService.ReportAggregation
                     orderBy.Append(" ORDER BY ");
                     foreach (string o in arrOrder)
                     {
-                        orderBy.Append(" ");
+                        orderBy.Append("[");
                         orderBy.Append(o);
-                        orderBy.Append(",");
+                        orderBy.Append("],");
                     }
                     orderBy.Length--;
 
