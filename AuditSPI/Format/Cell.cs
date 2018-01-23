@@ -13,6 +13,7 @@ namespace AuditSPI.Format
        public int CellCol;
        public string CellLogicalType;
        public string CellType;
+       public string CellRequired;
        public string CellDataType;
        public string CellMacro;
        public string CellHelp;

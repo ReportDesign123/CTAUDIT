@@ -60,12 +60,12 @@
         var CellFont = {FontSize:"",FontType:"",FontItalic:"",FontBold:""};
         var cellNameValue = { FontName: "FontName", FontSize: "FontSize", FontBold: "FontBold", FontItalic: "FontItalic", FontUnderline: "FontUnderline ",
             Alignment: "Alignment ", ForeColor: "ForeColor", BackColor: "BackColor", Border: "Border", CellCode: "CellCode", CellName: "CellName",
-            CellRow: "CellRow", CellCol: "CellCol", CellLogicalType: "CellLogicalType", CellType: "CellType", CellDataType: "CellDataType", CellMacro: "CellMacro", CellHelp: "CellHelp", CellValue: "CellValue", CellLength: "CellLength",
+            CellRow: "CellRow", CellCol: "CellCol", CellLogicalType: "CellLogicalType", CellType: "CellType", CellRequired: "CellRequired", CellDataType: "CellDataType", CellMacro: "CellMacro", CellHelp: "CellHelp", CellValue: "CellValue", CellLength: "CellLength",
             CellThousand: "CellThousand", CellCurrence: "CellCurrence", CellSmbol: "CellSmbol", CellLock: "CellLock", CellZero: "CellZero", CellAggregation: "CellAggregation", CellAggregationType: "CellAggregationType",
             CellPrimary: "CellPrimary", isOrUpdate: "isOrUpdate", DigitNumber: "DigitNumber",WrapText:"False"
         };
         var cellTag = { cellData: "cellData", bdqData: "bdqData", CellFont: "cellFont" };
-        var cellControls = { FontName: {}, FontSize: {}, CellLogicalType: {}, CellType: {}, CellDataType: {}, CellMacro: {}, CellHelp: {}, CellThousand: {},
+        var cellControls = { FontName: {}, FontSize: {}, CellLogicalType: {}, CellType: {},CellRequired:{}, CellDataType: {}, CellMacro: {}, CellHelp: {}, CellThousand: {},
             CellCurrence: {}, CellSmbol: {}, CellLock: {}, CellZero: {}, DigitNumber: {}, CellAggregation: {}, CellAggregationType: {}, CellPrimary: {},
             CellCodeRefresh: {}, CellHeight: {}, CellWidth: {}
         };   //CellCodeRefresh 重设内码开关
@@ -125,7 +125,6 @@
                     { text: "帮助按钮", id: "03" },
                     { text: "超链接", id: "04" }
                    ];
-
                    function _stopIt(e) {
                        if (e.returnValue) {
                            e.returnValue = false;
@@ -253,13 +252,20 @@
                            width: 170,
                            data: cellTypeData
                        });
+                       cellControls.CellRequired = $("input[name='CellRequired']").ligerComboBox({
+                           width: 170,
+                           data: [
+                   { text: "是", id: "1" },
+                   { text: "否", id: "0" }
+                           ]
+                       });
                        cellControls.CellLock = $("input[name='CellLock']").ligerComboBox({
                            data: [
                    { text: "是", id: "1" },
                    { text: "否", id: "0" }
                    ]
                        });
-
+                  
 
 
                        cellControls.CellAggregation = $("input[name='CellAggregation']").ligerComboBox({
@@ -851,7 +857,11 @@
                     else {
                         cellControls.CellType.setValue("");
                     }
-
+                    if (toolManager.IsNullOrEmpty(cellData, cellNameValue.CellRequired))
+                        cellControls.CellRequired.setValue(cellData[cellNameValue.CellRequired]);
+                    else {
+                        cellControls.CellRequired.setValue("");
+                    }
                     if (toolManager.IsNullOrEmpty(cellData, cellNameValue.CellName)) {
                         $("input[name='CellName']").val(cellData[cellNameValue.CellName]);
                     } else {
@@ -1635,6 +1645,9 @@
                     //设置单元格类型,下拉框
                     var cellType = cellControls.CellType.getValue();
                     toolManager.TagTool.SetDataValue(cellData, cellNameValue.CellType, cellType);
+                    //设置单元格是否必填
+                    var cellReq = cellControls.CellRequired.getValue();
+                    toolManager.TagTool.SetDataValue(cellData, cellNameValue.CellRequired, cellReq);
                     if (cellDataType == "02") {
                         //设置小数位数
                         var digitNumber = cellControls.DigitNumber.getValue();
@@ -2718,6 +2731,10 @@ a.c3:hover{
                             <tr class="myTr">
 								<td><span>数据内容</span></td>
 								<td><input type="text" style="width:170px" name="vValue" class="myTxtInput" ></td>
+							</tr>
+                            <tr class="myTr">
+								<td><span>是否必填</span></td>
+								<td><input type="text" name="CellRequired" id="CellRequired" ></td>
 							</tr>
 						</table>
 

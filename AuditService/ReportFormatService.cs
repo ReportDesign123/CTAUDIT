@@ -472,6 +472,7 @@ namespace AuditService
                 die.Help = cell.CellHelp;
                 die.CellDataType = cell.CellDataType;
                 die.CellType = cell.CellType;
+                die.ReqValue = cell.CellRequired;
                 die.Code = cell.CellCode;
                 die.Col = cell.CellCol;
                 die.Currency = cell.CellCurrence;

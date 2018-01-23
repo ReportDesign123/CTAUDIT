@@ -172,8 +172,13 @@ namespace AuditEntity
              get;
              set;
          }
-         
-         public string UpdateState = "";//1为新添加；2为编辑状态
+        [Column(Name = "DATAITEM_ReqValue")]
+        public string ReqValue
+        {
+            get;
+            set;
+        }
+        public string UpdateState = "";//1为新添加；2为编辑状态
 
 
     }

@@ -447,14 +447,14 @@
                     var gridIframe = toolsManager.GetGridIframe();
                     var vsFuals = "";
                     //将现有的数据进行拷贝
-                   gridFrame.Grid1.endEdit();
-                    gridFrame.Grid1.suspendPaint();
+                    gridFrame.Grid1.endEdit();
+                  //  gridFrame.Grid1.suspendPaint();
                     gridFrame.Grid1.setActiveCell(-1, -1);
                     $.extend(true, para.BdqData, BBDataItems.BdqData);
                     for (var i = 0; i < gridFrame.Grid1.getRowCount() ; i++) {
 
                         for (var j = 0; j < gridFrame.Grid1.getColumnCount() ; j++) {
-
+                            
                             var Cell = gridFrame.Grid1.getCell(i, j);
                             var vFormula = gridFrame.Grid1.getFormula(i, j);
                             if (vFormula) {
@@ -462,6 +462,19 @@
                             }
                             var tagStr = gridFrame.Grid1.getTag(i, j); // Cell.Tag;
                             if (tagStr && tagStr != "") {
+                                var vsCellReq;
+                                vsCellReq = mediatorManager.CheckReqValue(tagStr);
+                                if (vsCellReq == true)
+                                {
+                                    
+                                    if (Cell.value() == null||Cell.value() == "")
+                                    {
+                                        alert("行" + (i + 1).toString() + "列" + (j + 1).toString() + "单元格为必填！");
+                                       // gridFrame.Grid1.resumePaint();
+                                        return false;
+                                    }
+                                    
+                                }
                                 var cellConArr = tagStr.split("|");
                                 var gdBdArr = cellConArr[0].split(";");
                                 if (gdBdArr[0] == "1") {
@@ -518,7 +531,7 @@
                     if (vsFuals.length > 0) {
                         vsFuals = vsFuals.substring(0, vsFuals.length - 1);
                     }
-                    gridFrame.Grid1.resumePaint();
+                    //gridFrame.Grid1.resumePaint();
                     var obj = { dataStr: "", BBID: "", formulaStr: "" };
 
                     obj.dataStr = JSON.stringify(para);
@@ -1093,6 +1106,21 @@
                 }
 
                 toolsManager.GetInfoframe().RefreshAttatch();
+            },
+            CheckReqValue:function(tag)
+            {
+                if (tag != null && tag != "" && tag.length > 0)
+                {
+                    var cellFormat;
+                    var cellArr = tag.split("|");
+                    if (!cellArr[2]) return false;
+                    cellFormat = JSON2.parse(cellArr[2]);
+                    if (cellFormat.CellRequired == "1") return true;
+                    return false;
+
+                }
+                else
+                    return false;
             },
             TextChange: function (row, col, tag) {
                 //根据单元格信息设置单元格数据状态

@@ -23,10 +23,13 @@
     <script src="../../Scripts/FunctionMethodManager.js" type="text/javascript"></script>
 
 </head>
-<body  style=" height:100%; width:100%; margin:0; padding:0; overflow:hidden;">
+<body  style=" height:100%; width:100%; margin:0; padding:0; overflow:hidden;" onresize="showmsg()">
 			<div id="ss"  style="height:600px; width:100%">
 		</div>
         <script type="text/javascript">
+            function showmsg() {
+                alert("长度发生变化")
+            }
             top.loader && top.loader.close();
             var urls = {
                 HelpUrl: "../../handler/BasicHandler.ashx",
@@ -453,7 +456,8 @@
                }
            };
            window.onresize = function () {
-               Grid1.width=window.document.body.offsetWidth;
+              // Grid1.width = window.document.body.offsetWidth;
+               $("#ss").width(window.document.body.offsetWidth);
            }
            function ChangeHeight(height) {
                Grid1.height = height - 60;
