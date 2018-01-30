@@ -30,6 +30,7 @@
            spread.addSheet(spread.getSheetCount(), sheet);
            
 
+
            sheet.isPaintSuspended(true);
            sheet.setColumnCount(10);
            sheet.setRowCount(10);
