@@ -4,6 +4,7 @@ using System.Linq;
 using System.Text;
 using AuditEntity;
 
+using AuditSPI.ReportData;
 namespace AuditSPI
 {
     public  interface IDictionaryService
@@ -11,6 +12,7 @@ namespace AuditSPI
 
         DataGrid<DictionaryClassificationEntity>  GetDicClassifyList(DataGrid<DictionaryClassificationEntity> dataGrid);
         DataGrid<DictionaryClassificationEntity> GetDicClasifyList(DataGrid<DictionaryClassificationEntity> dataGrid, DictionaryClassificationEntity dce);
+        DataGrid<LSHELPDIC> GetDicLshelpList(DataGrid<LSHELPDIC> dataGrid, LSHELPDIC dce);
         DataGrid<DictionaryEntity> GetDictionaryList(DataGrid<DictionaryEntity> dataGrid,DictionaryEntity de);
         DataGrid<DictionaryEntity> GetParasList(DataGrid<DictionaryEntity> dataGrid, DictionaryEntity de);
         List<DictionaryEntity> GetList();
@@ -27,5 +29,6 @@ namespace AuditSPI
         List<DictionaryClassificationEntity> GetDicClassifyCombo();
         List<DictionaryEntity> GetDictionaryListByClassType(string classType);
         DataGrid<DictionaryEntity> GetDictionaryDataGridByClassType(string classType, DataGrid<DictionaryEntity> dataGrid,DictionaryEntity de);
+        DataGrid<DictionaryEntity> GetDictionaryDataGridByLsHelp(string classType, DataGrid<DictionaryEntity> dataGrid, DictionaryEntity de, ReportDataParameterStruct rdps);
     }
 }
