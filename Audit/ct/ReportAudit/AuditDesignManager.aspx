@@ -23,7 +23,8 @@
     <script src="../../Scripts/AjaxTrigger.js" type="text/javascript"></script>
     <script src="../../Scripts/ct/pub/PubHelp.js" type="text/javascript"></script>
 
-
+    
+       <script src="../../Scripts/ct_dialog.js" type="text/javascript"></script>
     <script type="text/javascript">
         var urls = {
             FormatUrl: "../../handler/FormatHandler.ashx",
@@ -86,15 +87,18 @@
         var EventManager = {
             setComboxData: function () {
                 var data = $("#moduleCombox").combobox("getData");
-                var result = window.showModalDialog("ChooseModules.aspx", data, "DialogWidth:350px;DialogHeight:300px");
-                if (result) {
-                    $("#moduleCombox").combobox("loadData", result);
-                    DesignData.ExistsModules = result;
-                    cellManager.GeneralLoadCellDataValue();
-                    $.each(cellData.settingCells, function (code, node) {
-                        cellData.cells[node] = { Data: JSON.stringify(DesignData), ReportId: cellData.report.Id, IndexCode: node };
-                    });
-                }
+                dialog.Open("ct/ReportAudit/ChooseModules.aspx", "帮助", data, function (result) {
+                    if (result) {
+                        $("#moduleCombox").combobox("loadData", result);
+                        DesignData.ExistsModules = result;
+                        cellManager.GeneralLoadCellDataValue();
+                        $.each(cellData.settingCells, function (code, node) {
+                            cellData.cells[node] = { Data: JSON.stringify(DesignData), ReportId: cellData.report.Id, IndexCode: node };
+                        });
+                    }
+                }, { width: 350, height: 350 });
+
+                
             },
             addBtn_Click: function () {
                 switch (control.InEdit) {
@@ -131,52 +135,61 @@
                 var content = $("#reportFormular").text();
                 var result;
                 if (type == "formular") {
-                    result = window.showModalDialog(urls.FormularUrlGS, { content: content, DataSource: control.DbType }, "DialogHeight:600px;DialogWidth:800px;scroll:no");
-                    if (result) {
-                        control.LinkType = $("#LinkType").combobox("getValue");
-                        $("#reportFormular").text(result.content);
-                        control.LinkContent = result.content;
-                        control.DbType = result.DataSource;
-                        saveChange("LinkType");
-                        saveChange("DbType");
-                        saveChange("Content");
-                    }
+                    dialog.Open(urls.FormularUrlGS, "帮助", { content: content, DataSource: control.DbType }, function (result) {
+                        if (result) {
+                            control.LinkType = $("#LinkType").combobox("getValue");
+                            $("#reportFormular").text(result.content);
+                            control.LinkContent = result.content;
+                            control.DbType = result.DataSource;
+                            saveChange("LinkType");
+                            saveChange("DbType");
+                            saveChange("Content");
+                        }
+                    }, { width: 800, height: 600 });
+
+                    
                 } else if (type == "url") {
-                    result = window.showModalDialog(urls.FormularUrlDZ, content, "DialogHeight:300px;DialogWidth:400px;scroll:no");
-                    if (result) {
-                        control.LinkType = $("#LinkType").combobox("getValue");
-                        $("#reportFormular").text(result);
-                        control.LinkContent = result;
-                        saveChange("LinkType");
-                        saveChange("Content");
-                    }
+                    dialog.Open(urls.FormularUrlDZ, "帮助", content, function (result) {
+                        if (result) {
+                            control.LinkType = $("#LinkType").combobox("getValue");
+                            $("#reportFormular").text(result);
+                            control.LinkContent = result;
+                            saveChange("LinkType");
+                            saveChange("Content");
+                        }
+                    }, { width: 400, height: 300 });
+
+                   
                 }
             },
             //相关报表、相关指标参数选择界面
             OpenDialog: function (url, title, type) {
-                var result = window.showModalDialog(url, type, "DialogHeight:550px;DialogWidth:950px;scroll:no;status:no;resizable:no");
-                if (result) {
-                    var find = false;
-                    if (type == "indexGrid") {
-                        for (var i = 0; i < result.length; ++i) {
-                            if (!find) {
-                                control.IndexList.push(result[i]);
-                                find = false;
+                dialog.Open(url, "帮助", type, function (result) {
+                    if (result) {
+                        var find = false;
+                        if (type == "indexGrid") {
+                            for (var i = 0; i < result.length; ++i) {
+                                if (!find) {
+                                    control.IndexList.push(result[i]);
+                                    find = false;
+                                }
                             }
-                        }
-                        control[type].datagrid("loadData", control.IndexList);
-                        saveChange("Indexs");
-                    } else {
-                        for (var j = 0; j < result.length; ++j) {
-                            if (!find) {
-                                control.ReportList.push(result[j]);
-                                find = false;
+                            control[type].datagrid("loadData", control.IndexList);
+                            saveChange("Indexs");
+                        } else {
+                            for (var j = 0; j < result.length; ++j) {
+                                if (!find) {
+                                    control.ReportList.push(result[j]);
+                                    find = false;
+                                }
                             }
+                            control[type].datagrid("loadData", control.ReportList);
+                            saveChange("Reports");
                         }
-                        control[type].datagrid("loadData", control.ReportList);
-                        saveChange("Reports");
                     }
-                }
+                }, { width: 950, height: 550 });
+
+                 
             },
             //导入相关指标
             LoadIndexList: function (data) {

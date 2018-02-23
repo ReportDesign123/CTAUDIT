@@ -15,6 +15,7 @@
     <link href="../../Styles/Ct_Controls.css" rel="stylesheet" type="text/css" />
     <script src="../../Scripts/Ct_Controls.js" type="text/javascript"></script>
     
+       <script src="../../Scripts/ct_dialog.js" type="text/javascript"></script>
 
 </head>
 <body  runat="server">
@@ -44,10 +45,12 @@
       function aboutReportBt_click() {
           var para = { CycleType: "" };
           para.CycleType = $("#Cycle").combobox("getValue");
-          var result = window.showModalDialog(aboutReportUrl, para, "dialogHeight:600px;dialogWidth:900px");
-          if (result && result.length > 0) {
+          dialog.Open(aboutReportUrl, "帮助", paras, function (result) {
+              if (result && result.length > 0) {
 
-          }
+              }
+          });
+          
   }
   //获取参数
   function getParameters(actionType, methodName) {

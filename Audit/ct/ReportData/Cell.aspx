@@ -21,7 +21,8 @@
     <script src="../../lib/json2.js" type="text/javascript"></script>
     <script src="../../Scripts/AjaxTrigger.js" type="text/javascript"></script>
     <script src="../../Scripts/FunctionMethodManager.js" type="text/javascript"></script>
-
+    
+       <script src="../../Scripts/ct_dialog.js" type="text/javascript"></script>
 </head>
 <body  style=" height:100%; width:100%; margin:0; padding:0; overflow:hidden;">
 			<div id="ss"  style="height:600px; width:100%">
@@ -433,18 +434,19 @@
                                        ]];
                                        paras.sortName = "Code";
                                        paras.sortOrder = "ASC";
-                                       var result = window.showModalDialog("../pub/HelpDialog.aspx", paras, "dialogHeight:350px;dialogWidth:300px");
-                                       if (result && result.Code) {
-                                           sheet.suspendPaint();
-                                          
-                                          
-                                           cellType.text(result.Name);
-                                           //sheet.setCellType(parseInt(row), parseInt(col), cellType);
-                                          // sheet.setValue(row, col-1, result.Name);
-                                           sheet.getCell(row, col).text(result.Name);
+                                       dialog.Open("ct/pub/HelpDialog.aspx", "帮助", paras, function (result) {
+                                           if (result && result.Code) {
+                                               sheet.suspendPaint(); 
+                                               cellType.text(result.Name);
+                                               //sheet.setCellType(parseInt(row), parseInt(col), cellType);
+                                               // sheet.setValue(row, col-1, result.Name);
+                                               sheet.getCell(row, col).text(result.Name);
 
-                                           sheet.resumePaint();
-                                       }
+                                               sheet.resumePaint();
+                                           }
+                                       }, { width: 300, height: 350 });
+
+                                       
                                    }
                                }
                            }

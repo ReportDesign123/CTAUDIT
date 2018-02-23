@@ -15,6 +15,7 @@
     <script src="../../../Scripts/Ct_WorkFlow.js" type="text/javascript"></script>
     <link href="../../../Styles/Common.css" rel="stylesheet" type="text/css" />
     <script src="../../../lib/json2.js" type="text/javascript"></script>
+       <script src="../../Scripts/ct_dialog.js" type="text/javascript"></script>
     <script type="text/javascript">
         var urls = {
             ReportDataUrl: "ct/ReportData/ReportAggregation/ReportDataCell.aspx",
@@ -64,14 +65,21 @@
         $(function () {
             currentState.ReportState["auditPaperVisible"] = "1";
             currentState.ReportState["auditZqVisible"] = "1";
+            dialog.Open("ct/ReportData/ChooseAuditTask.aspx", "切换任务", currentState.ReportState, function (result) {
+                if (result && result != undefined) {
+                    if (result.auditZqType == "05") {
+                        if (result.WeekReport.ID == "") {
+                            alert("请定义周报周期");
+                            var curTabTitle = "资料状态查看";
 
-            var result = window.showModalDialog("../ChooseAuditTask.aspx", currentState.ReportState, "dialogHeight:500px;dialogWidth:440px;scroll:no");
-            if (result && result != undefined) {
-                if (result.auditZqType == "05") {
-                    if (result.WeekReport.ID == "") {
-                        alert("请定义周报周期");
-                        var curTabTitle = "资料状态查看";
-
+                        }
+                        else {
+                            currentState.ReportState = result;
+                            var para = loadManager.GetLoadParam();
+                            var url = CreateUrl(urls.ReportUrls, ReportDataAction.ActionType.Grid, ReportDataAction.Functions.FillReport, ReportDataAction.Methods.FillReportMethods.GetAllReportsStateDataGrid, para);
+                            loadManager.LoadExamGrid(url, "allReports");
+                            PaperState = true;
+                        }
                     }
                     else {
                         currentState.ReportState = result;
@@ -80,16 +88,11 @@
                         loadManager.LoadExamGrid(url, "allReports");
                         PaperState = true;
                     }
-                }
-                else {
-                    currentState.ReportState = result;
-                    var para = loadManager.GetLoadParam();
-                    var url = CreateUrl(urls.ReportUrls, ReportDataAction.ActionType.Grid, ReportDataAction.Functions.FillReport, ReportDataAction.Methods.FillReportMethods.GetAllReportsStateDataGrid, para);
-                    loadManager.LoadExamGrid(url, "allReports");
-                    PaperState = true;
-                }
 
-            }
+                }
+            }, { width: 440, height: 500 });
+             
+         
             $("#ReportCode").keypress(function (e) {
                 var curKey = e.which;
                 if (curKey == 13) {
@@ -146,14 +149,22 @@
         function ChangeTask() {
             currentState.ReportState["auditPaperVisible"] = "1";
             currentState.ReportState["auditZqVisible"] = "1";
-            var result = window.showModalDialog("../ChooseAuditTask.aspx", currentState.ReportState, "dialogHeight:500px;dialogWidth:440px;scroll:no");
-            if (result && result != undefined) {
+            dialog.Open("ct/ReportData/ChooseAuditTask.aspx", "切换任务", currentState.ReportState, function (result) {
+                if (result && result != undefined) {
 
-                if (result.auditZqType == "05") {
-                    if (result.WeekReport.ID == "") {
-                        alert("请定义周报周期");
-                        var curTabTitle = "资料状态查看";
+                    if (result.auditZqType == "05") {
+                        if (result.WeekReport.ID == "") {
+                            alert("请定义周报周期");
+                            var curTabTitle = "资料状态查看";
 
+                        }
+                        else {
+                            currentState.ReportState = result;
+                            var para = loadManager.GetLoadParam();
+                            var url = CreateUrl(urls.ReportUrls, ReportDataAction.ActionType.Grid, ReportDataAction.Functions.FillReport, ReportDataAction.Methods.FillReportMethods.GetAllReportsStateDataGrid, para);
+                            loadManager.LoadExamGrid(url, "allReports");
+                            PaperState = true;
+                        }
                     }
                     else {
                         currentState.ReportState = result;
@@ -163,14 +174,8 @@
                         PaperState = true;
                     }
                 }
-                else {
-                    currentState.ReportState = result;
-                    var para = loadManager.GetLoadParam();
-                    var url = CreateUrl(urls.ReportUrls, ReportDataAction.ActionType.Grid, ReportDataAction.Functions.FillReport, ReportDataAction.Methods.FillReportMethods.GetAllReportsStateDataGrid, para);
-                    loadManager.LoadExamGrid(url, "allReports");
-                    PaperState = true;
-                }
-            }
+            }, { width: 440, height: 500 });
+          
         }
 
     </script>

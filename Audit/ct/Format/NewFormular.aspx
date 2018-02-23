@@ -23,6 +23,7 @@
 <link href="../../lib/ligerUI/skins/ligerui-icons.css" rel="stylesheet" type="text/css" /> 
 <link href="../../Styles/Ct_Controls.css" rel="stylesheet" type="text/css" /> 
 <script src="../../Scripts/Ct_Controls.js" type="text/javascript"></script> 
+         <script src="../../Scripts/ct_dialog.js"></script>
 <style type="text/css"> 
 .fontSize 
 { 
@@ -689,7 +690,7 @@ function () {
 
         window.close();
     });
-    var paras = window.dialogArguments;
+    var paras = dialog.para();// window.dialogArguments;
     if (paras && paras.content) {
         $("#fContent").val(paras.content);
 

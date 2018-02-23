@@ -13,7 +13,7 @@
     <script src="../../lib/easyUI/locale/easyui-lang-zh_CN.js" type="text/javascript"></script>
     <script src="../../Scripts/FunctionMethodManager.js" type="text/javascript"></script>
     <script src="../../Scripts/AjaxTrigger.js" type="text/javascript"></script>
-   
+       <script src="../../Scripts/ct_dialog.js" type="text/javascript"></script>
 </head>
 <body style=" overflow:hidden">
  <script type="text/javascript">
@@ -27,7 +27,7 @@
          }
      });
      function checkSaved() {
-         var para = dialogArguments;
+         var para = dialog.para();//dialogArguments;
          var allRow = $("#ListGrid").datagrid("getRows");
          $.each(para, function (code, node) {
              $.each(allRow, function (index, row) {

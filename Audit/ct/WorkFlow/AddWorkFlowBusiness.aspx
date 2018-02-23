@@ -15,7 +15,8 @@
 
     <script src="../../Scripts/Ct_Controls.js" type="text/javascript"></script>
     <link href="../../Styles/Ct_Controls.css" rel="stylesheet" type="text/css" />
-
+    
+       <script src="../../Scripts/ct_dialog.js" type="text/javascript"></script>
 </head>
 <body id="Body1" runat="server">
     <input id="Id" value="<%=wfbe.Id %>" type="hidden" />
@@ -72,11 +73,14 @@
                 ]];
             paras.sortName = "Code";
             paras.sortOrder = "DESC";
-            var result = window.showModalDialog("../pub/HelpDialog.aspx", paras, "dialogHeight:350px;dialogWidth:300px");
-            if (result && result.Code) {
-                workFlowOrder.name.val(result.Name);
-                workFlowOrder.value.val(result.Id);
-            }
+            dialog.Open("ct/pub/HelpDialog.aspx", "帮助窗口", paras, function (result) {
+                if (result && result.Code) {
+                    workFlowOrder.name.val(result.Name);
+                    workFlowOrder.value.val(result.Id);
+                }
+            }, { width: 300, height: 350 });
+
+           
         }
         ///帮助窗口加载
         $(

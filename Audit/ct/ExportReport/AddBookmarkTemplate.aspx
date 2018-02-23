@@ -13,6 +13,7 @@
     <script src="../../Scripts/FunctionMethodManager.js" type="text/javascript"></script> 
     <script src="../../Scripts/AjaxTrigger.js" type="text/javascript"></script> 
     <script src="../../lib/json2.js" type="text/javascript"></script>
+       <script src="../../Scripts/ct_dialog.js" type="text/javascript"></script>
 </head>
 
 <body style=" overflow:hidden">
@@ -38,27 +39,31 @@
         AddFormula: function () {
             var content = $("#Content").text();
             var DataSource = $("#DataSource").combobox("getValue");
-            var result = window.showModalDialog(urls.FormularUrl, { content: content, DataSource: DataSource }, "DialogHeight:600px;DialogWidth:800px;scroll:no");
-            if (result) {
-                $("#MacroOrFormular").val("F");
-                $("#Content").text(result.content);
-                $("#DataSource").combobox("setValue", result.DataSource);
-            }
+            dialog.Open(urls.FormularUrl, "添加公式", { content: content, DataSource: DataSource }, function (result) {
+                if (result) {
+                    $("#MacroOrFormular").val("F");
+                    $("#Content").text(result.content);
+                    $("#DataSource").combobox("setValue", result.DataSource);
+                }
+            });
+            
         },
         //新建 宏函数
         AddMacroFunction: function () {
             var paras = { url: "", columns: [], sortName: "", sortOrder: "", NameField: "Name", CodeField: "Code" };
+
             paras.url = "../../handler/BasicHandler.ashx?ActionType=" + BasicAction.ActionType.Grid + "&MethodName=" + BasicAction.Methods.DicManagerMethods.GetDictionaryListByClass + "&FunctionName=" + BasicAction.Functions.DictionaryManager + "&classId=HHS";
             paras.columns = [[{ field: "Code", title: "编号", width: 110 },
 { field: "Name", title: "名称", width: 120 }
             ]];
             paras.sortName = "Code";
             paras.sortOrder = "ASC";
-            var result = window.showModalDialog("../pub/HelpDialog.aspx", paras, "dialogHeight:400px;dialogWidth:325px");
-            if (result && result.Code) {
-                $("#MacroOrFormular").val("M");
-                $("#Content").text("<!" + result.Code + "!>");
-            }
+            dialog.Open("ct/pub/HelpDialog.aspx", "新建宏函数", paras, function (result) {
+                if (result && result.Code) {
+                    $("#MacroOrFormular").val("M");
+                    $("#Content").text("<!" + result.Code + "!>");
+                }
+            }); 
         },
         getPatameter: function () {
             var param = {};

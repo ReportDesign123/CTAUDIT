@@ -2732,6 +2732,7 @@
     <Content Include="Scripts\ct\ReportData\ReportAggregation\ReportSumDataCell.js" />
     <Content Include="Scripts\ct\ReportData\ReportAggregation\ReportDataCell.js" />
     <Content Include="Scripts\Ct_Controls.js" />
+    <Content Include="Scripts\ct_dialog.js" />
     <Content Include="Scripts\Ct_TextInput.js" />
     <Content Include="Scripts\Ct_Tool.js" />
     <Content Include="Scripts\Ct_Upload.js" />

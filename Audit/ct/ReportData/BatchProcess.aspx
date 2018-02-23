@@ -19,6 +19,7 @@
     <link href="../../Styles/Ct_Controls.css" rel="stylesheet" type="text/css" />
     <link href="../../Styles/Common.css" rel="stylesheet" type="text/css" />
     <script src="../../Scripts/ct/pub/PubHelp.js" type="text/javascript"></script>
+       <script src="../../Scripts/ct_dialog.js" type="text/javascript"></script>
     <script type="text/javascript">
         var urls = {
             functionsUrl: "../../handler/FormatHandler.ashx",
@@ -95,20 +96,23 @@
         taskBtn_ClickEvent: function () {
             currentState.ReportState["auditPaperVisible"] = "1";
             currentState.ReportState["auditZqVisible"] = "1";
-            var result = window.showModalDialog("ChooseAuditTask.aspx", currentState.ReportState, "dialogHeight:500px;dialogWidth:450px;scroll:no");
-            if (result && result != undefined) {
-                if (result.auditZqType == "05") {
-                    if (result.WeekReport.ID == "") {
-                        alert("请定义周报周期");
+            dialog.Open("ct/ReportData/ChooseAuditTask.aspx", "切换任务", currentState.ReportState, function (result) {
+                if (result && result != undefined) {
+                    if (result.auditZqType == "05") {
+                        if (result.WeekReport.ID == "") {
+                            alert("请定义周报周期");
+                        }
+                        else {
+                            ControlManager.SetAuditTask(result);
+                        }
                     }
                     else {
                         ControlManager.SetAuditTask(result);
                     }
                 }
-                else {
-                    ControlManager.SetAuditTask(result);
-                }
-            }
+            }, { width: 440, height: 500 });
+
+           
         },
         ChooseClassify: function () {
             var paras = { sortOrder: "ASC", sortName: "Code" }

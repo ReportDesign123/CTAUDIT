@@ -16,6 +16,8 @@
     <link href="../../Styles/Common.css" rel="stylesheet" type="text/css" /> 
      <script src="../../lib/Cookie/jquery.cookie.js" type="text/javascript"></script>
     <script src="../../Scripts/Cookie/Cookie.js" type="text/javascript"></script>
+    
+       <script src="../../Scripts/ct_dialog.js" type="text/javascript"></script>
     <script type="text/javascript">
         var urls = {
             getReportsUrl: "../../handler/FormatHandler.ashx",
@@ -141,24 +143,42 @@
             currentState.ReportState["auditZqVisible"] = "1";
             if (cookie&&cookie!="") {
                 result = cookie;
+                if (result && result != undefined) {
+                    currentState.ReportState = result;
+                    currentState.readyTask = true;
+                    var para = { TaskId: "", PaperId: "", Year: "", Zq: "", ReportType: "" };
+                    para.TaskId = result.AuditTask.value;
+                    para.PaperId = result.AuditPaper.value;
+                    para.Year = result.Nd;
+                    para.Zq = result.Zq;
+                    para.ReportType = result.auditZqType;
+
+                    var url = CreateUrl(urls.ReportAduitUrl, ReportAuditAction.ActionType.Grid, ReportAuditAction.Functions.ReportAudit, ReportAuditAction.Methods.ReportAuditMethods.DataGridReportAuditEntity, para);
+                    LoadDataGrid(url, "roleGrid");
+                    ///保存cookie
+                    CookieDataManager.SetCookieData(ReportAuditAction.Functions.ReportAuditSequestration, result);
+                }
             } else {
-                result = window.showModalDialog("../ReportData/ChooseAuditTask.aspx", currentState.ReportState, "dialogHeight:500px;dialogWidth:440px;scroll:no");
-            }
-            if (result && result != undefined) {
-                currentState.ReportState = result;
-                currentState.readyTask = true;
-                var para = { TaskId: "", PaperId: "", Year: "", Zq: "", ReportType: "" };
-                para.TaskId = result.AuditTask.value;
-                para.PaperId = result.AuditPaper.value;
-                para.Year = result.Nd;
-                para.Zq = result.Zq;
-                para.ReportType = result.auditZqType;
-                
-                var url = CreateUrl(urls.ReportAduitUrl, ReportAuditAction.ActionType.Grid, ReportAuditAction.Functions.ReportAudit, ReportAuditAction.Methods.ReportAuditMethods.DataGridReportAuditEntity, para);
-                LoadDataGrid(url, "roleGrid");
-                ///保存cookie
-                CookieDataManager.SetCookieData(ReportAuditAction.Functions.ReportAuditSequestration, result);
-            }
+                dialog.Open("ct/ReportData/ChooseAuditTask.aspx", "切换任务", currentState.ReportState, function (result) {
+                    if (result && result != undefined) {
+                        currentState.ReportState = result;
+                        currentState.readyTask = true;
+                        var para = { TaskId: "", PaperId: "", Year: "", Zq: "", ReportType: "" };
+                        para.TaskId = result.AuditTask.value;
+                        para.PaperId = result.AuditPaper.value;
+                        para.Year = result.Nd;
+                        para.Zq = result.Zq;
+                        para.ReportType = result.auditZqType;
+
+                        var url = CreateUrl(urls.ReportAduitUrl, ReportAuditAction.ActionType.Grid, ReportAuditAction.Functions.ReportAudit, ReportAuditAction.Methods.ReportAuditMethods.DataGridReportAuditEntity, para);
+                        LoadDataGrid(url, "roleGrid");
+                        ///保存cookie
+                        CookieDataManager.SetCookieData(ReportAuditAction.Functions.ReportAuditSequestration, result);
+                    }
+                }, { width: 440, height: 500 });
+
+                 }
+          
         }
         ///查询方法
         ///参数：查询条件 { companyCode: "", reportCode: "", State: "", IsOrNotRead: "" }

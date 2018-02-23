@@ -13,6 +13,7 @@
     <script src="../../lib/easyUI/locale/easyui-lang-zh_CN.js" type="text/javascript"></script>
     <script src="../../Scripts/AjaxTrigger.js" type="text/javascript"></script>
     <script src="../../Scripts/FunctionMethodManager.js" type="text/javascript"></script>
+        <script src="../../Scripts/ct_dialog.js" type="text/javascript"></script>
     <script type="text/javascript">
         var helpGrid;
         var para;
@@ -21,7 +22,7 @@
         };
         $(
         function () {
-            para = window.dialogArguments;
+            para = dialog.para();//window.dialogArguments;
             var url = para.url;
             helpManager.InitializeHelp(url, para.sortName, para.sortOrder, para.columns,para.height);
         }

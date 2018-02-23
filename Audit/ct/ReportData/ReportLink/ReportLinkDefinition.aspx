@@ -21,6 +21,7 @@
     <script src="../../../Scripts/FunctionMethodManager.js" type="text/javascript"></script>
     <script src="../../../Scripts/AjaxTrigger.js" type="text/javascript"></script>
     <script src="../../../Scripts/ct/pub/PubHelp.js" type="text/javascript"></script>
+       <script src="../../Scripts/ct_dialog.js" type="text/javascript"></script>
     <script type="text/javascript">
         var urls = {
             FormatUrl: "../../../handler/FormatHandler.ashx",
@@ -167,24 +168,33 @@
                 if (type == "ReportJoin") {
                     var parameter = { type: "report", Parent: "ReportLink", Data: {} };
                     parameter.Data = JSON2.parse(content);
-                    result = window.showModalDialog(urls.ParamUrl, parameter, "DialogHeight:550px;DialogWidth:950px;scroll:no;status:no;resizable:no");
-                    if (result) {
-                        content = JSON2.stringify(result);
-                    }
+                    dialog.Open(urls.ParamUrl, "创建公式", parameter, function (result) {
+                        if (result) {
+                            content = JSON2.stringify(result);
+                            $("#reportFormular").text(content);
+                        }
+                    }, { width: 950, height: 550 });
+
+                   
                 } else if (type == "CustomFormular") {
                     var CustomLinkStruct = { Content: "", DbType: "" };
                     if (content) {
                         CustomLinkStruct = JSON2.parse(content);
                     }
-                    result = window.showModalDialog(urls.FormularUrlGS, { content: CustomLinkStruct.Content, DataSource: CustomLinkStruct.DbType }, "DialogHeight:600px;DialogWidth:800px;scroll:no");
-                    if (result) {
-                        CustomLinkStruct.LinkType = $("#LinkType").combobox("getValue");
-                        CustomLinkStruct.Content = result.content;
-                        CustomLinkStruct.DbType = result.DataSource;
-                        content = JSON2.stringify(CustomLinkStruct);
-                    }
+                    dialog.Open(urls.FormularUrlGS, "创建公式", { content: CustomLinkStruct.Content, DataSource: CustomLinkStruct.DbType }, function (result) {
+                        if (result) {
+                            CustomLinkStruct.LinkType = $("#LinkType").combobox("getValue");
+                            CustomLinkStruct.Content = result.content;
+                            CustomLinkStruct.DbType = result.DataSource;
+                            content = JSON2.stringify(CustomLinkStruct);
+                            $("#reportFormular").text(content);
+                        }
+                    }, { width: 950, height: 550 });
+
+
+                   
                 }
-                $("#reportFormular").text(content);
+              
             },
             getUrlContent: function (url) {
                 var CustomLinkStruct = {};

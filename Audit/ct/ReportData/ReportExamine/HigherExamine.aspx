@@ -16,6 +16,7 @@
     <script src="../../../Scripts/Ct_Tool.js" type="text/javascript"></script>
     <link href="../../../Styles/Common.css" rel="stylesheet" type="text/css" />
     <script src="../../../lib/json2.js" type="text/javascript"></script>
+       <script src="../../Scripts/ct_dialog.js" type="text/javascript"></script>
     <script type="text/javascript">
         var controls = { selectedRow: { ReportId: "", CompanyId: "" }, ReportBox: {} };
         var currentState = { ReportState: { auditPaperVisible: "1", auditZqVisible: "1", WeekReport: { ID: "", Name: "", Ksrq: "", Jsrq: ""} }, AuditData: {} };
@@ -254,25 +255,27 @@
         function ChangeTask() {
             currentState.ReportState["auditPaperVisible"] = "1";
             currentState.ReportState["auditZqVisible"] = "1";
-            var result = window.showModalDialog("../ChooseAuditTask.aspx", currentState.ReportState, "dialogHeight:500px;dialogWidth:440px;scroll:no");
-            if (result && result != undefined) {
-                if (result.auditZqType == "05") {
-                    if (result.WeekReport.ID == "") {
-                        alert("请定义周报周期");
+            dialog.Open("ct/ReportData/ChooseAuditTask.aspx", "切换任务", currentState.ReportState, function (result) {
+                if (result && result != undefined) {
+                    if (result.auditZqType == "05") {
+                        if (result.WeekReport.ID == "") {
+                            alert("请定义周报周期");
+                        }
+                    }
+                    currentState.ReportState = result;
+                    var para = menuManager.GetLoadParam();
+                    var url = CreateUrl(urls.ReportUrls, ReportDataAction.ActionType.Grid, ReportDataAction.Functions.FillReport, ReportDataAction.Methods.FillReportMethods.GetHigherExamReportStateDataGrid, para);
+                    loadManager.LoadExamGrid(url, "ExamingTable");
+                    var tab = $("#center").tabs("getSelected");
+                    var index = $('#center').tabs('getTabIndex', tab);
+                    if (controls["ExamedTable"] || index == 1) {
+                        url = CreateUrl(urls.ReportUrls, ReportDataAction.ActionType.Grid, ReportDataAction.Functions.FillReport, ReportDataAction.Methods.FillReportMethods.GetHigherCancelReportStateDataGrid, para);
+                        loadManager.LoadCancelExamGrid(url, "ExamedTable", ExamedBar);
                     }
                 }
-                currentState.ReportState = result;
-                var para = menuManager.GetLoadParam();
-                var url = CreateUrl(urls.ReportUrls, ReportDataAction.ActionType.Grid, ReportDataAction.Functions.FillReport, ReportDataAction.Methods.FillReportMethods.GetHigherExamReportStateDataGrid, para);
-                loadManager.LoadExamGrid(url, "ExamingTable");
-                var tab = $("#center").tabs("getSelected");
-                var index = $('#center').tabs('getTabIndex', tab);
-                if (controls["ExamedTable"] || index == 1)
-                {
-                    url = CreateUrl(urls.ReportUrls, ReportDataAction.ActionType.Grid, ReportDataAction.Functions.FillReport, ReportDataAction.Methods.FillReportMethods.GetHigherCancelReportStateDataGrid, para);
-                    loadManager.LoadCancelExamGrid(url, "ExamedTable", ExamedBar);
-                }
-            }
+            }, { width: 440, height: 500 });
+
+         
         }
         var menuManager = {
             ExamReportState: function (discription, stageResult, id) {
