@@ -5,9 +5,11 @@
 <html xmlns="http://www.w3.org/1999/xhtml">
 <head runat="server">
     <title>报表下载管理</title>
+      <script src="../../lib/jquery/jquery-1.11.1.min.js" type="text/javascript"></script>
+        <script src="../../Scripts/ct_dialog.js" type="text/javascript"></script>
     <script type="text/javascript">
         window.onload = function () {
-            var bbPara = window.dialogArguments;
+            var bbPara = dialog.para();// window.dialogArguments;
             var iframe = window.frames["upFrame"];           
             iframe.SetPara(bbPara);
         }

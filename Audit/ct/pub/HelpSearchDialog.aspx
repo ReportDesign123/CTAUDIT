@@ -13,6 +13,7 @@
     <script src="../../lib/easyUI/locale/easyui-lang-zh_CN.js" type="text/javascript"></script>
     <script src="../../Scripts/AjaxTrigger.js" type="text/javascript"></script>
     <script src="../../Scripts/FunctionMethodManager.js" type="text/javascript"></script>
+         <script src="../../Scripts/ct_dialog.js" type="text/javascript"></script>
     <script type="text/javascript">
     //功能：用于报表分类、报表查询
         var para;
@@ -25,7 +26,7 @@
         //开始加载数据
         $(function () {
 
-            para = window.dialogArguments;
+            para = dialog.para();// window.dialogArguments;
             var data = [];
             if (para.ReportData && para.ReportData != "") {
                 data = para.ReportData;

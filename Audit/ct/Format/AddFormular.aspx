@@ -40,7 +40,8 @@
     <script src="../../Scripts/Format/AddFormular.js" type="text/javascript"></script>
 
      <link href="../../lib/ligerUI/skins/ligerui-icons.css" rel="stylesheet" type="text/css" />
-
+    
+       <script src="../../Scripts/ct_dialog.js" type="text/javascript"></script>
     <script type="text/javascript">
         var spreadNS;
         var spread;
@@ -1148,15 +1149,17 @@
                     alert("请选择定义公式的范围！");
                     return;
                 }
-                var result = window.showModalDialog(urls.newFormularUrl, null, "dialogHeight:600px;dialogWidth:800px;scroll:no;location=no;menubar=no");
-                if (result) {
-                    $("#fxContent").val(result.content);
-                    toolManager.Formular.AddEditFormular("add");
-                    FormularData.formularMaps[FormularData.currentIndex][0]["FormularDb"] = result.DataSource;
-                    FormularData.currentFormular["FormularDb"] = result.DataSource;
-                    FormularData.currentFormular["FormularLevel"] = result.FormularLevel;
-                    toolManager.SetBdq();
-                }
+                dialog.Open(urls.newFormularUrl, "新建公式", null, function (result) {
+                    if (result) {
+                        $("#fxContent").val(result.content);
+                        toolManager.Formular.AddEditFormular("add");
+                        FormularData.formularMaps[FormularData.currentIndex][0]["FormularDb"] = result.DataSource;
+                        FormularData.currentFormular["FormularDb"] = result.DataSource;
+                        FormularData.currentFormular["FormularLevel"] = result.FormularLevel;
+                        toolManager.SetBdq();
+                    }
+                }, { width: 800, height:600});
+               
             },
             EditFormular: function () {
                 if (FormularData.currentFormular == undefined) return;
@@ -1164,16 +1167,17 @@
                 paras.content = $("#fxContent").val();
                 paras.DataSource = FormularData.currentFormular.FormularDb;
                 paras.FormularLevel = FormularData.currentFormular["FormularLevel"];
-                var result = window.showModalDialog(urls.newFormularUrl, paras, "dialogHeight:600px;dialogWidth:800px;scroll:no");
-                if (result) {
-                    $("#fxContent").val(result.content);
-                    toolManager.Formular.AddEditFormular("edit");
-                    FormularData.formularMaps[FormularData.currentIndex][0]["FormularDb"] = result.DataSource;
-                    FormularData.currentFormular["FormularDb"] = result.DataSource;
-                    FormularData.currentFormular["FormularLevel"] = result.FormularLevel;
-                    toolManager.SetBdq();
-                }
-
+                dialog.Open(urls.newFormularUrl, "新建公式", paras, function (result) {
+                    if (result) {
+                        $("#fxContent").val(result.content);
+                        toolManager.Formular.AddEditFormular("edit");
+                        FormularData.formularMaps[FormularData.currentIndex][0]["FormularDb"] = result.DataSource;
+                        FormularData.currentFormular["FormularDb"] = result.DataSource;
+                        FormularData.currentFormular["FormularLevel"] = result.FormularLevel;
+                        toolManager.SetBdq();
+                    }
+                }, { width: 800, height: 600 });
+               
             },
             CheckBoxManager: {
                 TakeCheckSelected: function () {
@@ -1364,13 +1368,16 @@
         };
         function ContentHelpClick() {
             var content = $("#fxContent").val();
-                content = EditManager.getNoEncryptCells(content);
-            var result = window.showModalDialog(urls.InfoContent, content, "dialogHeight:300px;dialogWidth:400px;scroll:no");
-            if (result) {
-                result = EditManager.getEncryptCells(result);
-                $("#fxContent").val(result);
-                toolManager.Formular.AddEditFormular("edit");
-             }
+            content = EditManager.getNoEncryptCells(content);
+            dialog.Open(urls.InfoContent, "帮助", content, function (result) {
+                if (result) {
+                    result = EditManager.getEncryptCells(result);
+                    $("#fxContent").val(result);
+                    toolManager.Formular.AddEditFormular("edit");
+                }
+            }, { width:400, height: 300 });
+
+             
         }
         var EditManager = {
             getFormularType: function (content) {

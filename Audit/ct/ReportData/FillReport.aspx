@@ -12,6 +12,8 @@
     <meta http-equiv="X-UA-Compatible" content="IE=Edge,chrome=1" />
     <script src="../../lib/jquery/jquery-1.11.1.min.js" type="text/javascript"></script>
     <%--<script src="../../lib/jquery/jquery-1.5.2.min.js" type="text/javascript"></script>--%>
+    <script src="../../lib/easyUI14/jquery.easyui.min.js"></script>
+    <script src="../../Scripts/ct_dialog.js"></script>
     <script src="../../Scripts/Ct_Controls.js" type="text/javascript"></script>
     <script src="../../Scripts/FunctionMethodManager.js" type="text/javascript"></script>
     <script src="../../Scripts/AjaxTrigger.js" type="text/javascript"></script>
@@ -28,7 +30,7 @@
     <script src="../../lib/ligerUI/js/core/inject.js" type="text/javascript"></script>
     <script src="../../lib/ligerUI/js/ligerui.min.js" type="text/javascript"></script>
     <script src="../../Scripts/ct/pub/PubHelp.js" type="text/javascript"></script>
-
+    <link href="../../lib/easyUI14/themes/default/easyui.css" rel="stylesheet" />
 
     <style type="text/css">
         #topLoader {
@@ -51,30 +53,29 @@
     <script type="text/javascript">
         function convertToIndex(n) {
             var str = "abcdefghijklmnopqrstuvwxyz";
-            n = n.toLowerCase(); 
+            n = n.toLowerCase();
             var lastNum = n[n.length - 1];
             var index = str.indexOf(lastNum);
             var num = index;
-            if (n.length>1) {
+            if (n.length > 1) {
                 num = 26 * (n.length - 1) + index;
-            } 
+            }
             return num;
         }
-        function callbackRun(callback,arg)
-        { 
-           top.loader&& top.loader.open();
-            var  wait=function (item) {
+        function callbackRun(callback, arg) {
+            top.loader && top.loader.open();
+            var wait = function (item) {
                 var dtd = $.Deferred();
-                setTimeout(function(){
-                    callback (arg) ;
+                setTimeout(function () {
+                    callback(arg);
                     dtd.resolve();
-                },1000,item); 
+                }, 1000, item);
                 return dtd.promise(); // 返回promise对象  
             };
-            $.when(wait(callback)).then(function () { 
-                top.loader&& top.loader.close(); 
+            $.when(wait(callback)).then(function () {
+                top.loader && top.loader.close();
             });
-        
+
         }
         var kb = 0;
         var totalKb = 999;
@@ -171,16 +172,18 @@
 
             },
             InsertMultiRows: function () {
-                var result = window.showModalDialog("NewRowCol.aspx", null, "dialogHeight:130px;dialogWidth:260px;scroll:no");
-                if (result && result.RowCol) {
-                    var gridFrame = toolsManager.GetGridIframe();
-                    // gridFrame.Grid1.addRows(row, result.RowCol);
-                    for (var i = 0; i < result.RowCol; i++) {
-                        EventManager.InsertRowCol_Click();
-                    }
+                dialog.Open("ct/reportdata/NewRowCol.aspx", "插入行", null, function (result) {
+                    if (result && result.RowCol) {
+                        var gridFrame = toolsManager.GetGridIframe();
+                        // gridFrame.Grid1.addRows(row, result.RowCol);
+                        for (var i = 0; i < result.RowCol; i++) {
+                            EventManager.InsertRowCol_Click();
+                        }
 
-                    gridFrame.Grid1.setRowCount(gridFrame.Grid1.getRowCount());
-                }
+                        gridFrame.Grid1.setRowCount(gridFrame.Grid1.getRowCount());
+                    }
+                }, { width: 260, height: 130 });
+                 
             },
             ///删除报表数据
             ///参数：parametere{ReportId:""}
@@ -199,7 +202,10 @@
                 if (parameter && parameter.ReportId) {
                     para.ReportId = parameter.ReportId;
                 }
-                window.showModalDialog("UploadMiddle.aspx?TaskId=" + para.TaskId + "&PaperId=" + para.PaperId + "&ReportId=" + para.ReportId + "&CompanyId=" + para.CompanyId + "&Nd=" + para.Year + "&Zq=" + para.Cycle, para, "dialogHeight:550px;dialogWidth:600px;");
+                dialog.Open("ct/reportdata/UploadMiddle.aspx?TaskId=" + para.TaskId + "&PaperId=" + para.PaperId + "&ReportId=" + para.ReportId + "&CompanyId=" + para.CompanyId + "&Nd=" + para.Year + "&Zq=" + para.Cycle, "上传", para, function (result) {
+                    
+                }, { width: 600, height: 550 });
+                  
             },
             InsertRowCol_Click: function () {
                 var index = BBData.bdq.BdqMaps[currentState.BdqBh];
@@ -213,7 +219,7 @@
                     var currentBdRows = CaculateArrayLengthFilterUndefined(BBDataItems.BdqData[BBDataItems.bdMaps[bdqCode]]);
                     var bdRowInfo = toolsManager.GetRowTagBdqInfo(currentRow);
                     var currentIndex = toolsManager.GetArrayCountBeforeCurrentIndex(BBDataItems.BdqData[BBDataItems.bdMaps[bdqCode]], bdRowInfo.index);
-                    var row = currentBdRows - currentIndex + currentRow;              
+                    var row = currentBdRows - currentIndex + currentRow;
                     var columnCount = gridFrame.Grid1.getColumnCount();
                     gridFrame.Grid1.suspendPaint();
                     gridFrame.Grid1.addRows(row, 1);
@@ -313,7 +319,7 @@
 
 
                         para = CreateParameter(ReportDataAction.ActionType.Post, ReportDataAction.Functions.FillReport, ReportDataAction.Methods.FillReportMethods.DeleteBdqData, para);
-                        DataManager.sendData(urls.fillReportUrl, para, resultManager.DeleteReport_Success, resultManager.FailResult,false);
+                        DataManager.sendData(urls.fillReportUrl, para, resultManager.DeleteReport_Success, resultManager.FailResult, false);
                         delete BBDataItems.BdqData[index][bdInfo.index];
                     }
 
@@ -361,21 +367,23 @@
             taskBtn_ClickEvent: function () {
                 currentState.ReportState["auditPaperVisible"] = "1";
                 currentState.ReportState["auditZqVisible"] = "1";
-                var result = window.showModalDialog("ChooseAuditTask.aspx", currentState.ReportState, "dialogHeight:500px;dialogWidth:450px;scroll:no");
-                if (result && result != undefined) {
-                    if (result.auditZqType == "05") {
-                        if (result.WeekReport.ID == "") {
-                            alert("请定义周报周期");
-                            var curTabTitle = "资料填报";
-                            var t = parent.centerTabs.tabs('getTab', curTabTitle);
-                            if (t.panel('options').closable) {
-                                parent.centerTabs.tabs('close', curTabTitle);
-                                return;
+                dialog.Open("ct/reportdata/ChooseAuditTask.aspx","切换任务", currentState.ReportState, function (result) {
+                    if (result && result != undefined) {
+                        if (result.auditZqType == "05") {
+                            if (result.WeekReport.ID == "") {
+                                alert("请定义周报周期");
+                                var curTabTitle = "资料填报";
+                                var t = parent.centerTabs.tabs('getTab', curTabTitle);
+                                if (t.panel('options').closable) {
+                                    parent.centerTabs.tabs('close', curTabTitle);
+                                    return;
+                                }
                             }
                         }
+                        toolsManager.SetAuditTask(result);
                     }
-                    toolsManager.SetAuditTask(result);
-                }
+                }, { width: 450, height: 500 });
+               
 
             },
             TabEvents: {
@@ -413,7 +421,7 @@
                         callbackRun(function () {
                             mediatorManager.LoadBBFormat();
                             //mediatorManager.LoadBBCompFormat();
-                           mediatorManager.LoadBbData();
+                            mediatorManager.LoadBbData();
 
                         });
                     }
@@ -449,13 +457,13 @@
                     var vsFuals = "";
                     //将现有的数据进行拷贝
                     gridFrame.Grid1.endEdit();
-                  //  gridFrame.Grid1.suspendPaint();
+                    //  gridFrame.Grid1.suspendPaint();
                     gridFrame.Grid1.setActiveCell(-1, -1);
                     $.extend(true, para.BdqData, BBDataItems.BdqData);
                     for (var i = 0; i < gridFrame.Grid1.getRowCount() ; i++) {
 
                         for (var j = 0; j < gridFrame.Grid1.getColumnCount() ; j++) {
-                            
+
                             var Cell = gridFrame.Grid1.getCell(i, j);
                             var vFormula = gridFrame.Grid1.getFormula(i, j);
                             if (vFormula) {
@@ -465,16 +473,14 @@
                             if (tagStr && tagStr != "") {
                                 var vsCellReq;
                                 vsCellReq = mediatorManager.CheckReqValue(tagStr);
-                                if (vsCellReq == true)
-                                {
-                                    
-                                    if (Cell.value() == null||Cell.value() == "")
-                                    {
+                                if (vsCellReq == true) {
+
+                                    if (Cell.value() == null || Cell.value() == "") {
                                         alert("行" + (i + 1).toString() + "列" + (j + 1).toString() + "单元格为必填！");
-                                       // gridFrame.Grid1.resumePaint();
+                                        // gridFrame.Grid1.resumePaint();
                                         return false;
                                     }
-                                    
+
                                 }
                                 var cellConArr = tagStr.split("|");
                                 var gdBdArr = cellConArr[0].split(";");
@@ -601,45 +607,45 @@
                         var obj = { dataStr: "" };
                         obj.dataStr = JSON.stringify(para);
                         obj = CreateParameter(ReportDataAction.ActionType.Post, ReportDataAction.Functions.FillReport, ReportDataAction.Methods.FillReportMethods.DeserializeFatchFormular, obj);
-                        DataManager.sendData(urls.fillReportUrl, obj, resultManager.DesrializeFatchFormular_Success, resultManager.FailResult,false);
+                        DataManager.sendData(urls.fillReportUrl, obj, resultManager.DesrializeFatchFormular_Success, resultManager.FailResult, false);
 
-                    },BBDataItems);
+                    }, BBDataItems);
                 },
                 DeserializeCaculateFormular: function () {
                     if (!BBDataItems.Gdq) { alert("先选择一张需要操作的报表"); return; }
                     if (currentState.IsOrNotWriteLock == "0") { alert("报表已被锁定，无法执行操作"); return; }
                     // LoadingMessage = window.showModelessDialog("../pub/Progress.htm", null, "DialogHeight:120px;DialogWidth:450px;help:no;status:no;scroll:no;");
-                    callbackRun(function (BBDataItems){
-                    var para = { Gdq: {}, BdqData: [], bdMaps: {}, rdps: {}, GdbId: "", GdbTableName: "", bdIds: {}, bdTableNames: {} };
-                    para.GdbId = BBDataItems.GdbId;
-                    para.GdbTableName = BBDataItems.GdbTableName;
-                    para.rdps = toolsManager.GetReportParameter();
-                    para.bdMaps = BBDataItems.bdMaps;
-                    para.bdTableNames = BBDataItems.bdTableNames;
-                    para.Gdq = BBDataItems.Gdq;
+                    callbackRun(function (BBDataItems) {
+                        var para = { Gdq: {}, BdqData: [], bdMaps: {}, rdps: {}, GdbId: "", GdbTableName: "", bdIds: {}, bdTableNames: {} };
+                        para.GdbId = BBDataItems.GdbId;
+                        para.GdbTableName = BBDataItems.GdbTableName;
+                        para.rdps = toolsManager.GetReportParameter();
+                        para.bdMaps = BBDataItems.bdMaps;
+                        para.bdTableNames = BBDataItems.bdTableNames;
+                        para.Gdq = BBDataItems.Gdq;
 
-                    var gridIframe = toolsManager.GetGridIframe();
-                    //将现有的数据进行拷贝
-                    $.extend(true, para.BdqData, BBDataItems.BdqData);
+                        var gridIframe = toolsManager.GetGridIframe();
+                        //将现有的数据进行拷贝
+                        $.extend(true, para.BdqData, BBDataItems.BdqData);
 
-                    $.each(para.Gdq, function (index, item) {
-                        item.value = "";
-                    });
-                    $.each(para.BdqData, function (bdqIndex, bdqData) {
-                        $.each(bdqData, function (rowIndex, rowData) {
-                            if (rowData) {
-                                $.each(rowData, function (cellCode, item) {
-                                    if (cellCode != "DATA_ID")
-                                        item.value = "";
-                                });
-                            }
+                        $.each(para.Gdq, function (index, item) {
+                            item.value = "";
                         });
-                    });
+                        $.each(para.BdqData, function (bdqIndex, bdqData) {
+                            $.each(bdqData, function (rowIndex, rowData) {
+                                if (rowData) {
+                                    $.each(rowData, function (cellCode, item) {
+                                        if (cellCode != "DATA_ID")
+                                            item.value = "";
+                                    });
+                                }
+                            });
+                        });
 
-                    var obj = { dataStr: "" };
-                    obj.dataStr = JSON.stringify(para);
-                    obj = CreateParameter(ReportDataAction.ActionType.Post, ReportDataAction.Functions.FillReport, ReportDataAction.Methods.FillReportMethods.DeserializeCaculateFormular, obj);
-                    DataManager.sendData(urls.fillReportUrl, obj, resultManager.DeserializeCaculateFormular_Success, resultManager.FailResult,false);
+                        var obj = { dataStr: "" };
+                        obj.dataStr = JSON.stringify(para);
+                        obj = CreateParameter(ReportDataAction.ActionType.Post, ReportDataAction.Functions.FillReport, ReportDataAction.Methods.FillReportMethods.DeserializeCaculateFormular, obj);
+                        DataManager.sendData(urls.fillReportUrl, obj, resultManager.DeserializeCaculateFormular_Success, resultManager.FailResult, false);
                     }, BBDataItems);
                 },
                 DeserializeVarifyFormular: function () {
@@ -677,7 +683,7 @@
                     var obj = { dataStr: "" };
                     obj.dataStr = JSON.stringify(para);
                     obj = CreateParameter(ReportDataAction.ActionType.Post, ReportDataAction.Functions.FillReport, ReportDataAction.Methods.FillReportMethods.DeserializeVarifyFormular, obj);
-                    DataManager.sendData(urls.fillReportUrl, obj, resultManager.DeserializeVerifyFormular_Success, resultManager.FailResult,false);
+                    DataManager.sendData(urls.fillReportUrl, obj, resultManager.DeserializeVerifyFormular_Success, resultManager.FailResult, false);
                 },
                 SelfCheck: function () {
                     var para = { TaskId: "", PaperId: "", CompanyId: "", ReportId: "", Year: "", Cycle: "" };
@@ -688,7 +694,7 @@
                     para.PaperId = currentState.ReportState.AuditPaper.value;
                     para.ReportId = currentState.navigatorData.currentReportId;
                     para = CreateParameter(ReportDataAction.ActionType.Post, ReportDataAction.Functions.FillReport, ReportDataAction.Methods.FillReportMethods.SelfCheck, para);
-                    DataManager.sendData(urls.fillReportUrl, para, resultManager.SelfCheck_Success, resultManager.FailResult,false);
+                    DataManager.sendData(urls.fillReportUrl, para, resultManager.SelfCheck_Success, resultManager.FailResult, false);
                 },
                 CancelSelfCheck: function () {
                     var para = { TaskId: "", PaperId: "", CompanyId: "", ReportId: "", Year: "", Cycle: "" };
@@ -699,7 +705,7 @@
                     para.PaperId = currentState.ReportState.AuditPaper.value;
                     para.ReportId = currentState.navigatorData.currentReportId;
                     para = CreateParameter(ReportDataAction.ActionType.Post, ReportDataAction.Functions.FillReport, ReportDataAction.Methods.FillReportMethods.CancelSelfCheck, para);
-                    DataManager.sendData(urls.fillReportUrl, para, resultManager.CancelSelfCheck_Success, resultManager.FailResult,false);
+                    DataManager.sendData(urls.fillReportUrl, para, resultManager.CancelSelfCheck_Success, resultManager.FailResult, false);
                 },
                 PrintPreview: function () {
 
@@ -713,7 +719,7 @@
                 ExportExcel: function () {
                     if (!BBDataItems.Gdq) { alert("先选择一张需要操作的报表"); return; }
                     var gridFrame = toolsManager.GetGridIframe();
-                   // gridFrame.Grid1.exExportToExcel("", false, false);
+                    // gridFrame.Grid1.exExportToExcel("", false, false);
                     gridFrame.exportToExcel();
                 }
             },
@@ -805,31 +811,51 @@
                     }
                 }
                 toolsManager.SetAuditTask(tempState);
+                //初始树高度
+                LayoutManager.setTreeHeight();
             } else {
                 currentState.ReportState["auditPaperVisible"] = "1";
                 currentState.ReportState["auditZqVisible"] = "1";
-                var result = window.showModalDialog("ChooseAuditTask.aspx", currentState.ReportState, "dialogHeight:500px;dialogWidth:450px;scroll:no");
-                if (result && result != undefined) {
-                    if (result.auditZqType == "05") {
-                        if (result.WeekReport.ID == "") {
-                            alert("请定义周报周期");
-                            var curTabTitle = "资料填报";
-                            var t = parent.centerTabs.tabs('getTab', curTabTitle);
-                            if (t.panel('options').closable) {
-                                return;
-                                //  parent.centerTabs.tabs('close', curTabTitle);
+                dialog.Open("ct/ReportData/ChooseAuditTask.aspx", "填报任务切换", currentState.ReportState, function (result) {
+                    if (result && result != undefined) {
+                        if (result.auditZqType == "05") {
+                            if (result.WeekReport.ID == "") {
+                                alert("请定义周报周期");
+                                var curTabTitle = "资料填报";
+                                var t = parent.centerTabs.tabs('getTab', curTabTitle);
+                                if (t.panel('options').closable) {
+                                    return;
+                                    //  parent.centerTabs.tabs('close', curTabTitle);
+                                }
                             }
-                        }
 
+                        }
+                        toolsManager.SetAuditTask(result);
                     }
-                    toolsManager.SetAuditTask(result);
-                }
+                    //初始树高度
+                    LayoutManager.setTreeHeight();
+                });
+                //var result = window.showModalDialog("ChooseAuditTask.aspx", currentState.ReportState, "dialogHeight:500px;dialogWidth:450px;scroll:no");
+                //if (result && result != undefined) {
+                //    if (result.auditZqType == "05") {
+                //        if (result.WeekReport.ID == "") {
+                //            alert("请定义周报周期");
+                //            var curTabTitle = "资料填报";
+                //            var t = parent.centerTabs.tabs('getTab', curTabTitle);
+                //            if (t.panel('options').closable) {
+                //                return;
+                //                //  parent.centerTabs.tabs('close', curTabTitle);
+                //            }
+                //        }
+
+                //    }
+                //    toolsManager.SetAuditTask(result);
+                //}
 
 
             }
 
-            //初始树高度
-            LayoutManager.setTreeHeight();
+
         });
 
         var toolsManager = {
@@ -871,13 +897,13 @@
             },
             GetReportIframe: function () {
                 //兼容处理
-                 return window.frames["catalog"];
-               // return document.frames["catalog"];
+                return window.frames["catalog"];
+                // return document.frames["catalog"];
             },
             GetInfoframe: function () {
                 //兼容处理
-                 return window.frames["CheckoutInfoIframe"];document
-               // return document.frames["CheckoutInfoIframe"];
+                return window.frames["CheckoutInfoIframe"];  
+                // return document.frames["CheckoutInfoIframe"];
             },
             IsOrNotBdq: function (Row, Col) {
                 var code = "-1";
@@ -1014,7 +1040,7 @@
                 para.Id = currentState.navigatorData.currentReportId;
                 para = CreateParameter(ReportFormatAction.ActionType.Post, ReportFormatAction.Functions.ReportFormatMenu, ReportFormatAction.Methods.ReportFormatMenuMethods.LoadReportFormat, para);
 
-                DataManager.sendData(urls.BBUrl, para, resultManager.LoadBB_Success, resultManager.FailResult,false);
+                DataManager.sendData(urls.BBUrl, para, resultManager.LoadBB_Success, resultManager.FailResult, false);
             },
             LoadBBCompFormat: function () {
                 var para = { Id: "", CompanyId: "" };
@@ -1038,7 +1064,7 @@
                 para.CurrentZq = currentState.ReportState.Zq;
 
                 para = CreateParameter(ReportDataAction.ActionType.Post, ReportDataAction.Functions.FillReport, ReportDataAction.Methods.FillReportMethods.GetReportCycle, para);
-                DataManager.sendData(urls.fillReportUrl, para, resultManager.LoadCycle_Success, resultManager.FailResult,false);
+                DataManager.sendData(urls.fillReportUrl, para, resultManager.LoadCycle_Success, resultManager.FailResult, false);
             },
             LoadBbData: function () {
                 datestart = new Date();
@@ -1063,7 +1089,7 @@
                 para = CreateParameter(ReportDataAction.ActionType.Post, ReportDataAction.Functions.FillReport, ReportDataAction.Methods.FillReportMethods.LoadReportDatas, para);
                 datestart = new Date();
                 s += "sendData" + datestart;
-                DataManager.sendData(urls.fillReportUrl, para, resultManager.LoadReportData_Success, resultManager.FailResult,false);
+                DataManager.sendData(urls.fillReportUrl, para, resultManager.LoadReportData_Success, resultManager.FailResult, false);
                 currentState.BdqBh = "";
                 datestart = new Date();
                 s += "完成" + datestart;
@@ -1113,10 +1139,8 @@
 
                 toolsManager.GetInfoframe().RefreshAttatch();
             },
-            CheckReqValue:function(tag)
-            {
-                if (tag != null && tag != "" && tag.length > 0)
-                {
+            CheckReqValue: function (tag) {
+                if (tag != null && tag != "" && tag.length > 0) {
                     var cellFormat;
                     var cellArr = tag.split("|");
                     if (!cellArr[2]) return false;
@@ -1168,58 +1192,58 @@
                 DataManager.sendData(urls.fillReportUrl, para, resultManager.LoadRefreshHomeData_Success, resultManager.FailResult);
             },
             RefreshReport: function () {
-                callbackRun(function(){
-                currentState.RowColChange = false;
-                if (currentState.navigatorData.currentReportId == "home" || currentState.navigatorData.currentReportId == "") { mediatorManager.RefreshHome(); return; }
-                if (BBData.bdq.bdNum > 0) {
-                    gridFrame.RefreshGrid(currentState.ReportFormat);
-                    gridFrame.Grid1.suspendPaint();
-                    $.each(BBData.bbData, function (rowIndex, row) {
-                        $.each(row, function (colIndex, cell) {
-                            if (cell && cell.CellLogicalType && cell.CellLogicalType == "02" && cell.CellDataType && cell.CellDataType != "") {
-                                var flag = toolsManager.IsOrNotBdq(rowIndex, colIndex);
-                                if (flag == "-1") {
-                                    CellTag = "1;" + cell.CellCode + "|" + cell.CellDataType + "|" + JSON2.stringify(cell);
+                callbackRun(function () {
+                    currentState.RowColChange = false;
+                    if (currentState.navigatorData.currentReportId == "home" || currentState.navigatorData.currentReportId == "") { mediatorManager.RefreshHome(); return; }
+                    if (BBData.bdq.bdNum > 0) {
+                        gridFrame.RefreshGrid(currentState.ReportFormat);
+                        gridFrame.Grid1.suspendPaint();
+                        $.each(BBData.bbData, function (rowIndex, row) {
+                            $.each(row, function (colIndex, cell) {
+                                if (cell && cell.CellLogicalType && cell.CellLogicalType == "02" && cell.CellDataType && cell.CellDataType != "") {
+                                    var flag = toolsManager.IsOrNotBdq(rowIndex, colIndex);
+                                    if (flag == "-1") {
+                                        CellTag = "1;" + cell.CellCode + "|" + cell.CellDataType + "|" + JSON2.stringify(cell);
+                                    } else {
+                                        CellTag = "0;" + JSON2.stringify({ CellCode: cell.CellCode, bdCode: flag, index: 0 }) + "|" + cell.CellDataType + "|" + JSON2.stringify(cell);
+                                    }
+                                    gridFrame.Grid1.setTag(rowIndex, colIndex, CellTag);
+                                    //设置单元格对齐方式
+                                    var align;
+                                    if (cell.CellDataType == "01") {
+                                        align = gridFrame.spreadNS.HorizontalAlign["left"];
+                                        gridFrame.Grid1.getCell(rowIndex, colIndex)["hAlign"](align);
+                                    } else if (cell.CellDataType == "02") {
+                                        align = gridFrame.spreadNS.HorizontalAlign["right"];
+                                        gridFrame.Grid1.getCell(rowIndex, colIndex)["hAlign"](align);
+                                    }
+                                    //设置单元格类型 
+
+                                    gridFrame.GridManager.SetRowColCellType(cell, rowIndex, colIndex);
+
                                 } else {
-                                    CellTag = "0;" + JSON2.stringify({ CellCode: cell.CellCode, bdCode: flag, index: 0 }) + "|" + cell.CellDataType + "|" + JSON2.stringify(cell);
+                                    gridFrame.Grid1.getCell(rowIndex, colIndex).locked(true);
                                 }
-                                gridFrame.Grid1.setTag(rowIndex, colIndex, CellTag);
-                                //设置单元格对齐方式
-                                var align;
-                                if (cell.CellDataType == "01") {
-                                    align = gridFrame.spreadNS.HorizontalAlign["left"];
-                                    gridFrame.Grid1.getCell(rowIndex, colIndex)["hAlign"](align);
-                                } else if (cell.CellDataType == "02") {
-                                    align = gridFrame.spreadNS.HorizontalAlign["right"];
-                                    gridFrame.Grid1.getCell(rowIndex, colIndex)["hAlign"](align);
+
+                            });
+                        });
+                        gridFrame.GridManager.DealCellLock();
+                    } else {
+                        $.each(BBData.bbData, function (rowIndex, row) {
+                            $.each(row, function (colIndex, cell) {
+                                if (cell && cell.CellLogicalType && cell.CellLogicalType == "02" && cell.CellDataType && cell.CellDataType != "") {
+                                    //                                 gridFrame.Grid1.getCell(rowIndex, colIndex).text("");
+                                    gridFrame.Grid1.setValue(rowIndex, colIndex, "");
                                 }
-                                //设置单元格类型 
-                               
-                               gridFrame.GridManager.SetRowColCellType(cell, rowIndex, colIndex);
-
-                            } else {
-                                gridFrame.Grid1.getCell(rowIndex, colIndex).locked(true);
-                            }
-
+                            });
                         });
-                    });
-                    gridFrame.GridManager.DealCellLock();
-                } else {
-                    $.each(BBData.bbData, function (rowIndex, row) {
-                        $.each(row, function (colIndex, cell) {
-                            if (cell && cell.CellLogicalType && cell.CellLogicalType == "02" && cell.CellDataType && cell.CellDataType != "") {
-                                //                                 gridFrame.Grid1.getCell(rowIndex, colIndex).text("");
-                                gridFrame.Grid1.setValue(rowIndex, colIndex, "");
-                            }
-                        });
-                    });
-                }
-                gridFrame.Grid1.resumePaint();
-                currentState.RowColChange = true;
+                    }
+                    gridFrame.Grid1.resumePaint();
+                    currentState.RowColChange = true;
 
-                mediatorManager.LoadBbData();
-                    });
-               
+                    mediatorManager.LoadBbData();
+                });
+
             },
             InitializeCompanies: function (data) {
                 try {
@@ -1436,7 +1460,7 @@
             },
             FailResult: function (data) {
                 alert(data.sMeg);
-                 top.loader && top.loader.close();
+                top.loader && top.loader.close();
             },
             LoadCompBB_Success: function (data) {
                 alert(data.sMeg);
@@ -1469,7 +1493,7 @@
                                 }
                                 $.each(row, function (colIndex, cell) {
                                     if (cell && cell.CellLogicalType && cell.CellLogicalType == "02" && cell.CellDataType && cell.CellDataType != "") {
-                                       
+
                                         //gridFrame.Grid1.getCell(rowIndex, colIndex).text("");
                                         gridFrame.Grid1.setValue(rowIndex, colIndex, "");
                                         var flag = toolsManager.IsOrNotBdq(rowIndex, colIndex);
@@ -1508,18 +1532,18 @@
                                         gridFrame.Grid1.getCell(rowIndex, colIndex).locked(true);
 
                                     }
-                                  
+
                                 });
 
 
                             });
-                            
-                        
+
+
                             gridFrame.GridManager.DealCellLock();
                             gridFrame.Grid1.resumePaint();
 
                             currentState.RowColChange = false;
-                          
+
                             currentState.RowColChange = true;
                             cellTextNotChangeSetCellType = false;
                         } else {
@@ -1600,8 +1624,7 @@
             },
 
             LoadReportData_Success: function (data) {
-                try
-                {
+                try {
                     datestart = new Date();
                     s += "开始LoadReportData_Success" + datestart;
                     if (data.success) {
@@ -1610,11 +1633,11 @@
                             BBDataItems = data.obj;
                             currentState.BdqDataMaps = BBDataItems.rdps.bdqMaps;
                             var gridIframe = toolsManager.GetGridIframe();
-                        
+
                             gridFrame.Grid1.suspendPaint();
                             //固定行数据
                             $.each(data.obj.Gdq, function (cellCode, CellItem) {
-                              
+
                                 gridFrame.GridManager.SetRowColText(CellItem.row, CellItem.col, CellItem);
                                 var tag = gridFrame.Grid1.getTag(CellItem.row, CellItem.col);
                                 mediatorManager.TextChange(CellItem.row, CellItem.col, tag);
@@ -1649,7 +1672,7 @@
                                         s += "11111  " + datestart;
                                         vsKSRow = bdFormat.Offset + addRowData;
                                         vsRowNum = bdFormat.Offset + addRowData + rowNum - 1;
-                                    
+
                                         gridFrame.Grid1.suspendPaint();
                                         gridFrame.Grid1.addRows(bdFormat.Offset + 1 + addRowData, rowNum - 1);
 
@@ -1661,28 +1684,28 @@
                                         var option = { all: true };
                                         //var lineBorder = new gridFrame.spreadNS.LineBorder("#000000", gridFrame.spreadNS.LineStyle.thick);
                                         var columnCount = gridFrame.Grid1.getColumnCount();
-                                   
+
                                         gridFrame.Grid1.resumePaint();
                                         gridFrame.Grid1.suspendPaint();
-                                        for (var i = bdFormat.Offset + addRowData+1; i <= bdFormat.Offset + addRowData + rowNum - 1; i++) {
+                                        for (var i = bdFormat.Offset + addRowData + 1; i <= bdFormat.Offset + addRowData + rowNum - 1; i++) {
 
                                             for (var j = 0; j < gridFrame.Grid1.getColumnCount() ; j++) {
                                                 var vsCellType = gridFrame.Grid1.getStyle(bdFormat.Offset + addRowData, j);
                                                 gridIframe.Grid1.getCell(i, j).locked(false);
-                                               
+
                                                 if (gridIframe.CheckCellType(bdFormat.Offset + addRowData, j)) {
                                                     gridFrame.Grid1.setStyle(i, j, vsCellType);
                                                 }
-                                           
+
                                             }
                                         }
                                         gridFrame.Grid1.resumePaint();
                                         gridFrame.Grid1.suspendPaint();
 
-                                    
+
                                         //设置变动行中的数据格式信息
                                         $.each(BBData.bbData[bdFormat.Offset], function (columnIndex, cell) {
-                                        
+
                                             var dd = "";
                                             for (var i = bdFormat.Offset + 1 + addRowData - 1; i <= bdFormat.Offset + rowNum + addRowData - 1; i++) {
                                                 var cellCode = cell["CellCode"];
@@ -1717,14 +1740,14 @@
                                     s += "开始setBorder " + datestart;
                                     //设置变动行数据
                                     if (bdqData && bdqData.length > 0) {
-                                       
+
                                         $.each(bdqData, function (bdRowIndex, bdRow) {
                                             $.each(BBData.bbData[bdFormat.Offset], function (columnIndex, cell) {
-                                              
+
                                                 if (cell.CellCode) {
                                                     var row = bdFormat.Offset + bdRowIndex + addRowData;
                                                     if (bdRow && bdRow[cell.CellCode]) {
-                                                         gridFrame.GridManager.SetRowColText(row, columnIndex, bdRow[cell.CellCode]);
+                                                        gridFrame.GridManager.SetRowColText(row, columnIndex, bdRow[cell.CellCode]);
                                                     } else {
                                                         var cellItem = { value: "", cellDataType: cell.CellDataType, isOrNotUpdate: "0" };
                                                         gridFrame.GridManager.SetRowColTextByRowCol(row, columnIndex, cellItem);
@@ -1732,12 +1755,12 @@
                                                     var tag = gridFrame.Grid1.getTag(row, columnIndex);
                                                     mediatorManager.TextChange(row, columnIndex, tag);
                                                 }
-                                              
+
 
                                             });
 
                                         });
-                                       
+
                                     } else {
 
                                         $.each(BBData.bbData[bdFormat.Offset], function (columnIndex, cell) {
@@ -1859,13 +1882,13 @@
                                                                 var tag = gridFrame.Grid1.getTag(rowIndex, colIndexInt);
                                                                 if (tag && tag.indexOf("0;") == 0) {
                                                                     //变动行
-                                                                    newF = newF.replace(one, colIndexStr +( i+1));
+                                                                    newF = newF.replace(one, colIndexStr + (i + 1));
                                                                 }
                                                             }
-                                                       
+
                                                         }
-                                                    
-                                                    } 
+
+                                                    }
                                                     gridFrame.Grid1.setFormula(parseInt(i), parseInt(colIndex), newF); //cell.formula.replace(/\d+/g, i)
                                                 }
 
@@ -1875,8 +1898,8 @@
                                 }
                             }
 
-                           // gridFrame.Grid1.resumePaint();
-                     
+                            // gridFrame.Grid1.resumePaint();
+
                             //设置报表状态
 
                             currentState.IsOrNotWriteLock = data.obj.IsOrNotLock;
@@ -1914,8 +1937,7 @@
                         alert(data.sMeg);
                     }
                 }
-                catch(e)
-                {
+                catch (e) {
                     alert("ddddd");
                 }
             }, SaveReport_Success: function (data) {
@@ -1958,7 +1980,7 @@
                 } else {
                     alert(data.sMeg);
                 }
-               
+
             },
             DeserializeVerifyFormular_Success: function (data) {
 
@@ -2079,7 +2101,7 @@
 
                 //top.loader && top.loader.open();
 
-                
+
                 currentState.TabDatas.push(report);
                 controls.AuditReportTab.addTabItem(item);
 
@@ -2161,7 +2183,7 @@
                 var height = document.body.clientHeight - 50;
                 if (InfoIframControl.Collapse) {
                     $("#content").css("height", height - 30);
-                   // gridIframe.ChangeHeight(height - 30);
+                    // gridIframe.ChangeHeight(height - 30);
                 } else {
                     gridIframe.ChangeHeight(height - 143);
                 }

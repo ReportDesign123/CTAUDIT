@@ -26,7 +26,8 @@
     <script src="../../lib/ligerUI/js/core/inject.js" type="text/javascript"></script>
     <script src="../../lib/ligerUI/js/ligerui.min.js" type="text/javascript"></script>
     <script src="../../Scripts/ct/pub/PubHelp.js" type="text/javascript"></script>
-
+    
+       <script src="../../Scripts/ct_dialog.js" type="text/javascript"></script>
     <script type="text/javascript">
     var urls={
          fillReportUrl:"../../handler/ReportDataHandler.ashx",

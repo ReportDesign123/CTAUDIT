@@ -21,6 +21,7 @@
     <link href="../../Styles/Common.css" rel="stylesheet" type="text/css" />
     <link href="../../Styles/Ct_Controls.css" rel="stylesheet" type="text/css" />
     <script src="../../lib/json2.js" type="text/javascript"></script>
+        <script src="../../Scripts/ct_dialog.js" type="text/javascript"></script>
     <script type="text/javascript">
         var Pcontrols = { task: {}, paper: {}, report: {}, index: {}, cells: {}, company: {}, reportType: {} };
         var tempData = { cells: {}, type: "" }; //type 记录 上一页面的请求类型[report,index]
@@ -36,7 +37,7 @@
             cascading = !cascading;
         }
         $(function () {
-            ParentParameter = window.dialogArguments;
+            ParentParameter = dialog.para();// window.dialogArguments;
             if (ParentParameter == "report") {
                 tempData.type = ParentParameter;
                 $("#Td_Index").css("display", "none");

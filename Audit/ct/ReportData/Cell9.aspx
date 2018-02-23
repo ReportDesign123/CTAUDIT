@@ -19,7 +19,8 @@
     <script src="../../lib/json2.js" type="text/javascript"></script>
     <script src="../../Scripts/AjaxTrigger.js" type="text/javascript"></script>
     <script src="../../Scripts/FunctionMethodManager.js" type="text/javascript"></script>
-
+    
+       <script src="../../Scripts/ct_dialog.js" type="text/javascript"></script>
 </head>
 <body  style=" height:100%; width:100%; margin:0; padding:0; overflow:hidden;">
 			<div id="ss"  style="height:600px; width:100%">
