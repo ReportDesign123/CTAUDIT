@@ -60,7 +60,7 @@
         var CellFont = {FontSize:"",FontType:"",FontItalic:"",FontBold:""};
         var cellNameValue = { FontName: "FontName", FontSize: "FontSize", FontBold: "FontBold", FontItalic: "FontItalic", FontUnderline: "FontUnderline ",
             Alignment: "Alignment ", ForeColor: "ForeColor", BackColor: "BackColor", Border: "Border", CellCode: "CellCode", CellName: "CellName",
-            CellRow: "CellRow", CellCol: "CellCol", CellLogicalType: "CellLogicalType", CellType: "CellType", CellRequired: "CellRequired", CellDataType: "CellDataType", CellMacro: "CellMacro", CellHelp: "CellHelp", CellValue: "CellValue", CellLength: "CellLength",
+            CellRow: "CellRow", CellCol: "CellCol", CellLogicalType: "CellLogicalType", CellType: "CellType", CellRequired: "CellRequired", CellDataType: "CellDataType", CellMacro: "CellMacro", CellHelp: "CellHelp", CellValue: "CellValue",CellUrl:"CellUrl", CellLength: "CellLength",
             CellThousand: "CellThousand", CellCurrence: "CellCurrence", CellSmbol: "CellSmbol", CellLock: "CellLock", CellZero: "CellZero", CellAggregation: "CellAggregation", CellAggregationType: "CellAggregationType",
             CellPrimary: "CellPrimary", isOrUpdate: "isOrUpdate", DigitNumber: "DigitNumber",WrapText:"False"
         };
@@ -709,6 +709,7 @@
             },
             GeneralLoadCellDataValue: function (row, col) {
                 $("input[name='vValue']").val("");
+                $("input[name='vUrl']").val("");
                 //报表单元格选中后的处理方式           
                 row = Grid1.getActiveRowIndex();
                 col = Grid1.getActiveColumnIndex();
@@ -873,7 +874,12 @@
                     } else {
                         $("input[name='vValue']").val("");
                     }
-
+                    //URL
+                    if (toolManager.IsNullOrEmpty(cellData, cellNameValue.CellUrl)) {
+                        $("input[name='vUrl']").val(cellData[cellNameValue.CellUrl]);
+                    } else {
+                        $("input[name='vUrl']").val("");
+                    }
                     if (toolManager.IsNullOrEmpty(cellData, cellNameValue.CellMacro)) {
                         cellControls.CellMacro.setText(cellData[cellNameValue.CellMacro]);
                     } else {
@@ -885,11 +891,19 @@
                     } else {
                         cellControls.CellHelp.setText("");
                     }
+                    //数据内容
                     if (toolManager.IsNullOrEmpty(cellData, cellNameValue.CellValue)) {
                         $("input[name='vValue']").val(cellData[cellNameValue.CellValue]);
                     }
                     else {
                         $("input[name='vValue']").val("");
+                    }
+                    //URL
+                    if (toolManager.IsNullOrEmpty(cellData, cellNameValue.CellUrl)) {
+                        $("input[name='vUrl']").val(cellData[cellNameValue.CellUrl]);
+                    }
+                    else {
+                        $("input[name='vUrl']").val("");
                     }
                     if (toolManager.IsNullOrEmpty(cellData, cellNameValue.CellAggregation))
                         cellControls.CellAggregation.setValue(cellData[cellNameValue.CellAggregation]);
@@ -1170,6 +1184,7 @@
             CellHelp_Click: function () {
                 var paras = { url: "", columns: [], sortName: "", sortOrder: "", NameField: "Name,Code", CodeField: "Code" };
                 paras.url = "../../handler/BasicHandler.ashx?ActionType=" + BasicAction.ActionType.Grid + "&MethodName=" + BasicAction.Methods.DicManagerMethods.GetDicClassifyDataGridFilter + "&FunctionName=" + BasicAction.Functions.DictionaryManager;
+                //paras.url = "../../handler/BasicHandler.ashx?ActionType=" + BasicAction.ActionType.Grid + "&MethodName=" + BasicAction.Methods.DicManagerMethods.GetLshelp + "&FunctionName=" + BasicAction.Functions.DictionaryManager;
                 paras.columns = [[
                 { field: "Code", title: "编号", width: 120 },
                     { field: "Name", title: "名称", width: 200 }
@@ -1685,10 +1700,15 @@
                     var cellHelp = cellControls.CellHelp.getText();
                     toolManager.TagTool.SetDataValue(cellData, cellNameValue.CellHelp, cellHelp);
                     //数据内容
-
                     var cellValue = $("input[name='vValue']").val();
                     if (cellValue != null && cellValue != "") {
                         toolManager.TagTool.SetDataValue(cellData, cellNameValue.CellValue, cellValue);
+
+                    }
+                    //URL
+                    var cellValue = $("input[name='vUrl']").val();
+                    if (cellValue != null && cellValue != "") {
+                        toolManager.TagTool.SetDataValue(cellData, cellNameValue.CellUrl, cellValue);
 
                     }
                 } else if (cellLogicalType == "null" || cellLogicalType == "") {
@@ -2392,6 +2412,10 @@
                 return Math.round(pxValue * 72 / 96);
             }
         }
+        window.onresize = function () {
+            // Grid1.width = window.document.body.offsetWidth;
+            $("#ss").width(window.document.body.offsetWidth);
+        }
     </script>
 
     <style type="text/css">
@@ -2731,6 +2755,10 @@ a.c3:hover{
                             <tr class="myTr">
 								<td><span>数据内容</span></td>
 								<td><input type="text" style="width:170px" name="vValue" class="myTxtInput" ></td>
+							</tr>
+                             <tr class="myTr">
+								<td><span>URL</span></td>
+								<td><input type="text" style="width:170px" name="vUrl" class="myTxtInput" ></td>
 							</tr>
                             <tr class="myTr">
 								<td><span>是否必填</span></td>

@@ -9,6 +9,7 @@
     <meta http-equiv="X-UA-Compatible" content="IE=9" />
     <meta http-equiv="X-UA-Compatible" content="IE=8" />
     <meta http-equiv="X-UA-Compatible" content="IE=7" />
+    <meta http-equiv="X-UA-Compatible" content="IE=Edge,chrome=1" />
     <script src="../../lib/jquery/jquery-1.11.1.min.js" type="text/javascript"></script>
     <%--<script src="../../lib/jquery/jquery-1.5.2.min.js" type="text/javascript"></script>--%>
     <script src="../../Scripts/Ct_Controls.js" type="text/javascript"></script>
@@ -312,7 +313,7 @@
 
 
                         para = CreateParameter(ReportDataAction.ActionType.Post, ReportDataAction.Functions.FillReport, ReportDataAction.Methods.FillReportMethods.DeleteBdqData, para);
-                        DataManager.sendData(urls.fillReportUrl, para, resultManager.DeleteReport_Success, resultManager.FailResult, false);
+                        DataManager.sendData(urls.fillReportUrl, para, resultManager.DeleteReport_Success, resultManager.FailResult,false);
                         delete BBDataItems.BdqData[index][bdInfo.index];
                     }
 
@@ -412,7 +413,7 @@
                         callbackRun(function () {
                             mediatorManager.LoadBBFormat();
                             //mediatorManager.LoadBBCompFormat();
-                            mediatorManager.LoadBbData();
+                           mediatorManager.LoadBbData();
 
                         });
                     }
@@ -600,7 +601,7 @@
                         var obj = { dataStr: "" };
                         obj.dataStr = JSON.stringify(para);
                         obj = CreateParameter(ReportDataAction.ActionType.Post, ReportDataAction.Functions.FillReport, ReportDataAction.Methods.FillReportMethods.DeserializeFatchFormular, obj);
-                        DataManager.sendData(urls.fillReportUrl, obj, resultManager.DesrializeFatchFormular_Success, resultManager.FailResult, false);
+                        DataManager.sendData(urls.fillReportUrl, obj, resultManager.DesrializeFatchFormular_Success, resultManager.FailResult,false);
 
                     },BBDataItems);
                 },
@@ -638,7 +639,7 @@
                     var obj = { dataStr: "" };
                     obj.dataStr = JSON.stringify(para);
                     obj = CreateParameter(ReportDataAction.ActionType.Post, ReportDataAction.Functions.FillReport, ReportDataAction.Methods.FillReportMethods.DeserializeCaculateFormular, obj);
-                    DataManager.sendData(urls.fillReportUrl, obj, resultManager.DeserializeCaculateFormular_Success, resultManager.FailResult, false);
+                    DataManager.sendData(urls.fillReportUrl, obj, resultManager.DeserializeCaculateFormular_Success, resultManager.FailResult,false);
                     }, BBDataItems);
                 },
                 DeserializeVarifyFormular: function () {
@@ -676,7 +677,7 @@
                     var obj = { dataStr: "" };
                     obj.dataStr = JSON.stringify(para);
                     obj = CreateParameter(ReportDataAction.ActionType.Post, ReportDataAction.Functions.FillReport, ReportDataAction.Methods.FillReportMethods.DeserializeVarifyFormular, obj);
-                    DataManager.sendData(urls.fillReportUrl, obj, resultManager.DeserializeVerifyFormular_Success, resultManager.FailResult, false);
+                    DataManager.sendData(urls.fillReportUrl, obj, resultManager.DeserializeVerifyFormular_Success, resultManager.FailResult,false);
                 },
                 SelfCheck: function () {
                     var para = { TaskId: "", PaperId: "", CompanyId: "", ReportId: "", Year: "", Cycle: "" };
@@ -687,7 +688,7 @@
                     para.PaperId = currentState.ReportState.AuditPaper.value;
                     para.ReportId = currentState.navigatorData.currentReportId;
                     para = CreateParameter(ReportDataAction.ActionType.Post, ReportDataAction.Functions.FillReport, ReportDataAction.Methods.FillReportMethods.SelfCheck, para);
-                    DataManager.sendData(urls.fillReportUrl, para, resultManager.SelfCheck_Success, resultManager.FailResult, false);
+                    DataManager.sendData(urls.fillReportUrl, para, resultManager.SelfCheck_Success, resultManager.FailResult,false);
                 },
                 CancelSelfCheck: function () {
                     var para = { TaskId: "", PaperId: "", CompanyId: "", ReportId: "", Year: "", Cycle: "" };
@@ -698,7 +699,7 @@
                     para.PaperId = currentState.ReportState.AuditPaper.value;
                     para.ReportId = currentState.navigatorData.currentReportId;
                     para = CreateParameter(ReportDataAction.ActionType.Post, ReportDataAction.Functions.FillReport, ReportDataAction.Methods.FillReportMethods.CancelSelfCheck, para);
-                    DataManager.sendData(urls.fillReportUrl, para, resultManager.CancelSelfCheck_Success, resultManager.FailResult, false);
+                    DataManager.sendData(urls.fillReportUrl, para, resultManager.CancelSelfCheck_Success, resultManager.FailResult,false);
                 },
                 PrintPreview: function () {
 
@@ -866,12 +867,17 @@
             },
             GetGridIframe: function () {
                 return window.frames["gridFrame"];
+                //return document.frames["gridFrame"].contentWindow.document;
             },
             GetReportIframe: function () {
-                return window.frames["catalog"];
+                //兼容处理
+                 return window.frames["catalog"];
+               // return document.frames["catalog"];
             },
             GetInfoframe: function () {
-                return window.frames["CheckoutInfoIframe"];
+                //兼容处理
+                 return window.frames["CheckoutInfoIframe"];document
+               // return document.frames["CheckoutInfoIframe"];
             },
             IsOrNotBdq: function (Row, Col) {
                 var code = "-1";
@@ -1008,7 +1014,7 @@
                 para.Id = currentState.navigatorData.currentReportId;
                 para = CreateParameter(ReportFormatAction.ActionType.Post, ReportFormatAction.Functions.ReportFormatMenu, ReportFormatAction.Methods.ReportFormatMenuMethods.LoadReportFormat, para);
 
-                DataManager.sendData(urls.BBUrl, para, resultManager.LoadBB_Success, resultManager.FailResult, false);
+                DataManager.sendData(urls.BBUrl, para, resultManager.LoadBB_Success, resultManager.FailResult,false);
             },
             LoadBBCompFormat: function () {
                 var para = { Id: "", CompanyId: "" };
@@ -1023,7 +1029,7 @@
                 var para = { AuditPaperId: "" };
                 para.AuditPaperId = currentState.ReportState.AuditPaper.value;
                 para = CreateParameter(ReportDataAction.ActionType.Post, ReportDataAction.Functions.FillReport, ReportDataAction.Methods.FillReportMethods.GetCompaniesByAuditPaperAndAuthority, para);
-                DataManager.sendData(urls.fillReportUrl, para, resultManager.LoadCompanies_Success, resultManager.FailResult, false);
+                DataManager.sendData(urls.fillReportUrl, para, resultManager.LoadCompanies_Success, resultManager.FailResult);
             },
             LoadZq: function () {
                 var para = { ReportType: "", CurrentNd: "", CurrentZq: "" };
@@ -1032,7 +1038,7 @@
                 para.CurrentZq = currentState.ReportState.Zq;
 
                 para = CreateParameter(ReportDataAction.ActionType.Post, ReportDataAction.Functions.FillReport, ReportDataAction.Methods.FillReportMethods.GetReportCycle, para);
-                DataManager.sendData(urls.fillReportUrl, para, resultManager.LoadCycle_Success, resultManager.FailResult, false);
+                DataManager.sendData(urls.fillReportUrl, para, resultManager.LoadCycle_Success, resultManager.FailResult,false);
             },
             LoadBbData: function () {
                 datestart = new Date();
@@ -1057,7 +1063,7 @@
                 para = CreateParameter(ReportDataAction.ActionType.Post, ReportDataAction.Functions.FillReport, ReportDataAction.Methods.FillReportMethods.LoadReportDatas, para);
                 datestart = new Date();
                 s += "sendData" + datestart;
-                DataManager.sendData(urls.fillReportUrl, para, resultManager.LoadReportData_Success, resultManager.FailResult, false);
+                DataManager.sendData(urls.fillReportUrl, para, resultManager.LoadReportData_Success, resultManager.FailResult,false);
                 currentState.BdqBh = "";
                 datestart = new Date();
                 s += "完成" + datestart;
@@ -1213,7 +1219,7 @@
 
                 mediatorManager.LoadBbData();
                     });
-                // top.loader && top.loader.close();
+               
             },
             InitializeCompanies: function (data) {
                 try {
@@ -1453,8 +1459,6 @@
                             BBData = JSON2.parse(data.obj.itemStr);
                             currentState.RowColChange = false;
                             cellTextNotChangeSetCellType = true;
-
-
                             var vsBdhRow;
                             var vsBdhs = "";
                             gridFrame.Grid1.suspendPaint();
@@ -1465,7 +1469,7 @@
                                 }
                                 $.each(row, function (colIndex, cell) {
                                     if (cell && cell.CellLogicalType && cell.CellLogicalType == "02" && cell.CellDataType && cell.CellDataType != "") {
-
+                                       
                                         //gridFrame.Grid1.getCell(rowIndex, colIndex).text("");
                                         gridFrame.Grid1.setValue(rowIndex, colIndex, "");
                                         var flag = toolsManager.IsOrNotBdq(rowIndex, colIndex);
@@ -1498,18 +1502,19 @@
 
                                         }
                                         //设置单元格类型
-                                        gridFrame.GridManager.SetRowColCellType(cell, rowIndex, colIndex);
+                                        gridFrame.GridManager.SetRowColCellType(cell, cell.CellRow, cell.CellCol);
 
                                     } else {
                                         gridFrame.Grid1.getCell(rowIndex, colIndex).locked(true);
 
                                     }
+                                  
                                 });
 
 
                             });
                             
-
+                        
                             gridFrame.GridManager.DealCellLock();
                             gridFrame.Grid1.resumePaint();
 
@@ -1605,10 +1610,11 @@
                             BBDataItems = data.obj;
                             currentState.BdqDataMaps = BBDataItems.rdps.bdqMaps;
                             var gridIframe = toolsManager.GetGridIframe();
-                            //  gridIframe.Grid1.setIsProtected(true);
+                        
                             gridFrame.Grid1.suspendPaint();
                             //固定行数据
                             $.each(data.obj.Gdq, function (cellCode, CellItem) {
+                              
                                 gridFrame.GridManager.SetRowColText(CellItem.row, CellItem.col, CellItem);
                                 var tag = gridFrame.Grid1.getTag(CellItem.row, CellItem.col);
                                 mediatorManager.TextChange(CellItem.row, CellItem.col, tag);
@@ -1658,18 +1664,18 @@
                                    
                                         gridFrame.Grid1.resumePaint();
                                         gridFrame.Grid1.suspendPaint();
-
-                                      
-
                                         for (var i = bdFormat.Offset + addRowData+1; i <= bdFormat.Offset + addRowData + rowNum - 1; i++) {
 
                                             for (var j = 0; j < gridFrame.Grid1.getColumnCount() ; j++) {
                                                 var vsCellType = gridFrame.Grid1.getStyle(bdFormat.Offset + addRowData, j);
                                                 gridIframe.Grid1.getCell(i, j).locked(false);
-                                                gridFrame.Grid1.setStyle(i, j, vsCellType);
+                                               
+                                                if (gridIframe.CheckCellType(bdFormat.Offset + addRowData, j)) {
+                                                    gridFrame.Grid1.setStyle(i, j, vsCellType);
+                                                }
+                                           
                                             }
                                         }
-                                        // gridIframe.Grid1.getCells(bdFormat.Offset + addRowData, 0, bdFormat.Offset + addRowData + rowNum - 1, gridFrame.Grid1.getColumnCount() - 1).locked(false);
                                         gridFrame.Grid1.resumePaint();
                                         gridFrame.Grid1.suspendPaint();
 
@@ -1692,7 +1698,7 @@
 
                                                     //设置单元格对齐方式
                                                     if (cell.CellDataType == "01") {
-                                                        align = gridFrame.spreadNS.HorizontalAlign["left"];
+                                                        //align = gridFrame.spreadNS.HorizontalAlign["left"];
                                                         gridFrame.Grid1.getCell(i, columnIndex)["hAlign"](align);
                                                     } else if (cell.CellDataType == "02") {
                                                         align = gridFrame.spreadNS.HorizontalAlign["right"];
@@ -1701,20 +1707,24 @@
                                                 }
                                             }
                                         });
+                                        gridFrame.Grid1.resumePaint();
                                         //设置增量记录
                                         rowChangeFlag[bdFormat.Offset] = rowNum - 1;
 
                                     }
                                     datestart = new Date();
+                                    gridFrame.Grid1.suspendPaint();
                                     s += "开始setBorder " + datestart;
                                     //设置变动行数据
                                     if (bdqData && bdqData.length > 0) {
+                                       
                                         $.each(bdqData, function (bdRowIndex, bdRow) {
                                             $.each(BBData.bbData[bdFormat.Offset], function (columnIndex, cell) {
+                                              
                                                 if (cell.CellCode) {
                                                     var row = bdFormat.Offset + bdRowIndex + addRowData;
                                                     if (bdRow && bdRow[cell.CellCode]) {
-                                                        gridFrame.GridManager.SetRowColText(row, columnIndex, bdRow[cell.CellCode]);
+                                                         gridFrame.GridManager.SetRowColText(row, columnIndex, bdRow[cell.CellCode]);
                                                     } else {
                                                         var cellItem = { value: "", cellDataType: cell.CellDataType, isOrNotUpdate: "0" };
                                                         gridFrame.GridManager.SetRowColTextByRowCol(row, columnIndex, cellItem);
@@ -1722,10 +1732,12 @@
                                                     var tag = gridFrame.Grid1.getTag(row, columnIndex);
                                                     mediatorManager.TextChange(row, columnIndex, tag);
                                                 }
+                                              
 
                                             });
 
                                         });
+                                       
                                     } else {
 
                                         $.each(BBData.bbData[bdFormat.Offset], function (columnIndex, cell) {
@@ -1738,6 +1750,7 @@
 
                                         });
                                     }
+                                    gridFrame.Grid1.resumePaint();
                                     datestart = new Date();
                                     s += "结束setBorder " + datestart;
                                 }
@@ -1862,7 +1875,7 @@
                                 }
                             }
 
-                            gridFrame.Grid1.resumePaint();
+                           // gridFrame.Grid1.resumePaint();
                      
                             //设置报表状态
 
@@ -2148,7 +2161,7 @@
                 var height = document.body.clientHeight - 50;
                 if (InfoIframControl.Collapse) {
                     $("#content").css("height", height - 30);
-                    gridIframe.ChangeHeight(height - 30);
+                   // gridIframe.ChangeHeight(height - 30);
                 } else {
                     gridIframe.ChangeHeight(height - 143);
                 }

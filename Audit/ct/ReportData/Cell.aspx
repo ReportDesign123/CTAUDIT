@@ -23,17 +23,16 @@
     <script src="../../Scripts/FunctionMethodManager.js" type="text/javascript"></script>
 
 </head>
-<body  style=" height:100%; width:100%; margin:0; padding:0; overflow:hidden;" onresize="showmsg()">
+<body  style=" height:100%; width:100%; margin:0; padding:0; overflow:hidden;">
 			<div id="ss"  style="height:600px; width:100%">
 		</div>
         <script type="text/javascript">
-            function showmsg() {
-                alert("长度发生变化")
-            }
+            
             top.loader && top.loader.close();
             var urls = {
                 HelpUrl: "../../handler/BasicHandler.ashx",
-                ReportDataUrl: "JumpReportMang.aspx"
+                ReportDataUrl: "JumpReportMang.aspx",
+                BBUrl: "../../handler/FormatHandler.ashx"
             };
             var currentState = { Row: "", Col: "", Tag: "", CellsHelp: {},currentNum:0 };
             var grid1;
@@ -171,16 +170,18 @@
            var GridManager = {
 
                SetRowColText: function (row, col, CellItem) {
-                   var cellType = Grid1.getCellType(row, col);
-                   if(cellType instanceof GC.Spread.Sheets.CellTypes.HyperLink)
+                   var cellType = null;
+                   cellType = Grid1.getCellType(row, col);
+                   if (cellType instanceof GC.Spread.Sheets.CellTypes.HyperLink)
+                  // if (CellItem.cellDataType == "04")
                    {
                        var vsBBName;
-                       CellItem.ParaValue = GetRequest(CellItem.ParaValue, row, col);
+                       CellItem.UrlValue = GetRequest(CellItem.UrlValue, row, col);
                        var vsUrl;
                        //  var cellType = new spreadNS.CellTypes.HyperLink();
-                       if (CellItem.ParaValue.indexOf("BB$") >= 0) {
+                       if (CellItem.UrlValue.indexOf("BB$") >= 0) {
 
-                           var vsBBArry = CellItem.ParaValue.split("$");
+                           var vsBBArry = CellItem.UrlValue.split("$");
                            vsBBName = GetCellValue(vsBBArry[1], row, col);
                            vsUrl = "../../JumpReportMang.aspx?Report=" + vsBBName;
                            vsUrl += "&UserCode=9999&Stype=1";
@@ -194,16 +195,18 @@
                                vsUrl += "&AuditDate=" + parent.currentState.ReportState.AuditDate.value;
                            vsUrl += "&Company=" + parent.currentState.CompanyId;
                           
-                           Grid1.setValue(row, col, vsUrl);
-                           Grid1.getCellType(row, col)._text = vsBBName;
+                           //Grid1.setValue(row, col, vsUrl);
+                           //Grid1.getCellType(row, col)._text = vsBBName;
                        }
                        else
                        {
-                           cellType.text(CellItem.ParaValue);
-                           Grid1.getCell(row, col).cellType(cellType).value(CellItem.ParaValue);
-                           //Grid1.setValue(row, col, CellItem.ParaValue);
-                           //Grid1.getCellType(row, col)._text = CellItem.ParaValue;
+                           vsUrl = CellItem.UrlValue;
+                           //cellType.text(CellItem.ParaValue);
+                           //Grid1.getCell(row, col).cellType(cellType).value(CellItem.ParaValue);
+                           
                        }
+                       Grid1.getCell(parseInt(row), parseInt(col)).cellType(cellType).value(vsUrl);
+
                    }
                    else {
                        GridManager.SetRowColTextByRowCol(row, col, CellItem);
@@ -212,6 +215,7 @@
                SetRowColCellType: function (cell, rowIndex, colIndex) {
                    if (cell.CellType == "" || cell.CellType == undefined)
                        return;
+                  
                    if (cell.CellType == "02") {
                        var cellType =  new spreadNS.CellTypes.ComboBox();
                        if (cell.CellValue && cell.CellValue != "") {
@@ -227,23 +231,24 @@
                    }
                    else if (cell.CellType == "03") {
                        //帮助
-                       var cellType = Grid1.getCellType(rowIndex, colIndex);
                        var ButtonCellType = new spreadNS.CellTypes.Button();
                        ButtonCellType.buttonBackColor("#DCDCDC");
-                       Grid1.setCellType(rowIndex, colIndex, ButtonCellType);
+                       ButtonCellType.text("...");
+                       Grid1.setCellType(rowIndex, colIndex, ButtonCellType, GC.Spread.Sheets.SheetArea.viewport);
+                       //Grid1.getCell(parseInt(rowIndex), parseInt(colIndex)).cellType(ButtonCellType);
                    }
                    else if (cell.CellType == "04") {
 
-                       var defaultHyperlink =  new spreadNS.CellTypes.HyperLink();
-                       if (cell.CellValue && cell.CellValue != "") {
+                      
+                       if (cell.CellUrl && cell.CellUrl != "") {
 
-                           defaultHyperlink.text(cell.CellValue);
-                          // Grid1.getCell(rowIndex, colIndex).cellType(defaultHyperlink).value(cell.CellValue);
-                           Grid1.setCellType(rowIndex, colIndex, defaultHyperlink);
-                       }
-                       else {
-
-                           Grid1.setCellType(rowIndex, colIndex, defaultHyperlink);
+                           var defaultHyperlink = new spreadNS.CellTypes.HyperLink();
+                           defaultHyperlink.linkColor("blue")
+                           .visitedLinkColor("#FF8080")
+                            .text(cell.CellValue)
+                            .linkToolTip(cell.CellValue);
+                           Grid1.getCell(parseInt(rowIndex), parseInt(colIndex)).cellType(defaultHyperlink).value(cell.CellUrl);
+                          
                        }
                    }
                },
@@ -394,17 +399,34 @@
                    var sheet = args.sheet,
                        row = args.row,
                        col = args.col;
-                   var cellType = Grid1.getCellType(row, col);
-                   if (cellType instanceof GC.Spread.Sheets.CellTypes.Button) {
+                   var cellsType = sheet.getCellType(row,col);
+                   if (cellsType instanceof GC.Spread.Sheets.CellTypes.Button) {
+                       var cellType = sheet.getCellType(row, col);
                        try
                        {
-                           var tag = Grid1.getTag(row, col);
+                           var tag = sheet.getTag(args.row, args.col);
                            if (tag.split("|")[2]) {
                                var cellFormat = JSON2.parse(tag.split("|")[2]);
                                if (cellFormat["CellHelp"]) {
                                    if (cellFormat["CellType"] == "03") {
                                        var paras = { url: "", columns: [], sortName: "", sortOrder: "" };
-                                       paras.url = "../../handler/BasicHandler.ashx?ActionType=" + BasicAction.ActionType.Grid + "&MethodName=GetDictionaryDataGridByClassType&FunctionName=" + BasicAction.Functions.DictionaryManager + "&ClassType=" + cellFormat["CellHelp"];
+                                      // var para = { TaskId: "", PaperId: "", CompanyId: "", ReportId: "", Year: "", Cycle: "", AuditDate: "", bdqStr: "", Where: "", WeekReportID: "", WeekReportName: "", WeekReportKsrq: "", WeekReportJsrq: "" };
+                                        var vsTaskId =parent.currentState.ReportState.AuditTask.value;
+                                        var vsCompanyId = parent.currentState.CompanyId;
+                                       //para.Cycle = parent.currentState.ReportState.Zq;
+                                        var vsYear = parent.currentState.ReportState.Nd;
+                                        var vsPaperId = parent.currentState.ReportState.AuditPaper.value;
+                                        var vsReportId = parent.currentState.navigatorData.currentReportId;
+                                       //para.bdqStr = null;
+                                       //var bdqCode = parent.vsBDBH; // currentState.BdqBh;
+                                       //para.Where = "&&";
+                                       //para.WeekReportID = parent.currentState.ReportState.WeekReport.ID;
+                                       //para.WeekReportName = parent.currentState.ReportState.WeekReport.Name;
+                                       //para.WeekReportKsrq = parent.currentState.ReportState.WeekReport.Ksrq;
+                                       //para.WeekReportJsrq = parent.currentState.ReportState.WeekReport.Jsrq;
+                                      // paras.url = "../../handler/BasicHandler.ashx?ActionType=" + BasicAction.ActionType.Grid + "&MethodName=GetDictionaryDataGridByClassType&FunctionName=" + BasicAction.Functions.DictionaryManager + "&ClassType=" + cellFormat["CellHelp"];
+                                        paras.url = "../../handler/BasicHandler.ashx?ActionType=" + BasicAction.ActionType.Grid + "&MethodName=GetDictionaryDataGridByLsHelp&FunctionName=" + BasicAction.Functions.DictionaryManager + "&ClassType=" + cellFormat["CellHelp"] + "&TaskId=" + vsTaskId
+                                       + "&CompanyId=" + vsCompanyId + "&vsYear=" + vsYear + "&PaperId=" + vsPaperId + "&ReportId=" + vsReportId;
                                        paras.columns = [[
                         { field: "Code", title: "编号", width: 80 },
                          { field: "Name", title: "名称", width: 80 }
@@ -413,9 +435,15 @@
                                        paras.sortOrder = "ASC";
                                        var result = window.showModalDialog("../pub/HelpDialog.aspx", paras, "dialogHeight:350px;dialogWidth:300px");
                                        if (result && result.Code) {
+                                           sheet.suspendPaint();
+                                          
+                                          
                                            cellType.text(result.Name);
-                                           Grid1.setValue(row, col, result.Name);
-                                           Grid1.getCell(row, col).text(result.Name);
+                                           //sheet.setCellType(parseInt(row), parseInt(col), cellType);
+                                          // sheet.setValue(row, col-1, result.Name);
+                                           sheet.getCell(row, col).text(result.Name);
+
+                                           sheet.resumePaint();
                                        }
                                    }
                                }
@@ -429,6 +457,7 @@
                DealCellLock:function ()
                {
                    if (Grid1) {
+                      // Grid1.suspendPaint();
                        for (var i = 0; i < Grid1.getRowCount() ; i++) {
                            for (var j = 0; j < Grid1.getColumnCount() ; j++) {
                                var tag = Grid1.getTag(i, j);
@@ -440,6 +469,7 @@
                                }
                            }
                        }
+                      // Grid1.resumePaint();
                    }
                },
                GridClipboardChanged: function (e, args)
@@ -539,6 +569,14 @@
                        date.getFullYear(), to2DigitsString(date.getMonth() + 1), to2DigitsString(date.getDate()),
                        to2DigitsString(date.getHours()), to2DigitsString(date.getMinutes()), to2DigitsString(date.getSeconds())
                    ].join("");
+               }
+               function CheckCellType(row, col)
+               {
+                  var  cellType = Grid1.getCellType(row, col);
+                  if (cellType instanceof GC.Spread.Sheets.CellTypes.Button)
+                       return false;
+                   else
+                       return true;
                }
         </script>
 </body>

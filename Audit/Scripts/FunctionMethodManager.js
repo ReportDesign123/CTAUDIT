@@ -24,7 +24,7 @@ var BasicAction = {
         DicManagerMethods: { GetDicClassifyList: "GetDicClassifyList", SaveDictionaryClassify: "SaveDictionaryClassify", UpdateDictionaryClassify: "UpdateDictionaryClassify", DeleteDictionaryClassify: "DeleteDictionaryClassify",
             GetDictionaryClassify: "GetDictionaryClassify", GetDictionaryList: "GetDictionaryList", SaveDictionary: "SaveDictionary", UpdateDictionary: "UpdateDictionary", DeleteDictionary: "DeleteDictionary", GetDictionary: "GetDictionary",
             GetDicClassifyCombo: "GetDicClassifyCombo", GetDictionaryListByClass: "GetDictionaryListByClass", GetDictionaryListByClassType: "GetDictionaryListByClassType",
-            GetDictionaryDataGridByClassType: "GetDictionaryDataGridByClassType", GetDicClassifyDataGridFilter: "GetDicClassifyDataGridFilter", GetParasList: "GetParasList"
+            GetDictionaryDataGridByClassType: "GetDictionaryDataGridByClassType", GetDictionaryDataGridByLsHelp: "GetDictionaryDataGridByLsHelp", GetDicClassifyDataGridFilter: "GetDicClassifyDataGridFilter", GetParasList: "GetParasList", GetLshelp: "GetLshelp"
         },
         CycManagerMethods: { GetCycleList: "GetCycleList", SaveCycle: "SaveCycle", UpdateCycle: "UpdateCycle", DeleteCycle: "DeleteCycle", GetCycle: "GetCycle", GetCycleInfor: "GetCycleInfor"},
         CparasManagerMethods: { DataGrid: "DataGrid",Save: "Save", Edit: "Edit", Delete: "Delete", GetParaList: "GetParaList" },

@@ -183,7 +183,7 @@
                     }
 
                 }
-                $("#layout1").ligerLayout({ allowRightCollapse: true, allowRightResize: true, isRightCollapse: false, rightWidth: 370, onEndResize: formularManager.BalanceIfManager.LoadFormularGrid });
+                $("#layout1").ligerLayout({ allowRightCollapse: true, allowRightResize: true, isRightCollapse: false, rightWidth: 370, onEndResize: formularManager.BalanceIfManager.LoadFormularGrid, onRightToggle: function (isColl) { alert(isColl ? "收缩" : "显示"); } });
                 $("#fokBtn").bind("click", formularManager.createFormular);
                 $("#fnoBtn").bind("click", formularManager.RemoveFormular);
 
@@ -1332,6 +1332,8 @@
                 LoadFormularGrid: function () {
                     var data = BalanceManager.CreateBalanceData();
                     rightControls.FormulaGrid.loadData(data);
+                    spread.refresh();
+
                 },
                 SaveBalanceFormular: function () {
                     var TempFormular = { Id: "", formularContent: "", Type: "add", errorInfo: "" };
@@ -1415,8 +1417,13 @@
             } else {
                 document.body.style.width = "800px";
             }
+           // $("#ss").width(document.body.style.width);
         });
-        function ss(id) {alert(id);}
+        function ss(id) { alert(id); }
+        function CollapsHelp()
+        {
+           alert("ddddd");
+        }
     </script>
 </head>
 <body style=" overflow:hidden">
@@ -1460,8 +1467,10 @@
 </div>
     
 	<div id="layout1">
-	<div id="ss" position="center"  style="height: 100%; width:100%">
-		</div>
+        <div position="center" style="z-index:-1">
+        <div id="ss" style="width:100%;height:100%" >
+        </div>
+            </div>
 		<div position="right"title="平衡公式：" id="layout-right"  >
             <div id="main" style="margin: 0px; height: 100%; width:100%">
                 <div id="formularGridToobar"></div>
