@@ -415,12 +415,13 @@ namespace AuditService.ReportData
                         idvs.row = die.Row;
                         idvs.col = die.Col;
                         idvs.ParaValue   =die.ParaValue;
+                        idvs.UrlValue = die.UrlValue;
                         if (rds.Gdq.ContainsKey(die.Code))
                         {
                             throw new Exception("单元格内码【" + die.Code + "】重复，请调整报表格式");
                         }
                         rds.Gdq.Add(die.Code, idvs);
-
+                        //处理宏函数
                         if (!StringUtil.IsNullOrEmpty(die.Macro))
                         {
                             //mh.ReportParameter = rdps;
@@ -471,7 +472,7 @@ namespace AuditService.ReportData
         /// <param name="die"></param>
         private void ReplaceMarchPara(DataItemEntity die, MacroHelp mh)
         {
-            string strUrl = die.ParaValue;
+            string strUrl = die.UrlValue;
             if (strUrl==null||strUrl == "")
                 return;
             int QMarkIndex = strUrl.IndexOf('?');
@@ -490,7 +491,7 @@ namespace AuditService.ReportData
                   if (strValue.Split('@')[0] == "0")
                   {
                      string strMarcro=  mh.ReplaceMacroVariable(mh.ReplaceMacroVariable(strValue.Split('@')[1]));
-                     die.ParaValue= die.ParaValue.Replace(strValue, strMarcro);
+                     die.UrlValue= die.UrlValue.Replace(strValue, strMarcro);
                   }
             }     
         }
@@ -665,7 +666,8 @@ namespace AuditService.ReportData
                             if (dc.ColumnName != "DATA_ID")
                             {
                                 if (bdqItems[dc.ColumnName].CellType == "04")
-                                    idv.ParaValue = bdqItems[dc.ColumnName].ParaValue;
+                                  // idv.ParaValue = bdqItems[dc.ColumnName].ParaValue;
+                                idv.UrlValue = bdqItems[dc.ColumnName].UrlValue;
                             }
                             row.Add(dc.ColumnName, idv);
                         }
