@@ -111,7 +111,6 @@
 
 
 
-
         var EventManager = {
             imageFlag: "up",
             imgFooter_ToggleEvent: function () {
@@ -136,7 +135,7 @@
                 mediatorManager.RefreshReport();
             },
             ReportSearch: function () {
-
+                var gridFrame = toolsManager.GetGridIframe();
                 var filter = gridFrame.Grid1.rowFilter(),
                 text = $("#txtSearch").val(),
                  col = gridFrame.Grid1.getActiveColumnIndex();
@@ -174,7 +173,7 @@
             InsertMultiRows: function () {
                 dialog.Open("ct/reportdata/NewRowCol.aspx", "插入行", null, function (result) {
                     if (result && result.RowCol) {
-                        var gridFrame = toolsManager.GetGridIframe();
+                       var gridFrame = toolsManager.GetGridIframe();
                         // gridFrame.Grid1.addRows(row, result.RowCol);
                         for (var i = 0; i < result.RowCol; i++) {
                             EventManager.InsertRowCol_Click();
@@ -210,9 +209,9 @@
             InsertRowCol_Click: function () {
                 var index = BBData.bdq.BdqMaps[currentState.BdqBh];
                 var bdqFormat = BBData.bdq.Bdqs[index];
-                var gridFrame = toolsManager.GetGridIframe();
+               var gridFrame = toolsManager.GetGridIframe();
                 var bdqCode = bdqFormat.Code;
-                var gridFrame = toolsManager.GetGridIframe();
+              //  var gridFrame = toolsManager.GetGridIframe();
                 if (bdqFormat.BdType == "1") {
                     if (gridFrame.GridManager.GetCurrentRow() == gridFrame.Grid1.getRowCount()) { alert("表格行数需要比插入行数多一行！"); return; };
                     var currentRow = gridFrame.GridManager.GetCurrentRow();
@@ -284,7 +283,7 @@
             DeleteRowCol_Click: function () {
                 var index = BBData.bdq.BdqMaps[currentState.BdqBh];
                 var bdqFormat = BBData.bdq.Bdqs[index];
-                var gridFrame = toolsManager.GetGridIframe();
+               var gridFrame = toolsManager.GetGridIframe();
                 var bdqCode = bdqFormat.Code;
                 if (bdqFormat.BdType == "1") {
                     var row = gridFrame.GridManager.GetCurrentRow();
@@ -453,7 +452,8 @@
                     para.rdps = toolsManager.GetReportParameter();
                     para.bdMaps = BBDataItems.bdMaps;
                     para.bdTableNames = BBDataItems.bdTableNames;
-                    var gridIframe = toolsManager.GetGridIframe();
+                    //var gridIframe = toolsManager.GetGridIframe();
+                    var gridFrame = toolsManager.GetGridIframe();
                     var vsFuals = "";
                     //将现有的数据进行拷贝
                     gridFrame.Grid1.endEdit();
@@ -709,7 +709,7 @@
                 },
                 PrintPreview: function () {
 
-                    var gridFrame = toolsManager.GetGridIframe();
+                   var gridFrame = toolsManager.GetGridIframe();
                     gridFrame.spread.print();
                 },
                 Print: function () {
@@ -718,7 +718,7 @@
                 },
                 ExportExcel: function () {
                     if (!BBDataItems.Gdq) { alert("先选择一张需要操作的报表"); return; }
-                    var gridFrame = toolsManager.GetGridIframe();
+                   var gridFrame = toolsManager.GetGridIframe();
                     // gridFrame.Grid1.exExportToExcel("", false, false);
                     gridFrame.exportToExcel();
                 }
@@ -854,7 +854,7 @@
 
 
             }
-
+           
 
         });
 
@@ -892,19 +892,37 @@
 
             },
             GetGridIframe: function () {
-                return window.frames["gridFrame"];
+                if (toolsManager.BrowserType())
+                    return window.frames["gridFrame"];
+                else
+                    return window.frames["gridFrame"].contentWindow;
                 //return document.frames["gridFrame"].contentWindow.document;
             },
             GetReportIframe: function () {
                 //兼容处理
-                return window.frames["catalog"];
+                if (toolsManager.BrowserType())
+                    return window.frames["catalog"];
+                else
+                    //document.getElementById('catalog').contentWindow;
+                    return window.frames["catalog"].contentWindow;
                 // return document.frames["catalog"];
             },
             GetInfoframe: function () {
                 //兼容处理
-                return window.frames["CheckoutInfoIframe"];  
+                if (toolsManager.BrowserType())
+                    return window.frames["CheckoutInfoIframe"];
+                else
+                    return window.frames["CheckoutInfoIframe"].contentWindow;
                 // return document.frames["CheckoutInfoIframe"];
             },
+            BrowserType: function()
+            {
+                var userAgent = navigator.userAgent; //取得浏览器的userAgent字符串 
+                var isOpera = userAgent.indexOf("Opera") > -1; //判断是否Opera浏览器 
+                var isIE = userAgent.indexOf("compatible") > -1 && userAgent.indexOf("MSIE") > -1 && !isOpera; //判断是否IE浏览器
+                return isIE;
+            }
+            ,
             IsOrNotBdq: function (Row, Col) {
                 var code = "-1";
                 $.each(BBData.bdq.Bdqs, function (index, item) {
@@ -965,6 +983,7 @@
                 return null;
             },
             GetCellTagBdqInfo: function (row, col) {
+                var gridFrame = toolsManager.GetGridIframe();
                 var upCellTag = gridFrame.Grid1.getTag(row, col); // gridFrame.Grid1.Cell(row, col).Tag;
                 var bdInfo = JSON2.parse(upCellTag.split("|")[0].split(";")[1]);
                 return bdInfo;
@@ -1153,8 +1172,10 @@
                     return false;
             },
             TextChange: function (row, col, tag) {
+
                 //根据单元格信息设置单元格数据状态
                 if (cellTextNotChangeSetCellType) return;
+                var gridFrame = toolsManager.GetGridIframe();
                 if (tag != null && tag != "" && tag.length > 0) {
                     var cellArr = tag.split("|");
                     var bdArr = cellArr[0].split(";");
@@ -1193,6 +1214,7 @@
             },
             RefreshReport: function () {
                 callbackRun(function () {
+                    var gridFrame = toolsManager.GetGridIframe();
                     currentState.RowColChange = false;
                     if (currentState.navigatorData.currentReportId == "home" || currentState.navigatorData.currentReportId == "") { mediatorManager.RefreshHome(); return; }
                     if (BBData.bdq.bdNum > 0) {
@@ -1400,7 +1422,7 @@
             SetReportState: function (state) {
                 try {
                     if (state == "0") {
-                        var gridFrame = window.frames["gridFrame"];
+                       var gridFrame = window.frames["gridFrame"];
                         gridFrame.Grid1.suspendPaint();
                         for (var i = 0; i < gridFrame.Grid1.getRowCount() ; i++) {
                             for (var j = 0; j < gridFrame.Grid1.getColumnCount() ; j++) {
@@ -1472,7 +1494,7 @@
                     if (data && data.obj && data.obj.formatStr) {
                         currentState.ReportFormat = data.obj.formatStr;
                         currentState.ReportCalcuFormat = data.obj.formatCalcuStr;
-                        var gridFrame = window.frames["gridFrame"];
+                        var gridFrame = toolsManager.GetGridIframe();// window.frames["gridFrame"];
                         var width = $("#content").css("width");
                         width = parseInt(width.substr(0, width.length - 2), 10);
 
@@ -1632,9 +1654,12 @@
 
                             BBDataItems = data.obj;
                             currentState.BdqDataMaps = BBDataItems.rdps.bdqMaps;
-                            var gridIframe = toolsManager.GetGridIframe();
 
+                           var gridFrame = toolsManager.GetGridIframe();
+                          
                             gridFrame.Grid1.suspendPaint();
+                           // gridFrame.document.getElementById("Grid1").suspendPaint();
+                          
                             //固定行数据
                             $.each(data.obj.Gdq, function (cellCode, CellItem) {
 
@@ -1691,9 +1716,9 @@
 
                                             for (var j = 0; j < gridFrame.Grid1.getColumnCount() ; j++) {
                                                 var vsCellType = gridFrame.Grid1.getStyle(bdFormat.Offset + addRowData, j);
-                                                gridIframe.Grid1.getCell(i, j).locked(false);
+                                                gridFrame.Grid1.getCell(i, j).locked(false);
 
-                                                if (gridIframe.CheckCellType(bdFormat.Offset + addRowData, j)) {
+                                                if (gridFrame.CheckCellType(bdFormat.Offset + addRowData, j)) {
                                                     gridFrame.Grid1.setStyle(i, j, vsCellType);
                                                 }
 
@@ -2140,7 +2165,7 @@
                 },
                 getDataByMessage: function (message) {
                     var data = message.split("|");
-                    var InfData = [];
+                    var InfData=[];
                     $.each(data, function (index, node) {
                         var temp = node.split(";");
                         temp[0] = temp[0].substr(1, temp[0].length - 2);

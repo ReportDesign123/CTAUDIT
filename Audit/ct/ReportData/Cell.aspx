@@ -40,7 +40,7 @@
 
             var spreadNS;
             var spread;
-            var Grid1;
+             Grid1=null;
             var excelIO;
             var DOWNLOAD_DIALOG_WIDTH = 300;
             var isSafari = (function () {

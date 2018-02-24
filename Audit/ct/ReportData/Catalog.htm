@@ -137,7 +137,8 @@
                 var bbName = $("#bbName").val();
                 var ReportState = $("#ReportState").combobox("getText");
                 var classifiy = classifiyBox.name.val();
-                parent.mediatorManager.RefreshHome();
+                // parent.mediatorManager.RefreshHome();
+                 document.parentWindow.parent.mediatorManager.RefreshHome();
                 searchState = false;
                 var data = gridData;
                 var key = {};
