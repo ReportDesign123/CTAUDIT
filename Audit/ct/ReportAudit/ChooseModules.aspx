@@ -44,8 +44,9 @@
          $.each(Modules, function (index, node) {
              data.push({Code:node.Code,Name:node.Name});
          });
-         window.returnValue = data;
-         window.close();
+         var modalid = $(window.frameElement).attr("modalid");
+         dialog.setVal(data);
+         dialog.close(modalid);
      };
     </script>
   <table class="easyui-datagrid"  id="ListGrid"

@@ -42,8 +42,9 @@
                     title: "",
                     columns: columns,
                     onDblClickRow: function (rowIndex, rowData) {
-                        window.returnValue = rowData;
-                        window.close();
+                        var modalid = $(window.frameElement).attr("modalid");
+                        dialog.setVal(rowData);
+                        dialog.close(modalid);
                     },
                     toolbar: "#tb"
                 }
@@ -66,12 +67,15 @@
 
         var ClickManager = {
             SelectClick: function () {
-
-                window.returnValue = helpGrid.datagrid("getSelections");
-                 window.close();
+                var modalid = $(window.frameElement).attr("modalid");
+                dialog.setVal(helpGrid.datagrid("getSelections"));
+                dialog.close(modalid);
+              
             },
             CancelClick: function () {
-                window.close();
+                var modalid = $(window.frameElement).attr("modalid");
+               
+                dialog.close(modalid);
             }
         };
     </script>

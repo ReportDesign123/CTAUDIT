@@ -686,9 +686,11 @@ function () {
         result.content = Content
         result.DataSource = $("#DataSource").combobox('getValue');
         result.FormularLevel = $("#fLevel").val();
-        window.returnValue = result;
-
-        window.close();
+       
+        var modalid = $(window.frameElement).attr("modalid");
+        dialog.setVal(result);
+        dialog.close(modalid);
+      
     });
     var paras = dialog.para();// window.dialogArguments;
     if (paras && paras.content) {

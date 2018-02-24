@@ -35,7 +35,9 @@ input {
     }
     function close() {
         $('#TemplateForm').submit();
-        window.close();
+        var modalid = $(window.frameElement).attr("modalid");
+      
+        dialog.close(modalid);
     }
      
 </script>

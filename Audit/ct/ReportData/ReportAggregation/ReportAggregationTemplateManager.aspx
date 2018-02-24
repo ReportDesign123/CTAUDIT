@@ -60,8 +60,9 @@
                 },
                 onDblClickRow: function (index, rowdata) {
                     if (param && param.Type == "Classify") {
-                        window.returnValue = rowdata;
-                        window.close();
+                        var modalid = $(window.frameElement).attr("modalid");
+                        dialog.setVal(rowdata);
+                        dialog.close(modalid);
                     }
                 }
             });
@@ -145,8 +146,9 @@
                     onDblClickRow: function (index, rowdata) {
                         if (param && param.Type == "Template") {
                             rowdata.ClassifyName = controls.ClassifyGrid.datagrid("getSelected").Name;
-                            window.returnValue = rowdata;
-                            window.close();
+                            var modalid = $(window.frameElement).attr("modalid");
+                            dialog.setVal(rowdata);
+                            dialog.close(modalid);
                         }
                     }
                 });

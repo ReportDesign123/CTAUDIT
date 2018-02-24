@@ -57,8 +57,9 @@
                     { field: "bbName", title: "报表名称", width: 210 }
                     ]],
                     onDblClickRow: function (rowIndex, rowData) {
-                        window.returnValue = rowData;
-                        window.close();
+                        var modalid = $(window.frameElement).attr("modalid");
+                        dialog.setVal(rowData);
+                        dialog.close(modalid);
                     }, onLoadSuccess: function (data) {
                         var Id = para.ReportId;
                         if (Id && Id != ""&&data.rows.length>0) {
@@ -143,8 +144,9 @@
       }
       function returnReports() {
           var reports = $("#ReportGrid").datagrid("getSelections");
-          window.returnValue = reports;
-          window.close();
+          var modalid = $(window.frameElement).attr("modalid");
+          dialog.setVal(reports);
+          dialog.close(modalid);
       }
       </script>
 </head>

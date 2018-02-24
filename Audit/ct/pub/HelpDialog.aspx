@@ -47,8 +47,10 @@
                     fitColumns: true,
                     columns: columns,
                     onDblClickRow: function (rowIndex, rowData) {
-                        window.returnValue = rowData;
-                        window.close();
+                        var modalid = $(window.frameElement).attr("modalid");
+                        dialog.setVal(rowData);
+                        dialog.close(modalid);
+                     
                     },
                     toolbar:"#tb",
                     onLoadSuccess: function (data) {

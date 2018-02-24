@@ -38,11 +38,15 @@ body{ font-size:12px;}
                 para["DataName"] = controls.nameCol.getValue();
                 para["SortField"] = controls.sortCol.getValue();
                 para["Merge"] = $("#merge").attr("checked");
-                  window.returnValue = para;
-                  window.close();
+                 
+                  var modalid = $(window.frameElement).attr("modalid");
+                  dialog.setVal(para);
+                  dialog.close(modalid);
         });
         $("#cancel").bind("click", function () {
-            window.close();
+            var modalid = $(window.frameElement).attr("modalid");
+           
+            dialog.close(modalid);
         });
       
         InitializeControls(obj);

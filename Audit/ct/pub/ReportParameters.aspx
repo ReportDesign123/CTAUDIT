@@ -348,16 +348,19 @@
                             returnParm.push({ ReportCode: $("#reportValue").val(), ReportName: $("#reportName").val(), CompanyName: "", Parameters: patameter });
                         }
                     }
-                    window.returnValue = returnParm;
-                    window.close();
+                    var modalid = $(window.frameElement).attr("modalid");
+                    dialog.setVal(returnParm);
+                    dialog.close(modalid);
+                  
                 }
             },
             returnLinkParameter: function () {
                 var returnParm;
                 var patameter = EventManager.getParameter();
                 returnParm = { ReportCode: $("#reportValue").val(), ReportName: $("#reportName").val(), CompanyName: $("#companyName").val(), Parameters: patameter };
-                window.returnValue = returnParm;
-                window.close();
+                var modalid = $(window.frameElement).attr("modalid");
+                dialog.setVal(returnParm);
+                dialog.close(modalid);
             },
             getParameter: function () {
                 var param = { TaskId: "", TaskName: "", PaperId: "", PaperName: "", ReportId: "", CompanyId: "" };
@@ -392,7 +395,9 @@
                 return patameter;
             },
             backBtnClick: function () {
-                window.close();
+                var modalid = $(window.frameElement).attr("modalid");
+               
+                dialog.close(modalid);
             },
             doSearch: function (value, name) {
                 var para = {};

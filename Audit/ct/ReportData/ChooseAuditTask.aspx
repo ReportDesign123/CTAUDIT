@@ -103,8 +103,7 @@
                 var modalid = $(window.frameElement).attr("modalid");
                 dialog.setVal(para); 
                 dialog.close(modalid);
-                //  window.returnValue = para;
-                // window.close();
+               
             });
 
             paras =dialog.para();//window.dialogArguments;
@@ -395,7 +394,7 @@
     <div style="display: block; padding: 2; text-align: right; margin-right: 10px; position: absolute; bottom: 40px; right: 20px;">
 
         <a href="#" class="easyui-linkbutton" data-options="iconCls:'icon-save'" style="margin-right: 5px" id="sureBtn">确定</a>
-        <a href="#" class="easyui-linkbutton" data-options="iconCls:'icon-no'" onclick="window.close()">关闭</a>
+        <a href="#" class="easyui-linkbutton" data-options="iconCls:'icon-no'" onclick="dialog.close($(window.frameElement).attr('modalid'));">关闭</a>
     </div>
     <div id="Dialog"></div>
 </body>

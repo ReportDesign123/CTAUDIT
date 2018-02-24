@@ -39,11 +39,14 @@
                 var para = {};
                 if (!controls.RowCol.getValue()) { alert("输入不能为空"); return; }
                 para["RowCol"] = controls.RowCol.getValue();
-                window.returnValue = para;
-                window.close();
+                var modalid = $(window.frameElement).attr("modalid");
+                dialog.setVal(para);
+                dialog.close(modalid);
             });
             $("#cancel").bind("click", function () {
-                window.close();
+                var modalid = $(window.frameElement).attr("modalid");
+                
+                dialog.close(modalid);
             });
         });
     </script>

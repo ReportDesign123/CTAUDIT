@@ -19,8 +19,10 @@
             });
                 $(this).bind("click", function () {
                     var titleColor = $(this).attr("title");
-                    window.returnValue = titleColor;
-                    window.close();
+                    var modalid = $(window.frameElement).attr("modalid");
+                    dialog.setVal(titleColor);
+                    dialog.close(modalid);
+                    
                 });
             });
         });

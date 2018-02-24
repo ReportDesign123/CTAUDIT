@@ -267,11 +267,14 @@
                         returnParm.push({ ReportCode: Pcontrols.report.value.val(), ReportName: Pcontrols.report.name.val(), CompanyName: "", Parameters: patameter });
                     }
                 }
-                window.returnValue = returnParm;
-                window.close();
+                var modalid = $(window.frameElement).attr("modalid");
+                dialog.setVal(returnParm);
+                dialog.close(modalid);
             },
             backBtnClick: function () {
-                window.close();
+                var modalid = $(window.frameElement).attr("modalid");
+               
+                dialog.close(modalid);
             }
         };
         var resultManager = {

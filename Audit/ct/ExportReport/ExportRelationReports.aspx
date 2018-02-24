@@ -113,11 +113,15 @@
              resultManager: {
                  suerBtnClick: function () {
                      var rows = paramControl.Report.datagrid("getSelections");
-                     window.returnValue = rows;
-                     window.close();
+                     var modalid = $(window.frameElement).attr("modalid");
+                     dialog.setVal(rows);
+                     dialog.close(modalid);
+                     
                  },
                  CancleBtnClick: function () {
-                     window.close();
+                     var modalid = $(window.frameElement).attr("modalid"); 
+                     dialog.close(modalid);
+                     
                  }
              }
 

@@ -99,8 +99,7 @@
                     if (parent.EventManager && parent.EventManager && parent.EventManager.HelpResultManager) {
                         parent.EventManager.HelpResultManager.CellHelpBtnClick(cells);
                     }
-                    //window.returnValue = cells;
-                    //window.close();
+                  
                 }
             }
 
