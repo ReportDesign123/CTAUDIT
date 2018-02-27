@@ -10,6 +10,6 @@
 namespace Audit.ct.ReportData {
     
     
-    public partial class FillReport {
+    public partial class FillReport1 {
     }
 }
