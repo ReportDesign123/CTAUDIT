@@ -153,10 +153,10 @@
 
             //PaperId = currentState.ReportState.AuditPaper.value
             
-
+           // http://localhost:8293/ct/ReportData/FillReport1.aspx?UserCode='9999'&AuditType='05'&AuditTask='01'&AuditPaper='07'&AuditCycle='05'&AuditDate='2017-12-01'&Company='10'&Report='700'
 
             var paraUser = {};
-          
+            var para = {};
             paraUser["Code"] = urlpara("UserCode");
             para["AuditType"] = urlpara("AuditType");
             para["AuditTask"] = urlpara("AuditTask");
@@ -164,9 +164,10 @@
             para["AuditCycle"] = urlpara("AuditCycle");
             para["AuditDate"] = urlpara("AuditDate"); 
             para["Company"] = urlpara("Company");
-            reportID=  para["AuditReport"] = urlpara("Report");  
-            paraUser = CreateParameter(BasicAction.ActionType.Post, BasicAction.Functions.UserManager, BasicAction.Methods.UserManagerMethods.SingleLogin, paraUser);
-            DataManager.sendData("handler/BasicHandler.ashx", paraUser,  function(data) {
+            para["AuditReport"] = urlpara("Report");
+            reportID=  para["AuditReport"] ;  
+            para = CreateParameter(BasicAction.ActionType.Post, BasicAction.Functions.UserManager, BasicAction.Methods.UserManagerMethods.SingleData, para);
+            DataManager.sendData("../../handler/BasicHandler.ashx", paraUser, function (data) {
                 if (data.success) {
                     
 
@@ -194,9 +195,10 @@
             }, function () { }, false);
         }
         function openReport() {
+            getPara();
             var report = { Id: reportID, bbName: "报表", ReportState: "" };
             var item = { tabid: report.Id, text: report.bbName, showClose: false };
-            getPara();
+            
             tabManager.AddReport(item, report);
             mediatorManager.LoadBBFormat();
             //currentState.CompanyId = "d4dec446-2e30-4924-b072-fc2d9c13485b";
