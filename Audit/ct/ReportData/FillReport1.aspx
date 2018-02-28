@@ -156,7 +156,7 @@
 
 
             var paraUser = {};
-            reportID = urlpara("reportID");
+          
             paraUser["Code"] = urlpara("UserCode");
             para["AuditType"] = urlpara("AuditType");
             para["AuditTask"] = urlpara("AuditTask");
@@ -164,7 +164,7 @@
             para["AuditCycle"] = urlpara("AuditCycle");
             para["AuditDate"] = urlpara("AuditDate"); 
             para["Company"] = urlpara("Company");
-            para["AuditReport"] = urlpara("Report");  
+            reportID=  para["AuditReport"] = urlpara("Report");  
             paraUser = CreateParameter(BasicAction.ActionType.Post, BasicAction.Functions.UserManager, BasicAction.Methods.UserManagerMethods.SingleLogin, paraUser);
             DataManager.sendData("handler/BasicHandler.ashx", paraUser,  function(data) {
                 if (data.success) {
@@ -194,7 +194,7 @@
             }, function () { }, false);
         }
         function openReport() {
-            var report = { Id: urlpara("reportID"), bbName: "报表", ReportState: "" };
+            var report = { Id: reportID, bbName: "报表", ReportState: "" };
             var item = { tabid: report.Id, text: report.bbName, showClose: false };
             getPara();
             tabManager.AddReport(item, report);
