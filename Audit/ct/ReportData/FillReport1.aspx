@@ -101,43 +101,105 @@
         }
         function getPara() {
 
-            ReportId = "3c670837-83d7-4f47-bd89-6c8225f6ac22";// urlpara("ReportId");
-            CompanyId = urlpara("CompanyId");
-            TaskId = urlpara("TaskId");
-            Cycle = urlpara("Zq");
-            Year = urlpara("Nd");
-            CompanyId = urlpara("CompanyId");
-            ActionType = "post";
-            FunctionName = "ReportFormatMenu";
-            MethodName = "LoadReportFormat";
-            var para = {
-                "ActionType": "post",
-                "AuditDate": "",
-                "CompanyId": "d4dec446-2e30-4924-b072-fc2d9c13485b",
-                "Cycle": "47",
-                "FunctionName": "FillReport",
-                "MethodName": "LoadReportDatas",
-                "PaperId": "c35bba89-a0f4-4d47-8ad0-0ad844bd30de",
-                "ReportId": "3c670837-83d7-4f47-bd89-6c8225f6ac22",
-                "TaskId": "406d238f-49f5-433f-8272-57d92c74ffb1",
-                "WeekReportID": "480bc62b-221b-4299-87a9-9ca31c122157",
-                "WeekReportJsrq": "2017-12-08",
-                "WeekReportKsrq": "2017-12-01",
-                "WeekReportName": "47周",
-                "Where": "&&",
-                "Year": "2017",
-                "bdqStr": "{}"
-            };
-            currentState.CompanyId = "d4dec446-2e30-4924-b072-fc2d9c13485b";
-            return para;
+            //ReportId = "3c670837-83d7-4f47-bd89-6c8225f6ac22";// urlpara("ReportId");
+            //CompanyId = urlpara("CompanyId");
+            //TaskId = urlpara("TaskId");
+            //Cycle = urlpara("Zq");
+            //Year = urlpara("Nd");
+            //CompanyId = urlpara("CompanyId");
+            //ActionType = "post";
+            //FunctionName = "ReportFormatMenu";
+            //MethodName = "LoadReportFormat";
+            //var para = {
+            //    "ActionType": "post",
+            //    "AuditDate":  urlpara("AuditDate"),
+            //    "CompanyId": "d4dec446-2e30-4924-b072-fc2d9c13485b",
+            //    "Cycle": "47",
+            //    "FunctionName": "FillReport",
+            //    "MethodName": "LoadReportDatas",
+            //    "PaperId": "c35bba89-a0f4-4d47-8ad0-0ad844bd30de",
+            //    "ReportId": "3c670837-83d7-4f47-bd89-6c8225f6ac22",
+            //    "TaskId": "406d238f-49f5-433f-8272-57d92c74ffb1",
+            //    "WeekReportID": "480bc62b-221b-4299-87a9-9ca31c122157",
+            //    "WeekReportJsrq": "2017-12-08",
+            //    "WeekReportKsrq": "2017-12-01",
+            //    "WeekReportName": "47周",
+            //    "Where": "&&",
+            //    "Year": "2017",
+            //    "bdqStr": "{}"
+            //};
+            //currentState.CompanyId = urlpara("CompanyId");
+            //currentState.ReportState.AuditTask.value = urlpara("taskid");//任务
+           
+            //currentState.ReportState.Zq = urlpara("Cycle");
+            //currentState.ReportState.Nd = urlpara("Nd");
+            //currentState.ReportState.Nd = urlpara("Nd");
+           
+            //currentState.AuditType.name = urlpara("typeid"); 
+            //currentState.AuditType.value = urlpara("typename");
+            //currentState.AuditTask.name = urlpara("taskid");//任务
+            //currentState.AuditTask.value = urlpara("taskname");//任务
+            //currentState.AuditPaper.name = urlpara("paperame"); 
+            //currentState.AuditPaper.value = urlpara("paperId");
+            //currentState.AuditDate = urlpara("AuditDate");
+            //currentState.Nd = urlpara("Nd");
+            //currentState.WeekReport.ID = urlpara("WeekReportID");
+            //currentState.WeekReport.Name = urlpara("WeekReportID");
+            //currentState.WeekReport.Ksrq = urlpara("Ksrq");
+            //currentState.WeekReport.Jsrq = urlpara("Jsrq ");
+            //currentState.auditZqType = urlpara("AuditCycle");
+            //currentState.Zq = urlpara("Zq");
+
+
+            //PaperId = currentState.ReportState.AuditPaper.value
+            
+
+
+            var paraUser = {};
+            reportID = urlpara("reportID");
+            paraUser["Code"] = urlpara("UserCode");
+            para["AuditType"] = urlpara("AuditType");
+            para["AuditTask"] = urlpara("AuditTask");
+            para["AuditPaper"] = urlpara("AuditPaper");
+            para["AuditCycle"] = urlpara("AuditCycle");
+            para["AuditDate"] = urlpara("AuditDate"); 
+            para["Company"] = urlpara("Company");
+            para["AuditReport"] = urlpara("Report");  
+            paraUser = CreateParameter(BasicAction.ActionType.Post, BasicAction.Functions.UserManager, BasicAction.Methods.UserManagerMethods.SingleLogin, paraUser);
+            DataManager.sendData("handler/BasicHandler.ashx", paraUser,  function(data) {
+                if (data.success) {
+                    
+
+                        currentState.AuditType.name = data.obj.AuditTypeName;
+                        currentState.AuditType.value = data.obj.AuditTypeValue;
+
+                        currentState.AuditTask.name = data.obj.AuditTaskName;
+                        currentState.AuditTask.value = data.obj.AuditTaskValue;
+
+                        currentState.AuditPaper.name = data.obj.AuditPaperName;
+                        currentState.AuditPaper.value = data.obj.AuditPaperValue;
+
+                        currentState.AuditDate = data.obj.AuditDate;
+                        currentState.Nd = data.obj.AuditYear;
+                        currentState.WeekReport.ID = data.obj.WeekRpId;
+                        currentState.WeekReport.Name = data.obj.WeekRpName;
+                        currentState.WeekReport.Ksrq = data.obj.WeekRpKsrq;
+                        currentState.WeekReport.Jsrq = data.obj.WeekRpJsrq;
+                        currentState.auditZqType = para["AuditCycle"];
+                        currentState.Zq = data.obj.AuditZq;
+                        currentState = JSON2.stringify(currentState);
+                        
+                    
+                }
+            }, function () { }, false);
         }
         function openReport() {
-            var report = { Id: "3c670837-83d7-4f47-bd89-6c8225f6ac22", bbName: "报表", ReportState: "" };
+            var report = { Id: urlpara("reportID"), bbName: "报表", ReportState: "" };
             var item = { tabid: report.Id, text: report.bbName, showClose: false };
             getPara();
             tabManager.AddReport(item, report);
             mediatorManager.LoadBBFormat();
-            currentState.CompanyId = "d4dec446-2e30-4924-b072-fc2d9c13485b";
+            //currentState.CompanyId = "d4dec446-2e30-4924-b072-fc2d9c13485b";
             mediatorManager.LoadBbData();
         }
         var vsBDBH;
@@ -836,76 +898,16 @@
             var reportHeight = centerHeight;
             $("#content").css("height", reportHeight);
             $("#cframe").css("height", reportHeight);
-            var GridIframe = toolsManager.GetGridIframe();
-
+            var GridIframe = toolsManager.GetGridIframe(); 
             GridIframe.onload = GridIframe.onreadystatechange = function () {
                 if (this.readyState && this.readyState != 'complete') return;
                 else {
                     openReport();
                 }
-            }
-
+            } 
             EventManager.InitializeBtn();
-            var tempState;
-            if (GetQueryString("result")) {
-                tempState = GetQueryString("result");
-                tempState = JSON.parse(tempState);
-            }
-            else {
-                tempState = CookieDataManager.GetCookieData(ReportDataAction.Functions.FillReport);
-            }
-            if (tempState && tempState != null) {
-                if (tempState.auditZqType == "05") {
-                    if (tempState.WeekReport.ID == "") {
-                        alert("请定义周报周期");
-                        return;
-                    }
-                }
-                toolsManager.SetAuditTask(tempState);
-                //初始树高度
-                LayoutManager.setTreeHeight();
-            } else {
-                currentState.ReportState["auditPaperVisible"] = "1";
-                currentState.ReportState["auditZqVisible"] = "1";
-                dialog.Open("ct/ReportData/ChooseAuditTask.aspx", "填报任务切换", currentState.ReportState, function (result) {
-                    if (result && result != undefined) {
-                        if (result.auditZqType == "05") {
-                            if (result.WeekReport.ID == "") {
-                                alert("请定义周报周期");
-                                var curTabTitle = "资料填报";
-                                var t = parent.centerTabs.tabs('getTab', curTabTitle);
-                                if (t.panel('options').closable) {
-                                    return;
-                                    //  parent.centerTabs.tabs('close', curTabTitle);
-                                }
-                            }
-
-                        }
-                        toolsManager.SetAuditTask(result);
-                    }
-                    //初始树高度
-                    LayoutManager.setTreeHeight();
-                });
-                //var result = window.showModalDialog("ChooseAuditTask.aspx", currentState.ReportState, "dialogHeight:500px;dialogWidth:450px;scroll:no");
-                //if (result && result != undefined) {
-                //    if (result.auditZqType == "05") {
-                //        if (result.WeekReport.ID == "") {
-                //            alert("请定义周报周期");
-                //            var curTabTitle = "资料填报";
-                //            var t = parent.centerTabs.tabs('getTab', curTabTitle);
-                //            if (t.panel('options').closable) {
-                //                return;
-                //                //  parent.centerTabs.tabs('close', curTabTitle);
-                //            }
-                //        }
-
-                //    }
-                //    toolsManager.SetAuditTask(result);
-                //}
-
-
-            }
-
+             
+           
 
         });
 
@@ -2297,7 +2299,7 @@
         <div position="center">
             
             <div id="ReportsTab" class="ReportsTab">
-               <%-- <div title="目录" tabid="home" style="display:none"></div>--%>
+              
             </div>
             <div id="report" style="width: 100%; height: 100%;">
                 <div id="Tool" class="l-layout-header">
@@ -2330,7 +2332,7 @@
             </div>
         </div>
         <div position="bottom" style="text-align: center;">
-            <a href="#" id="taskBtn">审计任务切换</a>&nbsp <span>审计类型:</span><span id="auditTaskTypeSpan"></span>&nbsp <span>审计任务:</span><span id="auditTaskSpan"></span>&nbsp <span>审计底稿:</span><span id="auditPaperSpan"></span>&nbsp <span>审计周期:</span><span id="auditDateSpan"></span>
+             <span>审计类型:</span><span id="auditTaskTypeSpan"></span>&nbsp <span>审计任务:</span><span id="auditTaskSpan"></span>&nbsp <span>审计底稿:</span><span id="auditPaperSpan"></span>&nbsp <span>审计周期:</span><span id="auditDateSpan"></span>
 
         </div>
     </div>
