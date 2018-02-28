@@ -79,7 +79,7 @@
         }
         var kb = 0;
         var totalKb = 999;
-
+        var spara = {};
         var urls = {
             fillReportUrl: "../../handler/ReportDataHandler.ashx",
             BBUrl: "../../handler/FormatHandler.ashx",
@@ -101,108 +101,28 @@
         }
         function getPara() {
 
-            //ReportId = "3c670837-83d7-4f47-bd89-6c8225f6ac22";// urlpara("ReportId");
-            //CompanyId = urlpara("CompanyId");
-            //TaskId = urlpara("TaskId");
-            //Cycle = urlpara("Zq");
-            //Year = urlpara("Nd");
-            //CompanyId = urlpara("CompanyId");
-            //ActionType = "post";
-            //FunctionName = "ReportFormatMenu";
-            //MethodName = "LoadReportFormat";
-            //var para = {
-            //    "ActionType": "post",
-            //    "AuditDate":  urlpara("AuditDate"),
-            //    "CompanyId": "d4dec446-2e30-4924-b072-fc2d9c13485b",
-            //    "Cycle": "47",
-            //    "FunctionName": "FillReport",
-            //    "MethodName": "LoadReportDatas",
-            //    "PaperId": "c35bba89-a0f4-4d47-8ad0-0ad844bd30de",
-            //    "ReportId": "3c670837-83d7-4f47-bd89-6c8225f6ac22",
-            //    "TaskId": "406d238f-49f5-433f-8272-57d92c74ffb1",
-            //    "WeekReportID": "480bc62b-221b-4299-87a9-9ca31c122157",
-            //    "WeekReportJsrq": "2017-12-08",
-            //    "WeekReportKsrq": "2017-12-01",
-            //    "WeekReportName": "47周",
-            //    "Where": "&&",
-            //    "Year": "2017",
-            //    "bdqStr": "{}"
-            //};
-            //currentState.CompanyId = urlpara("CompanyId");
-            //currentState.ReportState.AuditTask.value = urlpara("taskid");//任务
-           
-            //currentState.ReportState.Zq = urlpara("Cycle");
-            //currentState.ReportState.Nd = urlpara("Nd");
-            //currentState.ReportState.Nd = urlpara("Nd");
-           
-            //currentState.AuditType.name = urlpara("typeid"); 
-            //currentState.AuditType.value = urlpara("typename");
-            //currentState.AuditTask.name = urlpara("taskid");//任务
-            //currentState.AuditTask.value = urlpara("taskname");//任务
-            //currentState.AuditPaper.name = urlpara("paperame"); 
-            //currentState.AuditPaper.value = urlpara("paperId");
-            //currentState.AuditDate = urlpara("AuditDate");
-            //currentState.Nd = urlpara("Nd");
-            //currentState.WeekReport.ID = urlpara("WeekReportID");
-            //currentState.WeekReport.Name = urlpara("WeekReportID");
-            //currentState.WeekReport.Ksrq = urlpara("Ksrq");
-            //currentState.WeekReport.Jsrq = urlpara("Jsrq ");
-            //currentState.auditZqType = urlpara("AuditCycle");
-            //currentState.Zq = urlpara("Zq");
-
-
-            //PaperId = currentState.ReportState.AuditPaper.value
             
-           // http://localhost:8293/ct/ReportData/FillReport1.aspx?UserCode='9999'&AuditType='05'&AuditTask='01'&AuditPaper='07'&AuditCycle='05'&AuditDate='2017-12-01'&Company='10'&Report='700'
-
+         
             var paraUser = {};
-            var para = {};
+            
             paraUser["Code"] = urlpara("UserCode");
-            para["AuditType"] = urlpara("AuditType");
-            para["AuditTask"] = urlpara("AuditTask");
-            para["AuditPaper"] = urlpara("AuditPaper");
-            para["AuditCycle"] = urlpara("AuditCycle");
-            para["AuditDate"] = urlpara("AuditDate"); 
-            para["Company"] = urlpara("Company");
-            para["AuditReport"] = urlpara("Report");
-            reportID=  para["AuditReport"] ;  
-            para = CreateParameter(BasicAction.ActionType.Post, BasicAction.Functions.UserManager, BasicAction.Methods.UserManagerMethods.SingleData, para);
-            DataManager.sendData("../../handler/BasicHandler.ashx", paraUser, function (data) {
-                if (data.success) {
-                    
+            spara["AuditType"] = urlpara("AuditType");
+            spara["AuditTask"] = urlpara("AuditTask");
+            spara["AuditPaper"] = urlpara("AuditPaper");
+            spara["AuditCycle"] = urlpara("AuditCycle");
+            spara["AuditDate"] = urlpara("AuditDate");
+            spara["Company"] = urlpara("Company");
+            spara["AuditReport"] = urlpara("Report");
+            reportID = spara["AuditReport"];
+            currentState.CompanyId = spara["Company"];
+            paraUser = CreateParameter(BasicAction.ActionType.Post, BasicAction.Functions.UserManager, BasicAction.Methods.UserManagerMethods.SingleLogin, paraUser);
+            DataManager.sendData("../../handler/BasicHandler.ashx", paraUser, resultManager.LoadReportsData_Success, resultManager.FailResult, false);
 
-                        currentState.AuditType.name = data.obj.AuditTypeName;
-                        currentState.AuditType.value = data.obj.AuditTypeValue;
-
-                        currentState.AuditTask.name = data.obj.AuditTaskName;
-                        currentState.AuditTask.value = data.obj.AuditTaskValue;
-
-                        currentState.AuditPaper.name = data.obj.AuditPaperName;
-                        currentState.AuditPaper.value = data.obj.AuditPaperValue;
-
-                        currentState.AuditDate = data.obj.AuditDate;
-                        currentState.Nd = data.obj.AuditYear;
-                        currentState.WeekReport.ID = data.obj.WeekRpId;
-                        currentState.WeekReport.Name = data.obj.WeekRpName;
-                        currentState.WeekReport.Ksrq = data.obj.WeekRpKsrq;
-                        currentState.WeekReport.Jsrq = data.obj.WeekRpJsrq;
-                        currentState.auditZqType = para["AuditCycle"];
-                        currentState.Zq = data.obj.AuditZq;
-                        currentState = JSON2.stringify(currentState);
-                        
-                    
-                }
-            }, function () { }, false);
+            
         }
         function openReport() {
             getPara();
-            var report = { Id: reportID, bbName: "报表", ReportState: "" };
-            var item = { tabid: report.Id, text: report.bbName, showClose: false };
-            
-            tabManager.AddReport(item, report);
-            mediatorManager.LoadBBFormat();
-            //currentState.CompanyId = "d4dec446-2e30-4924-b072-fc2d9c13485b";
-            mediatorManager.LoadBbData();
+           
         }
         var vsBDBH;
         var centerHeight;
@@ -1139,6 +1059,8 @@
                 para = CreateParameter(ReportDataAction.ActionType.Post, ReportDataAction.Functions.FillReport, ReportDataAction.Methods.FillReportMethods.GetReportCycle, para);
                 DataManager.sendData(urls.fillReportUrl, para, resultManager.LoadCycle_Success, resultManager.FailResult, false);
             },
+
+            
             LoadBbData: function () {
                 datestart = new Date();
                 s += "开始LoadBbData" + datestart;
@@ -1540,6 +1462,48 @@
             },
             LoadCompBB_Success: function (data) {
                 alert(data.sMeg);
+
+            },
+            LoadReportsData_Success: function (data) {
+                if (data.success)
+                {
+                    if (spara["AuditType"] && spara["AuditType"] != "") {
+                       
+                        spara = CreateParameter(BasicAction.ActionType.Post, BasicAction.Functions.UserManager, BasicAction.Methods.UserManagerMethods.SingleData, spara);
+                        DataManager.sendData("../../handler/BasicHandler.ashx", spara, function (data) {
+                            if (data.success) {
+                                currentState.ReportState.AuditType.name = data.obj.AuditTypeName;
+                                currentState.ReportState.AuditType.value = data.obj.AuditTypeValue;
+
+                                currentState.ReportState.AuditTask.name = data.obj.AuditTaskName;
+                                currentState.ReportState.AuditTask.value = data.obj.AuditTaskValue;
+
+                                currentState.ReportState.AuditPaper.name = data.obj.AuditPaperName;
+                                currentState.ReportState.AuditPaper.value = data.obj.AuditPaperValue;
+
+                                currentState.ReportState.AuditDate = data.obj.AuditDate;
+                                currentState.ReportState.Nd = data.obj.AuditYear;
+                                currentState.ReportState.WeekReport.ID = data.obj.WeekRpId;
+                                currentState.ReportState.WeekReport.Name = data.obj.WeekRpName;
+                                currentState.ReportState.WeekReport.Ksrq = data.obj.WeekRpKsrq;
+                                currentState.ReportState.WeekReport.Jsrq = data.obj.WeekRpJsrq;
+                                currentState.ReportState.ReportType = spara["AuditCycle"];
+                                currentState.ReportState.Zq = data.obj.AuditZq;
+                                currentState.navigatorData.currentReportId = data.obj.AuditReport;
+                               // currentState = JSON2.stringify(currentState);
+
+                                var report = { Id: reportID, bbName: "报表", ReportState: "" };
+                                var item = { tabid: report.Id, text: report.bbName, showClose: false };
+
+                                //  tabManager.AddReport(item, report);
+                                mediatorManager.LoadBBFormat();
+                                //currentState.CompanyId = "d4dec446-2e30-4924-b072-fc2d9c13485b";
+                                mediatorManager.LoadBbData();
+
+                            }
+                        }, function () { }, false);
+                    }
+                }
 
             },
             LoadBB_Success: function (data) {
