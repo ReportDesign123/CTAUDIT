@@ -1202,8 +1202,8 @@
             },
             CellHelp_Click: function () {
                 var paras = { url: "", columns: [], sortName: "", sortOrder: "", NameField: "Name,Code", CodeField: "Code" };
-                paras.url = "../../handler/BasicHandler.ashx?ActionType=" + BasicAction.ActionType.Grid + "&MethodName=" + BasicAction.Methods.DicManagerMethods.GetDicClassifyDataGridFilter + "&FunctionName=" + BasicAction.Functions.DictionaryManager;
-                //paras.url = "../../handler/BasicHandler.ashx?ActionType=" + BasicAction.ActionType.Grid + "&MethodName=" + BasicAction.Methods.DicManagerMethods.GetLshelp + "&FunctionName=" + BasicAction.Functions.DictionaryManager;
+               // paras.url = "../../handler/BasicHandler.ashx?ActionType=" + BasicAction.ActionType.Grid + "&MethodName=" + BasicAction.Methods.DicManagerMethods.GetDicClassifyDataGridFilter + "&FunctionName=" + BasicAction.Functions.DictionaryManager;
+                paras.url = "../../handler/BasicHandler.ashx?ActionType=" + BasicAction.ActionType.Grid + "&MethodName=" + BasicAction.Methods.DicManagerMethods.GetLshelp + "&FunctionName=" + BasicAction.Functions.DictionaryManager;
                 paras.columns = [[
                 { field: "Code", title: "编号", width: 120 },
                     { field: "Name", title: "名称", width: 200 }
