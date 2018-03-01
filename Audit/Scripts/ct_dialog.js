@@ -58,6 +58,15 @@
         if (para!=undefined) {
             this.para(para);
         }
+        function openDialog(modelID, opts) {
+            $('#' + modelID).dialog(opts);
+        }
+        function showDialog(modelID) {
+            $('#' + modelID).dialog('open');
+        }
+        function closeDialog(modelID) {
+            $('#' + modelID).dialog('close');
+        }
         topWindow.openDialog(modelID, opts);
 
     },
@@ -66,7 +75,15 @@
         var topWindow = this.GetTopWindow();
 
         topWindow.showDialog(modelID);
-
+        function openDialog(modelID, opts) {
+            $('#' + modelID).dialog(opts);
+        }
+        function showDialog(modelID) {
+            $('#' + modelID).dialog('open');
+        }
+        function closeDialog(modelID) {
+            $('#' + modelID).dialog('close');
+        }
 
     },
     close: function (modelID) {
