@@ -36,13 +36,35 @@
             string str2 = sql.Substring(0, 6) + " ";
             int index = sql.IndexOf("FROM");
             string str3 = sql.Substring(7, index - 3);
+
+            string[] strFields = str3.Split(',');
+            string strF = string.Empty;
+            if (str3.Contains("AS"))
+            {
+                foreach (string word in strFields)
+                {
+                    int WordIndex = word.IndexOf("AS");
+                    string strWord = string.Empty;
+                    //int WordLength = word.Length;
+                    strWord = word.Substring(WordIndex + 3);
+                    strF = strF + strWord + ",";
+
+                }
+            }
+            if (strF.Length > 0)
+            {
+                strF = strF.Substring(0, strF.Length - 1);
+            }
+            else
+                strF = str3;
+
             string str4 = sql.Substring(index + 4);
             int num2 = (pageIndex - 1) * pageNumber;
             int num3 = num2 + pageNumber;
             switch (dbType)
             {
                 case CTDbType.SQLSERVER:
-                    return string.Concat(new object[] { str2, str3, "(", str2, " ROW_NUMBER() OVER (ORDER BY ", sortOrder, ") as rank, ", str3, str4, ") as t where t.rank between ", num2, " and ", num3 });
+                    return string.Concat(new object[] { str2, strF, "(", str2, " ROW_NUMBER() OVER (ORDER BY ", sortOrder, ") as rank, ", str3, str4, ") as t where t.rank between ", num2, " and ", num3 });
 
                 case CTDbType.ORACLE:
                     return string.Concat(new object[] { str2, str3, "(", str2, " ROWNUM  rank, ", str3, str4, ") as t where t.rank between ", num2, " and ", num3 });

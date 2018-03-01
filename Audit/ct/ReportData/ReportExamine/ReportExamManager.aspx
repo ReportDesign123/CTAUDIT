@@ -15,6 +15,7 @@
     <script src="../../../Scripts/Ct_WorkFlow.js" type="text/javascript"></script>
     <script src="../../../Scripts/Ct_Tool.js" type="text/javascript"></script>
     <script src="../../../lib/json2.js" type="text/javascript"></script>
+       <script src="../../Scripts/ct_dialog.js" type="text/javascript"></script>
     <script type="text/javascript">
         var controls = { selectedRow: { ReportId: "", CompanyId: "" }, ReportBox: {} };
         var currentState = { ReportState: { auditPaperVisible: "1", auditZqVisible: "1" }, AuditData: {} };
@@ -333,17 +334,20 @@
         function ChangeTask() {
             currentState.ReportState["auditPaperVisible"] = "1";
             currentState.ReportState["auditZqVisible"] = "1";
-            var result = window.showModalDialog("../ChooseAuditTask.aspx", currentState.ReportState, "dialogHeight:420px;dialogWidth:360px;scroll:no");
-            if (result && result != undefined) {
-                currentState.ReportState = result;
-                var para = menuManager.GetLoadParam();
-                var url = CreateUrl(urls.ReportUrls, ReportDataAction.ActionType.Grid, ReportDataAction.Functions.FillReport, ReportDataAction.Methods.FillReportMethods.GetReportExamReportStateDataGrid, para);
-                loadManager.LoadExamGrid(url, "ExamingTable");
-                url = CreateUrl(urls.ReportUrls, ReportDataAction.ActionType.Grid, ReportDataAction.Functions.FillReport, ReportDataAction.Methods.FillReportMethods.GetExamReportHistoryGrid, para);
-                loadManager.LoadCancelExamGrid(url, "ExamedTable", ExamedBar);
-                url = CreateUrl(urls.ReportUrls, ReportDataAction.ActionType.Grid, ReportDataAction.Functions.FillReport, ReportDataAction.Methods.FillReportMethods.GetMyExamReportHistoryGrid, para);
-                loadManager.LoadHistoryExamGrid(url, "MyExamHistory");
-            }
+            dialog.Open("ct/ReportData/ChooseAuditTask.aspx", "切换任务", currentState.ReportState, function (result) {
+                if (result && result != undefined) {
+                    currentState.ReportState = result;
+                    var para = menuManager.GetLoadParam();
+                    var url = CreateUrl(urls.ReportUrls, ReportDataAction.ActionType.Grid, ReportDataAction.Functions.FillReport, ReportDataAction.Methods.FillReportMethods.GetReportExamReportStateDataGrid, para);
+                    loadManager.LoadExamGrid(url, "ExamingTable");
+                    url = CreateUrl(urls.ReportUrls, ReportDataAction.ActionType.Grid, ReportDataAction.Functions.FillReport, ReportDataAction.Methods.FillReportMethods.GetExamReportHistoryGrid, para);
+                    loadManager.LoadCancelExamGrid(url, "ExamedTable", ExamedBar);
+                    url = CreateUrl(urls.ReportUrls, ReportDataAction.ActionType.Grid, ReportDataAction.Functions.FillReport, ReportDataAction.Methods.FillReportMethods.GetMyExamReportHistoryGrid, para);
+                    loadManager.LoadHistoryExamGrid(url, "MyExamHistory");
+                }
+            }, { width: 440, height: 500 });
+
+           
         }
         var menuManager = {
             ExamReportState: function (discription, stageResult, id) {

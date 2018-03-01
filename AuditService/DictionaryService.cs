@@ -2,11 +2,14 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
+using System.Data;
 using AuditSPI;
 using DbManager;
 using CtTool;
 using AuditEntity;
-
+using AuditSPI.ReportData;
+using System.Text.RegularExpressions;
+using AuditService.Analysis.Formular;
 namespace AuditService
 {
    public   class DictionaryService:IDictionaryService
@@ -183,7 +186,32 @@ namespace AuditService
                 throw ex;
             }
         }
+        //新增 预制LSHELP
+        DataGrid<LSHELPDIC> IDictionaryService.GetDicLshelpList(DataGrid<LSHELPDIC> dataGrid, LSHELPDIC dce)
+        {
+            try
+            {
+                DataGrid<LSHELPDIC> dg = new DataGrid<LSHELPDIC>();
+                string whereSql = BeanUtil.ConvertObjectToFuzzyQueryWhereSqls<LSHELPDIC>(dce);
+                string s = "";
+                if (whereSql.Length > 0)
+                {
+                    s = " WHERE " + whereSql;
+                }
+                string csql = "SELECT * FROM LSHELP" + s;
 
+                Dictionary<string, string> maps = BeanUtil.ConvertObjectToMaps<LSHELPDIC>();
+                string countSql = "SELECT COUNT(*) FROM LSHELP" + s;
+                string sortName = maps[dataGrid.sort];
+                dg.rows = dbManager.ExecuteSqlReturnTType<LSHELPDIC>(csql, dataGrid.page, dataGrid.pageNumber, sortName + " " + dataGrid.order, maps);
+                dg.total = dbManager.Count(countSql);
+                return dg;
+            }
+            catch (Exception ex)
+            {
+                throw ex;
+            }
+        }
 
         public DataGrid<DictionaryEntity> GetDictionaryList(DataGrid<DictionaryEntity> dataGrid,DictionaryEntity de)
         {
@@ -281,7 +309,95 @@ namespace AuditService
                 throw ex;
             }
         }
+        public string GetMarcoName(ReportDataParameterStruct rdps, string strMacro)
+        {
+            string MarcoName = string.Empty;
+            ReportDataStruct rds = new ReportDataStruct();
+            rds.rdps = rdps;
+            MacroHelp mh = new MacroHelp();
 
+            try
+            {
+                if (strMacro.Contains("@"))
+                {
+                    for(int i=1;i< strMacro.Split('@').Length;i++)
+                    {
+                        mh.ReportParameter = rdps;
+                        string strOld = strMacro.Split('@')[i];
+                        MarcoName = mh.ReplaceMacroVariable(mh.ReplaceMacroVariable(strOld));
+                        if (string.IsNullOrEmpty(MarcoName))
+                            continue;
+                        strMacro = strMacro.Replace("@"+strOld+"@", "'"+MarcoName+"'");
+                    }
+                }
+
+              
+            }
+            catch (Exception ex)
+            {
+                throw ex;
+            }
+            return strMacro;
+        }
+        private void ReplaceMarchPara(string strWhere, MacroHelp mh)
+        {
+           
+            string ps = strWhere;
+            Regex re = new Regex(@"(^|&)?(\w+)=([^&]+)(&|$)?", RegexOptions.Compiled);
+
+            MatchCollection mc = re.Matches(ps);
+            Dictionary<string, string> DParas = new Dictionary<string, string>();
+            foreach (Match m in mc)
+            {
+                string strValue = m.Result("$3");
+                if (strValue.Contains("@"))
+                {
+                    string strMarcro = mh.ReplaceMacroVariable(mh.ReplaceMacroVariable(strValue.Split('@')[1]));
+                    ps =ps.Replace(strValue, strMarcro);
+                }
+            }
+        }
+        DataGrid<DictionaryEntity> IDictionaryService.GetDictionaryDataGridByLsHelp(string classType, DataGrid<DictionaryEntity> dataGrid, DictionaryEntity de, ReportDataParameterStruct rdps)
+        {
+            try
+            {
+                DataGrid<DictionaryEntity> dg = new DataGrid<DictionaryEntity>();
+                
+                MacroHelp mh = new MacroHelp();
+                string sql = string.Empty;
+                sql = "select  LSHELP_TABLE,LSHELP_TABLECODE,LSHELP_TABLENAME,LSHELP_TABLEWHERE,LSHELP_NAME from lshelp where LSHELP_CODE='" + classType+"'";
+                DataTable table = dbManager.ExecuteSqlReturnDataTable(sql);
+                if (table == null || table.Rows.Count == 0)
+                    return null;
+                
+                string tableName = table.Rows[0][0].ToString();
+                string tableFCode= table.Rows[0][1].ToString();
+                string tableFName= table.Rows[0][2].ToString();
+                string tableWhere= table.Rows[0][3].ToString();
+                if (string.IsNullOrEmpty(tableWhere))
+                    tableWhere = "1=1";
+                tableWhere= GetMarcoName(rdps,tableWhere);
+                ReplaceMarchPara(tableWhere, mh);
+                string tableHelp = table.Rows[0][4].ToString();
+                sql = "select "+ tableFCode + " AS DICTIONARY_CODE ,"+ tableFName+ " AS DICTIONARY_NAME from "+ tableName+ "  CT_BASIC_DICTIONARY where "+ tableWhere;
+
+                string csql = "SELECT * FROM CT_BASIC_DICTIONARY D INNER JOIN CT_BASIC_DICTIONARYCLASSIFICATION C ON D.DICTIONARY_CLASSID=C.DICTIONARYCLASSIFICATION_ID  AND C.DICTIONARYCLASSIFICATION_CODE='" + classType + "' ";
+                string whereSql = BeanUtil.ConvertObjectToFuzzyQueryWhereSqls<DictionaryEntity>(de);
+
+                Dictionary<string, string> maps = BeanUtil.ConvertObjectToMaps<DictionaryEntity>();
+                maps["CName"] = "'"+ tableHelp+"' CName";
+                string countSql = "SELECT COUNT(*) FROM  "+ tableName + "  CT_BASIC_DICTIONARY where " + tableWhere; // CT_BASIC_DICTIONARY D INNER JOIN CT_BASIC_DICTIONARYCLASSIFICATION C ON D.DICTIONARY_CLASSID=C.DICTIONARYCLASSIFICATION_ID  AND C.DICTIONARYCLASSIFICATION_CODE='" + classType + "' ";
+                string sortName = maps[dataGrid.sort];
+                dg.rows = dbManager.ExecuteSqlReturnTType<DictionaryEntity>(sql, dataGrid.page, dataGrid.pageNumber,  tableFCode+" ASC", maps);
+                dg.total = dbManager.Count(countSql);
+
+                return dg;
+            }
+            catch (Exception ex)
+            {
+                throw ex;
+            }
+        }
 
         DataGrid<DictionaryEntity> IDictionaryService.GetDictionaryDataGridByClassType(string classType, DataGrid<DictionaryEntity> dataGrid,DictionaryEntity de)
         {

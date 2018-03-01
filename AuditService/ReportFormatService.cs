@@ -491,6 +491,7 @@ namespace AuditService
                 die.CellPrimary = cell.CellPrimary;
                 die.DigitNumber = cell.DigitNumber;
                 die.ParaValue = cell.CellValue;
+                die.UrlValue = cell.CellUrl;
                 return die;
             }
             catch (Exception ex)

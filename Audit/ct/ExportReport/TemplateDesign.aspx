@@ -13,6 +13,7 @@
     <script src="../../Scripts/FunctionMethodManager.js" type="text/javascript"></script> 
     <script src="../../Scripts/AjaxTrigger.js" type="text/javascript"></script> 
     <script src="../../lib/json2.js" type="text/javascript"></script>
+       <script src="../../Scripts/ct_dialog.js" type="text/javascript"></script>
 <style type="text/css"> 
 .content 
 { 
@@ -174,17 +175,19 @@ text-decoration: none;
                        return;
                    }
                    var paras = {};
-                   var result = window.showModalDialog(urls.FormularUrl, { content: content, DataSource: DataSource }, "DialogHeight:600px;DialogWidth:800px;scroll:no");
-                   if (result) {
-                       if (currentState.EditMarkIndex || currentState.EditMarkIndex == 0) {
-                           InEditingMark.DataSource = result.DataSource;
-                           InEditingMark.Content = result.content;
-                           InEditingMark.MacroOrFormular = "F";
-                           InEditingMark.IsUpdate = true;
+                   dialog.Open(urls.FormularUrl, "新建公式", { content: content, DataSource: DataSource }, function (result) {
+                       if (result) {
+                           if (currentState.EditMarkIndex || currentState.EditMarkIndex == 0) {
+                               InEditingMark.DataSource = result.DataSource;
+                               InEditingMark.Content = result.content;
+                               InEditingMark.MacroOrFormular = "F";
+                               InEditingMark.IsUpdate = true;
+                           }
+                           $("#MarkContent").text(result.content);
+                           $("#DataSourceName").combobox("setValue", result.DataSource);
                        }
-                       $("#MarkContent").text(result.content);
-                       $("#DataSourceName").combobox("setValue", result.DataSource);
-                   }
+                   });
+                   
                },
                //新建 宏函数
                AddMacroFunction: function () {
@@ -195,15 +198,18 @@ text-decoration: none;
 ]];
                    paras.sortName = "Code";
                    paras.sortOrder = "ASC";
-                   var result = window.showModalDialog("../pub/HelpDialog.aspx", paras, "dialogHeight:400px;dialogWidth:325px");
-                   if (result && result.Code) {
-                       if (currentState.EditMarkIndex || currentState.EditMarkIndex == 0) {
-                           InEditingMark.Content = "<!" + result.Code + "!>";
-                           InEditingMark.MacroOrFormular = "M";
-                           InEditingMark.IsUpdate = true;
+                   dialog.Open("ct/pub/HelpDialog.aspx", "新建宏函数", paras, function (result) {
+                       if (result && result.Code) {
+                           if (currentState.EditMarkIndex || currentState.EditMarkIndex == 0) {
+                               InEditingMark.Content = "<!" + result.Code + "!>";
+                               InEditingMark.MacroOrFormular = "M";
+                               InEditingMark.IsUpdate = true;
+                           }
+                           $("#MarkContent").text("<!" + result.Code + "!>");
                        }
-                       $("#MarkContent").text("<!" + result.Code + "!>");
-                   }
+                   });
+
+                   
                },
                //引入模板
                UseHistoryMark: function () {
@@ -214,21 +220,24 @@ text-decoration: none;
                    ]];
                    paras.sortName = "Code";
                    paras.sortOrder = "ASC";
-                   var result = window.showModalDialog("../pub/HelpDialog.aspx", paras, "dialogHeight:400px;dialogWidth:325px");
-                   if (result && result.Code) {
-                       if (currentState.EditMarkIndex || currentState.EditMarkIndex == 0) {
-                           InEditingMark.DataSource = result.DataSource;
-                           InEditingMark.Content = result.Content;
-                           InEditingMark.Thousand = result.Thousand;
-                           InEditingMark.MacroOrFormular = result.MacroOrFormular;
-                           InEditingMark.Type = result.Type;
-                           InEditingMark.IsUpdate = true;
+                   dialog.Open("ct/pub/HelpDialog.aspx", "引入模板", paras, function (result) {
+                       if (result && result.Code) {
+                           if (currentState.EditMarkIndex || currentState.EditMarkIndex == 0) {
+                               InEditingMark.DataSource = result.DataSource;
+                               InEditingMark.Content = result.Content;
+                               InEditingMark.Thousand = result.Thousand;
+                               InEditingMark.MacroOrFormular = result.MacroOrFormular;
+                               InEditingMark.Type = result.Type;
+                               InEditingMark.IsUpdate = true;
+                           }
+                           $("#MarkContent").text(result.Content);
+                           $("#MarkType").combobox("select", result.Type);
+                           $("#Thousand").combobox("setValue", result.Thousand);
+                           $("#DataSourceName").combobox("setValue", result.DataSource);
                        }
-                       $("#MarkContent").text(result.Content);
-                       $("#MarkType").combobox("select", result.Type);
-                       $("#Thousand").combobox("setValue", result.Thousand);
-                       $("#DataSourceName").combobox("setValue", result.DataSource);
-                   }
+                   });
+
+                   
                },
                //保存标签 为 模板  
                SaveTemplateMark: function () {

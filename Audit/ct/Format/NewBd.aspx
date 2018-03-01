@@ -11,7 +11,8 @@
 <link href="../../lib/ligerUI/skins/ligerui-icons.css" rel="stylesheet" type="text/css" /> 
 <script src="../../lib/jquery/jquery-1.5.2.min.js" type="text/javascript"></script> 
 <script src="../../lib/ligerUI/js/core/base.js" type="text/javascript"></script> 
-<script src="../../lib/ligerUI/js/ligerui.min.js" type="text/javascript"></script> 
+<script src="../../lib/ligerUI/js/ligerui.min.js" type="text/javascript"></script>
+     <script src="../../Scripts/ct_dialog.js"></script>
 <style type="text/css"> 
 body{ font-size:12px;} 
 .l-table-edit {} 
@@ -25,7 +26,7 @@ body{ font-size:12px;}
 
     $(function () {
         //初始化数据
-        var obj = window.dialogArguments;
+        var obj = dialog.para();//window.dialogArguments;
         controls.codeCol = $("#codeCol").ligerSpinner({ height: 24, type: 'int', isNegative: false, minValue: 0, maxValue: obj.num });
         controls.nameCol = $("#nameCol").ligerSpinner({ height: 24, type: 'int', isNegative: false, minValue: 0, maxValue: obj.num });
         controls.sortCol = $("#sortCol").ligerSpinner({ height: 24, type: 'int', isNegative: false, minValue: 0, maxValue: obj.num });
@@ -37,11 +38,15 @@ body{ font-size:12px;}
                 para["DataName"] = controls.nameCol.getValue();
                 para["SortField"] = controls.sortCol.getValue();
                 para["Merge"] = $("#merge").attr("checked");
-                  window.returnValue = para;
-                  window.close();
+                 
+                  var modalid = $(window.frameElement).attr("modalid");
+                  dialog.setVal(para);
+                  dialog.close(modalid);
         });
         $("#cancel").bind("click", function () {
-            window.close();
+            var modalid = $(window.frameElement).attr("modalid");
+           
+            dialog.close(modalid);
         });
       
         InitializeControls(obj);

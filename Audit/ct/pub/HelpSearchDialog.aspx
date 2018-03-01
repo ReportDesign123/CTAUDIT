@@ -13,6 +13,7 @@
     <script src="../../lib/easyUI/locale/easyui-lang-zh_CN.js" type="text/javascript"></script>
     <script src="../../Scripts/AjaxTrigger.js" type="text/javascript"></script>
     <script src="../../Scripts/FunctionMethodManager.js" type="text/javascript"></script>
+         <script src="../../Scripts/ct_dialog.js" type="text/javascript"></script>
     <script type="text/javascript">
     //功能：用于报表分类、报表查询
         var para;
@@ -25,7 +26,7 @@
         //开始加载数据
         $(function () {
 
-            para = window.dialogArguments;
+            para = dialog.para();// window.dialogArguments;
             var data = [];
             if (para.ReportData && para.ReportData != "") {
                 data = para.ReportData;
@@ -56,8 +57,9 @@
                     { field: "bbName", title: "报表名称", width: 210 }
                     ]],
                     onDblClickRow: function (rowIndex, rowData) {
-                        window.returnValue = rowData;
-                        window.close();
+                        var modalid = $(window.frameElement).attr("modalid");
+                        dialog.setVal(rowData);
+                        dialog.close(modalid);
                     }, onLoadSuccess: function (data) {
                         var Id = para.ReportId;
                         if (Id && Id != ""&&data.rows.length>0) {
@@ -142,8 +144,9 @@
       }
       function returnReports() {
           var reports = $("#ReportGrid").datagrid("getSelections");
-          window.returnValue = reports;
-          window.close();
+          var modalid = $(window.frameElement).attr("modalid");
+          dialog.setVal(reports);
+          dialog.close(modalid);
       }
       </script>
 </head>

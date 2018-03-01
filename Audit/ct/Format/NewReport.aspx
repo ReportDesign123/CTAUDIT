@@ -59,13 +59,17 @@
                 para["row"] = controls.row.getValue();
                 para["zq"] = controls.zq.getValue() + ":" + controls.zq.getText();
                 para["classifyId"] = controls.classify.getValue();
-                window.returnValue = para;
-                window.close();
+               
+                var modalid = $(window.frameElement).attr("modalid");
+                dialog.setVal(para);
+                dialog.close(modalid);
             });
 
 
             $("#cancel").bind("click", function () {
-                window.close();
+                var modalid = $(window.frameElement).attr("modalid");
+              
+                dialog.close(modalid);
             });
 
         }

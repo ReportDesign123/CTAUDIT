@@ -56,9 +56,12 @@
                       } else if ($(this).attr("title") == "cellOutThickInsideThin") {
                           para.Edge = 8 + "|" + 4 + "|" + 5;
                           para.LineStyle = 2 + "|" + 1 + "|" + 1;
-                      }                      
-                      window.returnValue = para;
-                      window.close();
+                      }
+
+                      var modalid = $(window.frameElement).attr("modalid");
+                      dialog.setVal(para);
+                      dialog.close(modalid);
+                    
                   });
               });
           });

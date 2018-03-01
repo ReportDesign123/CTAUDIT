@@ -172,6 +172,12 @@ namespace AuditEntity
              get;
              set;
          }
+        [Column(Name = "DATAITEM_UrlValue")]
+        public string UrlValue
+        {
+            get;
+            set;
+        }
         [Column(Name = "DATAITEM_ReqValue")]
         public string ReqValue
         {

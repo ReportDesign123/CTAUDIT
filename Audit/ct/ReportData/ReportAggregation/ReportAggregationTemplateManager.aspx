@@ -21,7 +21,7 @@
     <script src="../../../lib/ligerUI/js/core/inject.js" type="text/javascript"></script>
     <script src="../../../lib/ligerUI/js/ligerui.min.js" type="text/javascript"></script>
     <script src="../../../lib/json2.js" type="text/javascript"></script>
-    
+        <script src="../../Scripts/ct_dialog.js" type="text/javascript"></script>
     <script type="text/javascript">
         var controls = {ClassifyGrid:{},TemplatGrid:{}};
         var urls = {
@@ -32,7 +32,7 @@
         var  param;
         var dialogControls = { dialog: {} };
         $(function () {
-            param = window.dialogArguments;
+            param = dialog.para();// window.dialogArguments;
             var allWidth = param.dialogWidth;
             var allHeight = param.dialogHeight - 40;
             var leftWidth = allWidth * 0.353;
@@ -60,8 +60,9 @@
                 },
                 onDblClickRow: function (index, rowdata) {
                     if (param && param.Type == "Classify") {
-                        window.returnValue = rowdata;
-                        window.close();
+                        var modalid = $(window.frameElement).attr("modalid");
+                        dialog.setVal(rowdata);
+                        dialog.close(modalid);
                     }
                 }
             });
@@ -145,8 +146,9 @@
                     onDblClickRow: function (index, rowdata) {
                         if (param && param.Type == "Template") {
                             rowdata.ClassifyName = controls.ClassifyGrid.datagrid("getSelected").Name;
-                            window.returnValue = rowdata;
-                            window.close();
+                            var modalid = $(window.frameElement).attr("modalid");
+                            dialog.setVal(rowdata);
+                            dialog.close(modalid);
                         }
                     }
                 });

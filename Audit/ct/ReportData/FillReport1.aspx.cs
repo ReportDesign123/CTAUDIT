@@ -13,8 +13,7 @@ namespace Audit.ct.ReportData
     {
         protected void Page_Load(object sender, EventArgs e)
         {
-            string curCompany = CtTool.SessoinUtil.GetCurrentCompanyId();
-            Response.Write("<Script>var curCompany='"+curCompany+"';</Script>");
+            
         }
     }
 }

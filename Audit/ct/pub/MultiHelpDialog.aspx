@@ -13,6 +13,7 @@
     <script src="../../lib/easyUI/locale/easyui-lang-zh_CN.js" type="text/javascript"></script>
     <script src="../../Scripts/AjaxTrigger.js" type="text/javascript"></script>
     <script src="../../Scripts/FunctionMethodManager.js" type="text/javascript"></script>
+        <script src="../../Scripts/ct_dialog.js" type="text/javascript"></script>
     <script type="text/javascript">
         var helpGrid;
         var para;
@@ -21,7 +22,7 @@
         };
         $(
         function () {
-            para = window.dialogArguments;
+            para = dialog.para();//window.dialogArguments;
             var url = para.url;
             helpManager.InitializeHelp(url, para.sortName, para.sortOrder, para.columns,para.height);
         }
@@ -41,8 +42,9 @@
                     title: "",
                     columns: columns,
                     onDblClickRow: function (rowIndex, rowData) {
-                        window.returnValue = rowData;
-                        window.close();
+                        var modalid = $(window.frameElement).attr("modalid");
+                        dialog.setVal(rowData);
+                        dialog.close(modalid);
                     },
                     toolbar: "#tb"
                 }
@@ -65,12 +67,15 @@
 
         var ClickManager = {
             SelectClick: function () {
-
-                window.returnValue = helpGrid.datagrid("getSelections");
-                 window.close();
+                var modalid = $(window.frameElement).attr("modalid");
+                dialog.setVal(helpGrid.datagrid("getSelections"));
+                dialog.close(modalid);
+              
             },
             CancelClick: function () {
-                window.close();
+                var modalid = $(window.frameElement).attr("modalid");
+               
+                dialog.close(modalid);
             }
         };
     </script>

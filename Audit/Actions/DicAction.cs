@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Web;
 
-
+using AuditSPI.ReportData;
 using AuditSPI;
 using AuditService;
 using AuditEntity;
@@ -30,6 +30,7 @@ namespace Audit.Actions
             {
                 //获取功能菜单菜单
                 case "GetDicClassifyList":
+
                     DataGrid<DictionaryClassificationEntity> dg = new DataGrid<DictionaryClassificationEntity>();
                     dg = ActionTool.DeserializeParametersByFields<DataGrid<DictionaryClassificationEntity>>(context, actionType);
                     ActionTool.InvokeObjMethod<DicAction>(this, methodName, dg);
@@ -90,10 +91,38 @@ namespace Audit.Actions
                     de = ActionTool.DeserializeParameters<DictionaryEntity>(context, actionType);
                     GetDictionaryDataGridByClassType(classType, dg4,de);
                     break;
+                case "GetDictionaryDataGridByLsHelp":
+                    DataGrid<DictionaryEntity> dg6 = new DataGrid<DictionaryEntity>();
+                    dg6 = ActionTool.DeserializeParametersByFields<DataGrid<DictionaryEntity>>(context, actionType);
+                    List<string> paras3 = new List<string>();
+                    paras3.Add("ClassType");
+                    paras3.Add("TaskId");
+                    paras3.Add("CompanyId");
+                    paras3.Add("vsYear");
+                    paras3.Add("PaperId");
+                    paras3.Add("ReportId");
+                    ReportDataParameterStruct rdps = new ReportDataParameterStruct();
+                    rdps.TaskId= Convert.ToString(ActionTool.DeserializeParameters(paras3, context, actionType)[1]);
+                    rdps.CompanyId = Convert.ToString(ActionTool.DeserializeParameters(paras3, context, actionType)[2]);
+                    rdps.Year = Convert.ToString(ActionTool.DeserializeParameters(paras3, context, actionType)[3]);
+                    rdps.PaperId = Convert.ToString(ActionTool.DeserializeParameters(paras3, context, actionType)[4]);
+                    rdps.ReportId = Convert.ToString(ActionTool.DeserializeParameters(paras3, context, actionType)[5]);
+                  
+                    string classType1 = Convert.ToString(ActionTool.DeserializeParameters(paras3, context, actionType)[0]);
+                    de = ActionTool.DeserializeParameters<DictionaryEntity>(context, actionType);
+                    GetDictionaryDataGridByLsHelp(classType1, dg6, de, rdps);
+                    break;
                 case "GetDicClassifyDataGridFilter":
                     dg = ActionTool.DeserializeParametersByFields<DataGrid<DictionaryClassificationEntity>>(context, actionType);
                     dce = ActionTool.DeserializeParameters<DictionaryClassificationEntity>(context, actionType);
                     GetDicClassifyDataGridFilter(dg, dce);
+                    break;
+                case "GetLshelp":
+                    DataGrid<LSHELPDIC> dg5 = new DataGrid<LSHELPDIC>();
+                    dg5 = ActionTool.DeserializeParametersByFields<DataGrid<LSHELPDIC>>(context, actionType);
+                    LSHELPDIC deg3 = ActionTool.DeserializeParameters<LSHELPDIC>(context, actionType);
+                    GetLshelpList(dg5, deg3);
+
                     break;
 
 
@@ -290,6 +319,18 @@ namespace Audit.Actions
                 throw ex;
             }
         }
+        public void GetLshelpList(DataGrid<LSHELPDIC> dg, LSHELPDIC de)
+        {
+            try
+            {
+                DataGrid<LSHELPDIC> dataGrid = dicService.GetDicLshelpList(dg, de);
+                JsonTool.WriteJson<DataGrid<LSHELPDIC>>(dataGrid, context);
+            }
+            catch (Exception ex)
+            {
+                throw ex;
+            }
+        }
         public  void GetParasList(DataGrid<DictionaryEntity> dg,DictionaryEntity de)
         {
             try
@@ -332,8 +373,20 @@ namespace Audit.Actions
               LogManager.WriteLog(ex.Message);
           }
       }
-
-      public void GetDictionaryDataGridByClassType(string classType, DataGrid<DictionaryEntity> dataGrid,DictionaryEntity de)
+        //  GetDictionaryDataGridByLsHelp
+        public void GetDictionaryDataGridByLsHelp(string classType, DataGrid<DictionaryEntity> dataGrid, DictionaryEntity de, ReportDataParameterStruct rdps)
+        {
+            try
+            {
+                DataGrid<DictionaryEntity> dgs = dicService.GetDictionaryDataGridByLsHelp(classType, dataGrid, de, rdps);
+                JsonTool.WriteJson<DataGrid<DictionaryEntity>>(dgs, context);
+            }
+            catch (Exception ex)
+            {
+                LogManager.WriteLog(ex.Message);
+            }
+        }
+        public void GetDictionaryDataGridByClassType(string classType, DataGrid<DictionaryEntity> dataGrid,DictionaryEntity de)
       {
           try
           {

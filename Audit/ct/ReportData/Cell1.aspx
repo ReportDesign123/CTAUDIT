@@ -9,7 +9,8 @@
     <script src="../../lib/json2.js" type="text/javascript"></script>
     <script src="../../Scripts/AjaxTrigger.js" type="text/javascript"></script>
     <script src="../../Scripts/FunctionMethodManager.js" type="text/javascript"></script>
-
+    
+       <script src="../../Scripts/ct_dialog.js" type="text/javascript"></script>
 </head>
 <body  style=" height:100%; width:100%; margin:0; padding:0; overflow:hidden;">
 			   <OBJECT CLASSID = "clsid:5220cb21-c88d-11cf-b347-00aa00a28331" VIEWASTEXT>

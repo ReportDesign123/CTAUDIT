@@ -27,7 +27,8 @@
     <script src="../../../Scripts/Cookie/Cookie.js" type="text/javascript"></script>
     <script src="../../../lib/Cookie/jquery.cookie.js" type="text/javascript"></script>
 
-
+    
+       <script src="../../Scripts/ct_dialog.js" type="text/javascript"></script>
     <script type="text/javascript">
         var controls = { companies: {}, selectCompanies: {}, ReportSearch: { ReportCode: "", ReportName: "" } };
         var dialogControls = { Name: "", Code: "", Wd: "", TemplateName: "", TemplateCode: "", TemplateClassify: {}, SearchDialog: {}, TemplateDialog: {}, ImportTemplate: {} };
@@ -229,36 +230,63 @@
                   var result;
                   if (cookie && cookie != undefined) {
                       result = cookie;
+                      if (result && result != undefined) {
+                          $.each(result, function (key, value) {
+                              currentState.ReportPara[key] = value;
+                          });
+                          if (result.auditZqType == "05") {
+                              if (result.WeekReport.ID == "") {
+                                  alert("请定义周报周期");
+                                  var curTabTitle = "资料汇总";
+                                  var t = parent.centerTabs.tabs('getTab', curTabTitle);
+                                  if (t.panel('options').closable) {
+                                      parent.centerTabs.tabs('close', curTabTitle);
+                                      return;
+                                  }
+                              }
+
+                          }
+
+                          currentState.AggZq.Year = result.Nd;
+                          currentState.AggZq.Cycle = result.Zq;
+                          MediatorManager.LoadReports(currentState.ReportPara.AuditDate, currentState.ReportPara.AuditPaper.value);
+                          EventManager.LoadDateFormats(result);
+                          ///保存cookie
+                          CookieDataManager.SetCookieData(ReportDataAction.Functions.ReportAggregation, result);
+                      }
                   } else {
                       currentState.ReportPara.auditZqVisible = "1";
                       currentState.ReportPara.auditPaperVisible = "1";
+                      dialog.Open("ct/reportdata/ChooseAuditTask.aspx", "切换任务", currentState.ReportPara, function (result) {
+                          if (result && result != undefined) {
+                              $.each(result, function (key, value) {
+                                  currentState.ReportPara[key] = value;
+                              });
+                              if (result.auditZqType == "05") {
+                                  if (result.WeekReport.ID == "") {
+                                      alert("请定义周报周期");
+                                      var curTabTitle = "资料汇总";
+                                      var t = parent.centerTabs.tabs('getTab', curTabTitle);
+                                      if (t.panel('options').closable) {
+                                          parent.centerTabs.tabs('close', curTabTitle);
+                                          return;
+                                      }
+                                  }
 
-                      result = window.showModalDialog("../ChooseAuditTask.aspx", currentState.ReportPara, "dialogHeight:500px;dialogWidth:450px;scroll:no");
-                  }
-                  if (result && result != undefined) {
-                      $.each(result, function (key, value) {
-                          currentState.ReportPara[key] = value;
-                      });
-                      if (result.auditZqType == "05") {
-                          if (result.WeekReport.ID == "") {
-                              alert("请定义周报周期");
-                              var curTabTitle = "资料汇总";
-                              var t = parent.centerTabs.tabs('getTab', curTabTitle);
-                              if (t.panel('options').closable) {
-                                  parent.centerTabs.tabs('close', curTabTitle);
-                                  return;
                               }
+
+                              currentState.AggZq.Year = result.Nd;
+                              currentState.AggZq.Cycle = result.Zq;
+                              MediatorManager.LoadReports(currentState.ReportPara.AuditDate, currentState.ReportPara.AuditPaper.value);
+                              EventManager.LoadDateFormats(result);
+                              ///保存cookie
+                              CookieDataManager.SetCookieData(ReportDataAction.Functions.ReportAggregation, result);
                           }
-                        
-                      }
-                   
-                      currentState.AggZq.Year = result.Nd;
-                      currentState.AggZq.Cycle = result.Zq;
-                      MediatorManager.LoadReports(currentState.ReportPara.AuditDate, currentState.ReportPara.AuditPaper.value);
-                      EventManager.LoadDateFormats(result);
-                      ///保存cookie
-                      CookieDataManager.SetCookieData(ReportDataAction.Functions.ReportAggregation, result);
+                      }, { width: 450, height: 500 });
+
+                      
                   }
+                 
               },
               ///初始化周期栏
               ///参数：底稿ReportPaper
@@ -412,17 +440,20 @@
                   var para = { Type: "Template" };
                   para.dialogHeight = 400;
                   para.dialogWidth = 600;
-                  var result = window.showModalDialog("ReportAggregationTemplateManager.aspx", para, "dialogHeight:400px;dialogWidth:600px;scroll:no");
-                  if (result && result.Content) {
-                      dialogControls.ImportTemplate = { ClassifyName: result.ClassifyName, ClassifyId: result.ClassifyId, Id: result.Id, Code: result.Code, Name: result.Name };
-                      currentState.TemplateId = result.Id;
-                      var Template = JSON.parse(result.Content);
-                      var data = controls.companies.getData();
-                      selectedTreeNodes = [];
-                      ListManager.GetTreeNodeDataRecursive(data);
-                      MediatorManager.ImportCompanys(Template.Companies);
-                      MediatorManager.ImportReports(Template.ReportItems);
-                  }
+                  dialog.Open("ct/ReportData/ReportAggregation/ReportAggregationTemplateManager.aspx", "选择模板", para, function (result) {
+                      if (result && result.Content) {
+                          dialogControls.ImportTemplate = { ClassifyName: result.ClassifyName, ClassifyId: result.ClassifyId, Id: result.Id, Code: result.Code, Name: result.Name };
+                          currentState.TemplateId = result.Id;
+                          var Template = JSON.parse(result.Content);
+                          var data = controls.companies.getData();
+                          selectedTreeNodes = [];
+                          ListManager.GetTreeNodeDataRecursive(data);
+                          MediatorManager.ImportCompanys(Template.Companies);
+                          MediatorManager.ImportReports(Template.ReportItems);
+                      }
+                  }, { width: 600, height: 400 });
+
+                 
               },
               ///导入模板：组织机构
               ///参数：组织机构Companies[]
@@ -509,12 +540,14 @@
             ChooseClassifyDialog: function () {
                 var para = { Type: "Classify" };
                 para.dialogHeight=400;
-                para.dialogWidth =600;
-                var result = window.showModalDialog("ReportAggregationTemplateManager.aspx", para, "dialogHeight:400px;dialogWidth:600px;scroll:no");
-                if (result && result.Id) {
-                    dialogControls.TemplateClassify.setText(result.Name);
-                    dialogControls.TemplateClassify.setValue(result.Id);
-                }
+                para.dialogWidth = 600;
+                dialog.Open("ct/ReportData/ReportAggregation/ReportAggregationTemplateManager.aspx", "选择模板", para, function (result) {
+                    if (result && result.Id) {
+                        dialogControls.TemplateClassify.setText(result.Name);
+                        dialogControls.TemplateClassify.setValue(result.Id);
+                    }
+                }, { width: 600, height: 400 });
+                
             },
             ///保存、编辑模板弹窗
             ///输入参数：Reports[Id:"",bbName:"",bbCode:""]

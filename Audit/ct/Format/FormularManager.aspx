@@ -14,7 +14,8 @@
     <script src="../../Scripts/FunctionMethodManager.js" type="text/javascript"></script>
     <script src="../../Scripts/AjaxTrigger.js" type="text/javascript"></script>
     <link href="../../Styles/Common.css" rel="stylesheet" type="text/css" />
-
+    
+       <script src="../../Scripts/ct_dialog.js" type="text/javascript"></script>
 
     <script type="text/javascript">
 

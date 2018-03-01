@@ -6,11 +6,11 @@
 <head id="Head1" runat="server">
     <title>信息查看</title>
         <script src="../../lib/jquery/jquery-1.11.1.min.js" type="text/javascript"></script>
-       
+            <script src="../../Scripts/ct_dialog.js"  type="text/javascript"></script>
     <script type="text/javascript">
     //公式内容显示
         window.onload = function () {
-            var content = window.dialogArguments;
+            var content = dialog.para();// window.dialogArguments;
             $("#content").text(content);
         }
         function getResult() {

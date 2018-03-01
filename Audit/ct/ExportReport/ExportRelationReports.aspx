@@ -16,7 +16,7 @@
     <script src="../../Scripts/Ct_Controls.js" type="text/javascript"></script>
     <script src="../../lib/json2.js" type="text/javascript"></script>
     <script src="../../Scripts/ct/pub/PubHelp.js" type="text/javascript"></script>
-
+    <script src="../../Scripts/ct_dialog.js"></script>
      <script type="text/javascript">
          var urls = {
              zqUrl: "../../handler/BasicHandler.ashx?ActionType=" + BasicAction.ActionType.Get + "&MethodName=GetDictionaryListByClassType&FunctionName=" + BasicAction.Functions.DictionaryManager + "&ClassType=BBZQ",
@@ -27,7 +27,7 @@
          var resultParam = {};
          var parentparam;
          $(function () {
-             parentparam = window.dialogArguments;
+             parentparam = dialog.para();// window.dialogArguments;
              paramControl.Task = $("#Task").PopEdit();
              paramControl.Task.btn.bind("click", function () {
                  ControlManager.TaskBt_click();
@@ -113,11 +113,15 @@
              resultManager: {
                  suerBtnClick: function () {
                      var rows = paramControl.Report.datagrid("getSelections");
-                     window.returnValue = rows;
-                     window.close();
+                     var modalid = $(window.frameElement).attr("modalid");
+                     dialog.setVal(rows);
+                     dialog.close(modalid);
+                     
                  },
                  CancleBtnClick: function () {
-                     window.close();
+                     var modalid = $(window.frameElement).attr("modalid"); 
+                     dialog.close(modalid);
+                     
                  }
              }
 

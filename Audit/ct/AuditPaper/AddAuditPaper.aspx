@@ -11,7 +11,7 @@
     <script src="../../lib/easyUI/locale/easyui-lang-zh_CN.js" type="text/javascript"></script>
     <script src="../../Scripts/FunctionMethodManager.js" type="text/javascript"></script>
     <script src="../../Scripts/AjaxTrigger.js" type="text/javascript"></script>
-
+       <script src="../../Scripts/ct_dialog.js" type="text/javascript"></script>
 
 </head>
 <body>
@@ -74,11 +74,13 @@
                         ]];
                 paras.sortName = "CreateTime";
                 paras.sortOrder = "DESC";
-                var result = window.showModalDialog("../pub/HelpDialog.aspx", paras, "dialogHeight:390px;dialogWidth:320px");
-                if (result && result.Id) {
-                    template.name.val(result.Name);
-                    template.value.val(result.Id);
-                }
+                dialog.Open("ct/pub/HelpDialog.aspx", "帮助", paras, function (result) {
+                    if (result && result.Id) {
+                        template.name.val(result.Name);
+                        template.value.val(result.Id);
+                    }
+                });
+                
 
             });
             $("#DefaultZq").combobox({

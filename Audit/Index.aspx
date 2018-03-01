@@ -19,47 +19,56 @@
     <script src="lib/easyUI/locale/easyui-lang-zh_CN.js" type="text/javascript"></script>
     <script src="Scripts/AjaxTrigger.js" type="text/javascript"></script>
     <script src="Scripts/FunctionMethodManager.js" type="text/javascript"></script>
-
+    <script src="Scripts/ct_dialog.js"></script>
     <script src="Scripts/layer/layer.js"></script>
     <style type="text/css">
         table {
-    display: table;
-    border-collapse: separate;
-    border-spacing: 2px;
-    border-color: grey;
-    border-width:5px;
-    border-style:solid;
-}
+            display: table;
+            border-collapse: separate;
+            border-spacing: 2px;
+            border-color: grey;
+            border-width: 5px;
+            border-style: solid;
+        }
+
         .loading {
-    font-family: Arial, sans-serif;
-    color: #4f4f4f;
-    background: #ffffff;
-    font-size: 20px;
-    padding: 0.4em;
-}
+            font-family: Arial, sans-serif;
+            color: #4f4f4f;
+            background: #ffffff;
+            font-size: 20px;
+            padding: 0.4em;
+        }
+
         .ui_dialog {
-    background: #FFF;
-}
+            background: #FFF;
+        }
+
         .layui-layer-hui {
-            background:none;
+            background: none;
         }
     </style>
-    
+
     <script type="text/javascript">
         loader = {
-            open: function (  ) {
+            open: function () {
                 if (layer) {
-                     
-                    layer.msg('<table class="ui_dialog"><tbody><tr><td colspan="2"><div class="ui_title_bar"><div class="ui_title" unselectable="on" style="cursor: move; display: none;"></div><div class="ui_title_buttons"><a class="ui_min" href="javascript:void(0);" title="最小化" style="display: none;"><b class="ui_min_b"></b></a><a class="ui_max" href="javascript:void(0);" title="最大化" style="display: none;"><b class="ui_max_b"></b></a><a class="ui_res" href="javascript:void(0);" title="还原"><b class="ui_res_b"></b><b class="ui_res_t"></b></a><a class="ui_close" href="javascript:void(0);" title="关闭(esc键)" style="display: none;">×</a></div></div></td></tr><tr><td class="ui_icon"><img src="Scripts/layer/skin/default/loading-2.gif" class="ui_icon_bg"></td><td class="ui_main" style="width: auto; height: auto;"><div class="ui_content" style="padding: 10px;"><span class="loading">报表正在加载数据，请稍后</span></div></td></tr><tr><td colspan="2"><div class="ui_buttons" style="display: none;"></div></td></tr></tbody></table>', {
-                        icon:  -1,
+                    layer.msg('<table class="ui_dialog"><tbody><tr><td class="ui_icon"><img src="Scripts/layer/skin/default/loading-2.gif" class="ui_icon_bg"></td><td class="ui_main" style="width: auto; height: auto;"><div class="ui_content" style="padding: 10px;"><span class="loading">报表正在加载数据，请稍后</span></div></td></tr><tr><td colspan="2"><div class="ui_buttons" style="display: none;"></div></td></tr></tbody></table>', {
+                        icon: -1,
                         time: 0,
                         shade: 0.4,
-                        area: ['390px', '80px'],
+                        area: ['410px', '90px'],
 
-                    } );
-                    
+                    });
+                    //layer.msg('<table class="ui_dialog"><tbody><tr><td colspan="2"><div class="ui_title_bar"><div class="ui_title" unselectable="on" style="cursor: move; display: none;"></div><div class="ui_title_buttons"><a class="ui_min" href="javascript:void(0);" title="最小化" style="display: none;"><b class="ui_min_b"></b></a><a class="ui_max" href="javascript:void(0);" title="最大化" style="display: none;"><b class="ui_max_b"></b></a><a class="ui_res" href="javascript:void(0);" title="还原"><b class="ui_res_b"></b><b class="ui_res_t"></b></a><a class="ui_close" href="javascript:void(0);" title="关闭(esc键)" style="display: none;">×</a></div></div></td></tr><tr><td class="ui_icon"><img src="Scripts/layer/skin/default/loading-2.gif" class="ui_icon_bg"></td><td class="ui_main" style="width: auto; height: auto;"><div class="ui_content" style="padding: 10px;"><span class="loading">报表正在加载数据，请稍后</span></div></td></tr><tr><td colspan="2"><div class="ui_buttons" style="display: none;"></div></td></tr></tbody></table>', {
+                    //    icon: -1,
+                    //    time: 0,
+                    //    shade: 0.4,
+                    //    area: ['410px', '90px'],
+
+                    //});
+
                 }
-               
+
             },
             close: function () {
                 if (layer) {
@@ -67,7 +76,18 @@
                 }
             }
         };
+
+        function openDialog(modelID, opts) {
+            $('#' + modelID).dialog(opts);
+        }
+        function showDialog(modelID) {
+            $('#' + modelID).dialog('open');
+        }
+        function closeDialog(modelID) {
+            $('#' + modelID).dialog('close');
+        }
     </script>
+    
     <style type="text/css">
         .easyui-tree li {
             margin-top: 6px;
@@ -302,7 +322,8 @@
             </div>
             <div region="south" style="height: 30px; overflow: hidden; border: 0px" data-options="collapsible:false">
                 <div class="panel-header" style="width: 190px; cursor: pointer" onclick="LoginOut()">
-                    <img src="lib/easyUI/themes/icons/closs16.png" style="left: 3px; width: 16px; position: relative;" /><span class="panel-title" style="left: 9px; top: -3px; position: relative;">退出系统</span></div>
+                    <img src="lib/easyUI/themes/icons/closs16.png" style="left: 3px; width: 16px; position: relative;" /><span class="panel-title" style="left: 9px; top: -3px; position: relative;">退出系统</span>
+                </div>
             </div>
         </div>
     </div>

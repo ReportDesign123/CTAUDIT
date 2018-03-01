@@ -13,6 +13,7 @@
     <script src="../../lib/easyUI/locale/easyui-lang-zh_CN.js" type="text/javascript"></script>
     <script src="../../Scripts/AjaxTrigger.js" type="text/javascript"></script>
     <script src="../../Scripts/FunctionMethodManager.js" type="text/javascript"></script>
+         <script src="../../Scripts/ct_dialog.js"></script>
     <script type="text/javascript">
 //*********************************
         //推荐弹窗高度：大于等于400px
@@ -26,7 +27,7 @@
             DicCGridUrl: "../../handler/BasicHandler.ashx?ActionType=" + BasicAction.ActionType.Grid + "&MethodName=" + BasicAction.Methods.DicManagerMethods.GetDictionaryListByClass + "&FunctionName=" + BasicAction.Functions.DictionaryManager + "&classId=HHS"
         };
         $(function () {
-            para = window.dialogArguments;
+            para = dialog.para();// window.dialogArguments;
             var url = para.url;
             helpManager.InitializeHelp(url, para.sortName, para.sortOrder, para.columns);
       
@@ -46,8 +47,10 @@
                     fitColumns: true,
                     columns: columns,
                     onDblClickRow: function (rowIndex, rowData) {
-                        window.returnValue = rowData;
-                        window.close();
+                        var modalid = $(window.frameElement).attr("modalid");
+                        dialog.setVal(rowData);
+                        dialog.close(modalid);
+                     
                     },
                     toolbar:"#tb",
                     onLoadSuccess: function (data) {

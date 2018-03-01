@@ -22,7 +22,8 @@
     <link href="../../Styles/FormatManager.css" rel="stylesheet" type="text/css" />
     <link href="../../Styles/default.css" rel="stylesheet" type="text/css" />
     <script src="../../lib/Base64.js" type="text/javascript"></script>
-
+    
+       <script src="../../Scripts/ct_dialog.js" type="text/javascript"></script>
         <link href="../../lib/easyUI/themes/default/linkbutton.css" rel="stylesheet" type="text/css" />
     <link href="../../lib/easyUI/themes/icon.css" rel="stylesheet" type="text/css" />
     <link href="../../Styles/Common.css" rel="stylesheet" type="text/css" />

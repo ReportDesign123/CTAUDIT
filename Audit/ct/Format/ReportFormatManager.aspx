@@ -33,6 +33,7 @@
     <link href="../../Styles/FormatManager.css" rel="stylesheet" type="text/css" />
     <link href="../../Styles/default.css" rel="stylesheet" type="text/css" />
   
+       <script src="../../Scripts/ct_dialog.js" type="text/javascript"></script>
 
         <link href="../../lib/easyUI/themes/default/linkbutton.css" rel="stylesheet" type="text/css" />
     <link href="../../lib/easyUI/themes/icon.css" rel="stylesheet" type="text/css" />
@@ -60,7 +61,7 @@
         var CellFont = {FontSize:"",FontType:"",FontItalic:"",FontBold:""};
         var cellNameValue = { FontName: "FontName", FontSize: "FontSize", FontBold: "FontBold", FontItalic: "FontItalic", FontUnderline: "FontUnderline ",
             Alignment: "Alignment ", ForeColor: "ForeColor", BackColor: "BackColor", Border: "Border", CellCode: "CellCode", CellName: "CellName",
-            CellRow: "CellRow", CellCol: "CellCol", CellLogicalType: "CellLogicalType", CellType: "CellType", CellRequired: "CellRequired", CellDataType: "CellDataType", CellMacro: "CellMacro", CellHelp: "CellHelp", CellValue: "CellValue", CellLength: "CellLength",
+            CellRow: "CellRow", CellCol: "CellCol", CellLogicalType: "CellLogicalType", CellType: "CellType", CellRequired: "CellRequired", CellDataType: "CellDataType", CellMacro: "CellMacro", CellHelp: "CellHelp", CellValue: "CellValue",CellUrl:"CellUrl", CellLength: "CellLength",
             CellThousand: "CellThousand", CellCurrence: "CellCurrence", CellSmbol: "CellSmbol", CellLock: "CellLock", CellZero: "CellZero", CellAggregation: "CellAggregation", CellAggregationType: "CellAggregationType",
             CellPrimary: "CellPrimary", isOrUpdate: "isOrUpdate", DigitNumber: "DigitNumber",WrapText:"False"
         };
@@ -362,20 +363,26 @@
                 } else if ($(this).attr("id") == "right") {
                     cellManager.Alignment_Click(flag, "14");
                 } else if ($(this).attr("id") == "ForeColor") {
-                    var result = window.showModalDialog("ColorPick.aspx", null, "dialogHeight:200px;dialogWidth:200px");
-                    if (result) {
-                        cellManager.ForeColor_Click(toolManager.CovertColorStr(result));
-                    }
+                    dialog.Open("ct/format/ColorPick.aspx", "选择颜色", null, function (result) {
+                        if (result) {
+                            cellManager.ForeColor_Click(toolManager.CovertColorStr(result));
+                        }
+                    }, { width: 200, height: 200 });
+                   
                 } else if ($(this).attr("id") == "BackColor") {
-                    var result = window.showModalDialog("ColorPick.aspx", null, "dialogHeight:200px;dialogWidth:200px");
-                    if (result) {
-                        cellManager.BackColor_Click(toolManager.CovertColorStr(result));
-                    }
+                    dialog.Open("ct/format/ColorPick.aspx", "选择颜色", null, function (result) {
+                        if (result) {
+                            cellManager.BackColor_Click(toolManager.CovertColorStr(result));
+                        }
+                    }, { width: 200, height: 200 });
+                    
                 } else if ($(this).attr("id") == "Border") {
-                    var result = window.showModalDialog("Border.aspx", null, "dialogWidth:100px;dialogHeight:100px");
-                    if (result && !toolManager.IsNullOrEmpty(result.Edge)) {
-                        cellManager.Border_Click(result.Edge, result.LineStyle);
-                    }
+                    dialog.Open("ct/format/Border.aspx", "设置边框", null, function (result) {
+                        if (result && !toolManager.IsNullOrEmpty(result.Edge)) {
+                            cellManager.Border_Click(result.Edge, result.LineStyle);
+                        }
+                    }, { width: 100, height: 100 });
+                    
                 } else if ($(this).attr("id") == "LeftTor") {
                     cellManager.LeftTor_Click();
                 } else if ($(this).attr("id") == "RightTor") {
@@ -458,19 +465,22 @@
                 menuManager.SaveMenu();
             } else if (item.text == "导入报表") {
                 var paras = { columns:[],ReportId: ImportReportControl.Id, ClassifyId: ImportReportControl.ClassifyId };
-                var result = window.showModalDialog("../pub/HelpSearchDialog.aspx", paras, "dialogHeight:400px;dialogWidth:600px");
-                if (result && result.Id != undefined) {      
-                    if (result.ReportClassifyId != "") {
-                        ImportReportControl.Id = result.Id;
-                        ImportReportControl.ClassifyId = result.ReportClassifyId; 
+                dialog.Open("ct/pub/HelpSearchDialog.aspx", "导入报表", paras, function (result) {
+                    if (result && result.Id != undefined) {
+                        if (result.ReportClassifyId != "") {
+                            ImportReportControl.Id = result.Id;
+                            ImportReportControl.ClassifyId = result.ReportClassifyId;
+                        }
+                        var para = { Id: "" };
+                        para.Id = result.Id;
+                        para = CreateParameter(ReportFormatAction.ActionType.Post, ReportFormatAction.Functions.ReportFormatMenu, ReportFormatAction.Methods.ReportFormatMenuMethods.LoadReportFormat, para);
+
+                        DataManager.sendData(urls.functionsUrl, para, resultManagers.LoadSuccess, resultManagers.fail, false);
+
                     }
-                    var para = { Id: "" };
-                    para.Id = result.Id;
-                    para = CreateParameter(ReportFormatAction.ActionType.Post, ReportFormatAction.Functions.ReportFormatMenu, ReportFormatAction.Methods.ReportFormatMenuMethods.LoadReportFormat, para);
+                }, { width: 600, height: 400 });
 
-                    DataManager.sendData(urls.functionsUrl, para, resultManagers.LoadSuccess, resultManagers.fail, false);
-
-                }
+                
             }
         }
         function InitializeFlexCell(row, col) {
@@ -531,53 +541,56 @@
             ]
             },
             NewReportFunc: function () {
-                var result = window.showModalDialog("NewReport.aspx", null, "dialogHeight:420px;dialogWidth:380px");
-                //重置变动区最大编号
-                if (result) currentState.MaxBdNm = 0;
-                if (result && result["row"] && result["col"]) {
+                dialog.Open("ct/format/NewReport.aspx", "新建报表", null, function (result) {
+                    //重置变动区最大编号
+                    if (result) currentState.MaxBdNm = 0;
+                    if (result && result["row"] && result["col"]) {
 
 
-                    if (Grid1) {
-                        var rowCount = Grid1.getRowCount();
-                        for (var i = 0; i < rowCount; i++) {
-                            Grid1.deleteRows(0, rowCount);
+                        if (Grid1) {
+                            var rowCount = Grid1.getRowCount();
+                            for (var i = 0; i < rowCount; i++) {
+                                Grid1.deleteRows(0, rowCount);
+                            }
+
+
                         }
-                       
 
+
+
+                        InitializeFlexCell(parseInt(result["row"]), parseInt(result["col"]));
+                        for (var i = 0; i < Grid1.getColumnCount() ; i++) {
+                            //  Grid1.getCell(0, i).text(i.toString());
+                            // Grid1.Cell(0, i).Text = i;
+                        }
+                    }
+                    if (result && result["code"]) {
+                        $('input[name="bbCode"]').val(result["code"]);
+                        BBData.bbCode = result["code"];
+                    }
+                    if (result && result["name"]) {
+                        $('input[name="bbName"]').val(result["name"]);
+                        BBData.bbName = result["name"];
+                    }
+                    if (result && result["row"]) {
+                        BBData.bbRows = result["row"];
+                        $('input[name="bbRows"]').val(result["row"]);
                     }
 
-
-
-                    InitializeFlexCell(parseInt(result["row"]) , parseInt(result["col"]));
-                    for (var i = 0; i < Grid1.getColumnCount(); i++) {
-                        //  Grid1.getCell(0, i).text(i.toString());
-                        // Grid1.Cell(0, i).Text = i;
+                    if (result && result["col"]) {
+                        BBData.bbCols = result["col"];
+                        $('input[name="bbCols"]').val(result["col"]);
                     }
-                }
-                if (result && result["code"]) {
-                    $('input[name="bbCode"]').val(result["code"]);
-                    BBData.bbCode = result["code"];
-                }
-                if (result && result["name"]) {
-                    $('input[name="bbName"]').val(result["name"]);
-                    BBData.bbName = result["name"];
-                }
-                if (result && result["row"]) {
-                    BBData.bbRows = result["row"];
-                    $('input[name="bbRows"]').val(result["row"]);
-                }
-
-                if (result && result["col"]) {
-                    BBData.bbCols = result["col"];
-                    $('input[name="bbCols"]').val(result["col"]);
-                }
-                if (result && result["classifyId"]) {
-                    BBData.bbClassifyId = result["classifyId"];
-                }
-                if (result && result["zq"]) {
-                    BBData.zq = result["zq"];
-                    $('input[name="zq"]').val(toolManager.GetZqName(BBData.zq));
-                }
+                    if (result && result["classifyId"]) {
+                        BBData.bbClassifyId = result["classifyId"];
+                    }
+                    if (result && result["zq"]) {
+                        BBData.zq = result["zq"];
+                        $('input[name="zq"]').val(toolManager.GetZqName(BBData.zq));
+                    }
+                }, { width: 380, height: 420 });
+                
+                
             },
             NewBdFunc: function (type, num) {
                 var para = { type: type, num: num, DataCode: "", DataName: "", SortRow: "", isOrNotMerge: "" };
@@ -599,12 +612,15 @@
                     para.SortRow = bdq.SortRow;
                     para.isOrNotMerge = bdq.isOrNotMerge;
                 }
-                var result = window.showModalDialog("NewBd.aspx", para, "dialogHeight:180px;dialogWidth:300px");
-                if (type == "1") {
-                    GridManager.SetChangeRow(result, bdq);
-                } else if (type == "2") {
-                    GridManager.SetChangeCol(result, bdq);
-                }
+                dialog.Open("ct/format/NewBd.aspx", "新建报表", null, function (result) {
+                    if (type == "1") {
+                        GridManager.SetChangeRow(result, bdq);
+                    } else if (type == "2") {
+                        GridManager.SetChangeCol(result, bdq);
+                    }
+                }, { width: 300, height: 180 });
+
+                
             },
             SaveMenu: function () {
                 var para = { dataStr: "", gridXmlStr: "" };
@@ -709,6 +725,7 @@
             },
             GeneralLoadCellDataValue: function (row, col) {
                 $("input[name='vValue']").val("");
+                $("input[name='vUrl']").val("");
                 //报表单元格选中后的处理方式           
                 row = Grid1.getActiveRowIndex();
                 col = Grid1.getActiveColumnIndex();
@@ -873,7 +890,12 @@
                     } else {
                         $("input[name='vValue']").val("");
                     }
-
+                    //URL
+                    if (toolManager.IsNullOrEmpty(cellData, cellNameValue.CellUrl)) {
+                        $("input[name='vUrl']").val(cellData[cellNameValue.CellUrl]);
+                    } else {
+                        $("input[name='vUrl']").val("");
+                    }
                     if (toolManager.IsNullOrEmpty(cellData, cellNameValue.CellMacro)) {
                         cellControls.CellMacro.setText(cellData[cellNameValue.CellMacro]);
                     } else {
@@ -885,11 +907,19 @@
                     } else {
                         cellControls.CellHelp.setText("");
                     }
+                    //数据内容
                     if (toolManager.IsNullOrEmpty(cellData, cellNameValue.CellValue)) {
                         $("input[name='vValue']").val(cellData[cellNameValue.CellValue]);
                     }
                     else {
                         $("input[name='vValue']").val("");
+                    }
+                    //URL
+                    if (toolManager.IsNullOrEmpty(cellData, cellNameValue.CellUrl)) {
+                        $("input[name='vUrl']").val(cellData[cellNameValue.CellUrl]);
+                    }
+                    else {
+                        $("input[name='vUrl']").val("");
                     }
                     if (toolManager.IsNullOrEmpty(cellData, cellNameValue.CellAggregation))
                         cellControls.CellAggregation.setValue(cellData[cellNameValue.CellAggregation]);
@@ -1160,16 +1190,20 @@
                     ]];
                 paras.sortName = "Code";
                 paras.sortOrder = "ASC";
-                var result = window.showModalDialog("../pub/HelpDialog.aspx", paras, "dialogHeight:400px;dialogWidth:350px");
-                if (result && result.Code != undefined) {
-                    var value = "<!" + result.Code + "!>";
-                    cellControls.CellMacro.setText(value);
-                    cellManager.GeneralCell(GridManager.SetCellMacro, value);
-                }
+                dialog.Open("ct/pub/HelpDialog.aspx", "窗口", paras, function (result) {
+                    if (result && result.Code != undefined) {
+                        var value = "<!" + result.Code + "!>";
+                        cellControls.CellMacro.setText(value);
+                        cellManager.GeneralCell(GridManager.SetCellMacro, value);
+                    }
+                }, { width: 350, height: 400 });
+
+             
             },
             CellHelp_Click: function () {
                 var paras = { url: "", columns: [], sortName: "", sortOrder: "", NameField: "Name,Code", CodeField: "Code" };
-                paras.url = "../../handler/BasicHandler.ashx?ActionType=" + BasicAction.ActionType.Grid + "&MethodName=" + BasicAction.Methods.DicManagerMethods.GetDicClassifyDataGridFilter + "&FunctionName=" + BasicAction.Functions.DictionaryManager;
+               // paras.url = "../../handler/BasicHandler.ashx?ActionType=" + BasicAction.ActionType.Grid + "&MethodName=" + BasicAction.Methods.DicManagerMethods.GetDicClassifyDataGridFilter + "&FunctionName=" + BasicAction.Functions.DictionaryManager;
+                paras.url = "../../handler/BasicHandler.ashx?ActionType=" + BasicAction.ActionType.Grid + "&MethodName=" + BasicAction.Methods.DicManagerMethods.GetLshelp + "&FunctionName=" + BasicAction.Functions.DictionaryManager;
                 paras.columns = [[
                 { field: "Code", title: "编号", width: 120 },
                     { field: "Name", title: "名称", width: 200 }
@@ -1177,12 +1211,14 @@
                     ]];
                 paras.sortName = "Code";
                 paras.sortOrder = "ASC";
-                var result = window.showModalDialog("../pub/HelpDialog.aspx", paras, "dialogHeight:400px;dialogWidth:350px");
-                if (result && result.Code != undefined) {
-                    var value = result.Code;
-                    cellControls.CellHelp.setText(value);
-                    cellManager.GeneralCell(GridManager.SetCellHelp, value);
-                }
+                dialog.Open("ct/pub/HelpDialog.aspx", "窗口", paras, function (result) {
+                    if (result && result.Code != undefined) {
+                        var value = result.Code;
+                        cellControls.CellHelp.setText(value);
+                        cellManager.GeneralCell(GridManager.SetCellHelp, value);
+                    }
+                }, { width: 350, height: 400 });
+                
             },
             ApplicationOk_Click: function () {
                 //设置数据项信息
@@ -1685,10 +1721,15 @@
                     var cellHelp = cellControls.CellHelp.getText();
                     toolManager.TagTool.SetDataValue(cellData, cellNameValue.CellHelp, cellHelp);
                     //数据内容
-
                     var cellValue = $("input[name='vValue']").val();
                     if (cellValue != null && cellValue != "") {
                         toolManager.TagTool.SetDataValue(cellData, cellNameValue.CellValue, cellValue);
+
+                    }
+                    //URL
+                    var cellValue = $("input[name='vUrl']").val();
+                    if (cellValue != null && cellValue != "") {
+                        toolManager.TagTool.SetDataValue(cellData, cellNameValue.CellUrl, cellValue);
 
                     }
                 } else if (cellLogicalType == "null" || cellLogicalType == "") {
@@ -2392,6 +2433,10 @@
                 return Math.round(pxValue * 72 / 96);
             }
         }
+        window.onresize = function () {
+            // Grid1.width = window.document.body.offsetWidth;
+            $("#ss").width(window.document.body.offsetWidth);
+        }
     </script>
 
     <style type="text/css">
@@ -2731,6 +2776,10 @@ a.c3:hover{
                             <tr class="myTr">
 								<td><span>数据内容</span></td>
 								<td><input type="text" style="width:170px" name="vValue" class="myTxtInput" ></td>
+							</tr>
+                             <tr class="myTr">
+								<td><span>URL</span></td>
+								<td><input type="text" style="width:170px" name="vUrl" class="myTxtInput" ></td>
 							</tr>
                             <tr class="myTr">
 								<td><span>是否必填</span></td>
