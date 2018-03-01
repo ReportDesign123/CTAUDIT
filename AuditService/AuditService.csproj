@@ -87,7 +87,6 @@
     <Compile Include="AuditPaper\ReportTemplateService.cs" />
     <Compile Include="AuditTask\AuditTaskService.cs" />
     <Compile Include="Authoriy\UserCompanyRelationService.cs" />
-    <Compile Include="BackUpService\BackUp.cs" />
     <Compile Include="CompanyService.cs" />
     <Compile Include="CparaService.cs" />
     <Compile Include="CycleService.cs" />
@@ -150,7 +149,9 @@
       <Name>DbManager</Name>
     </ProjectReference>
   </ItemGroup>
-  <ItemGroup />
+  <ItemGroup>
+    <Folder Include="BackUpService\" />
+  </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
        Other similar extension points exist, see Microsoft.Common.targets.

@@ -12,7 +12,6 @@
     <AssemblyName>AuditEntity</AssemblyName>
     <TargetFrameworkVersion>v4.0</TargetFrameworkVersion>
     <FileAlignment>512</FileAlignment>
-     
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
     <DebugSymbols>true</DebugSymbols>
@@ -51,7 +50,6 @@
     <Compile Include="AuditTask\AuditTaskAndCompanyEntity.cs" />
     <Compile Include="AuditTask\AuditTaskEntity.cs" />
     <Compile Include="Authority\UserAndCompanyEntity.cs" />
-    <Compile Include="BackUp\BackUpEntity.cs" />
     <Compile Include="CompanyEntity.cs" />
     <Compile Include="ConfigEntity.cs" />
     <Compile Include="CparaEntity.cs" />
@@ -107,7 +105,9 @@
     <Compile Include="WorkFlow\WorkFlowDefinition.cs" />
     <Compile Include="WorkFlow\WorkFlowHistory.cs" />
   </ItemGroup>
-  <ItemGroup />
+  <ItemGroup>
+    <Folder Include="BackUp\" />
+  </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
        Other similar extension points exist, see Microsoft.Common.targets.

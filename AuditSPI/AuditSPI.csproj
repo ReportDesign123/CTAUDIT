@@ -12,7 +12,6 @@
     <AssemblyName>AuditSPI</AssemblyName>
     <TargetFrameworkVersion>v4.0</TargetFrameworkVersion>
     <FileAlignment>512</FileAlignment>
-    
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
     <DebugSymbols>true</DebugSymbols>
@@ -54,7 +53,6 @@
     <Compile Include="AuditTask\IAuditTaskAndAuditPaper.cs" />
     <Compile Include="AuditTask\IAuditTaskCompany.cs" />
     <Compile Include="Authority\IAuthority.cs" />
-    <Compile Include="BackUp\IBackUp.cs" />
     <Compile Include="ICpara.cs" />
     <Compile Include="ICycleService.cs" />
     <Compile Include="DataGrid.cs" />
@@ -146,7 +144,9 @@
       <Name>AuditEntity</Name>
     </ProjectReference>
   </ItemGroup>
-  <ItemGroup />
+  <ItemGroup>
+    <Folder Include="BackUp\" />
+  </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
        Other similar extension points exist, see Microsoft.Common.targets.

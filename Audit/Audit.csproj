@@ -106,7 +106,6 @@
     <Content Include="ct\AuditTask\AuditTaskManager.aspx" />
     <Content Include="ct\Authority\UserAuditAuthority.aspx" />
     <Content Include="ct\Authority\UserFillReportAuthority.aspx" />
-    <Content Include="ct\backUp\BackUp.aspx" />
     <Content Include="ct\basic\AddCompany.aspx" />
     <Content Include="ct\basic\AddConfig.aspx" />
     <Content Include="ct\basic\AddDic.aspx" />
@@ -2828,7 +2827,6 @@
     <Compile Include="Actions\AuditPaper\AuditPaperManagerAction.cs" />
     <Compile Include="Actions\AuditTask\AuditTaskAction.cs" />
     <Compile Include="Actions\Authority\AuthorityAction.cs" />
-    <Compile Include="Actions\BackUpAction.cs" />
     <Compile Include="Actions\BaseAction.cs" />
     <Compile Include="Actions\CompanyAction.cs" />
     <Compile Include="Actions\CparaAction.cs" />
@@ -2949,13 +2947,6 @@
     </Compile>
     <Compile Include="ct\Authority\UserFillReportAuthority.aspx.designer.cs">
       <DependentUpon>UserFillReportAuthority.aspx</DependentUpon>
-    </Compile>
-    <Compile Include="ct\backUp\BackUp.aspx.cs">
-      <DependentUpon>BackUp.aspx</DependentUpon>
-      <SubType>ASPXCodeBehind</SubType>
-    </Compile>
-    <Compile Include="ct\backUp\BackUp.aspx.designer.cs">
-      <DependentUpon>BackUp.aspx</DependentUpon>
     </Compile>
     <Compile Include="ct\basic\AddCompany.aspx.cs">
       <DependentUpon>AddCompany.aspx</DependentUpon>
@@ -4023,6 +4014,8 @@
     <Folder Include="ct\attatchs\ReportDataAttatch\" />
     <Folder Include="ct\attatchs\ReportData\Attatch\" />
     <Folder Include="ct\attatchs\zipDir\Zip\" />
+    <Folder Include="ct\backUp\" />
+    <Folder Include="ct\DocViewer\" />
     <Folder Include="lib\easyUI\themes\images\" />
     <Folder Include="Scripts\ReportData\" />
   </ItemGroup>

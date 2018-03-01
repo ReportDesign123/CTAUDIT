@@ -23,7 +23,8 @@ using ICSharpCode.SharpZipLib.Zip;
 
 namespace AuditService.ReportAttatchment
 {
-    public  class ReportAttatchmentService:IReportAttatchment
+
+    public class ReportAttatchmentService : IReportAttatchment
     {
 
         ILinqDataManager linqDbManager;
@@ -71,7 +72,8 @@ namespace AuditService.ReportAttatchment
         {
             try
             {
-                string sql = "delete from [CT_DATA_ATTACHMENT] WHERE ATTACHMENT_ID='" + rae.Id + "'";
+                // string sql = "delete from [CT_DATA_ATTACHMENT] WHERE ATTACHMENT_ID='" + rae.Id + "'";
+                string sql = "update [CT_DATA_ATTACHMENT] set ATTACHMENT_DEL='1'  WHERE ATTACHMENT_ID='" + rae.Id + "'";
                 dbManager.ExecuteSql(sql);
             }
             catch (Exception ex)
@@ -84,7 +86,7 @@ namespace AuditService.ReportAttatchment
         {
             try
             {
-                string sql = "SELECT * FROM [CT_DATA_ATTACHMENT] WHERE ATTACHMENT_ID='"+rae.Id+"'";
+                string sql = "SELECT * FROM [CT_DATA_ATTACHMENT] WHERE ATTACHMENT_ID='" + rae.Id + "'";
                 List<ReportAttatchEntity> lists = dbManager.ExecuteSqlReturnTType<ReportAttatchEntity>(sql);
                 if (lists.Count > 0)
                 {
@@ -102,20 +104,23 @@ namespace AuditService.ReportAttatchment
         }
 
 
-        public List<ReportAttatchEntity> GetReportAttatchments(ReportAttatchEntity rae)
+        public List<ReportAttatchEntity> GetReportAttatchments(ReportAttatchEntity rae, string pzt)
         {
             try
             {
                 Dictionary<string, string> excludes = new Dictionary<string, string>();
                 excludes.Add("AttatchNum", "AttatchNum");
-               string wherSql=  BeanUtil.ConvertObjectToWhereSqls<ReportAttatchEntity>(rae,excludes);
-                //先注释掉，以后修改逻辑
-               //if (rae.DataItem == null||rae.DataItem=="")
-               //{
-               //    wherSql += " and  ATTACHMENT_DATAITEM is null ";
-               //}
-              
-                string sql = "SELECT * FROM CT_DATA_ATTACHMENT WHERE 1=1 "+wherSql +" ORDER BY ATTACHMENT_TIME DESC";
+                string wherSql = BeanUtil.ConvertObjectToWhereSqls<ReportAttatchEntity>(rae, excludes);
+                if (rae.DataItem == null || rae.DataItem == "")
+                {
+                    wherSql += " and  ISNULL(ATTACHMENT_DATAITEM,'')=''  ";
+                }
+                if (rae.COLPK == null || rae.COLPK == "")
+                {
+                    wherSql += " and  ISNULL(ATTACHMENT_COLPK,'')=''  ";
+                }
+
+                string sql = "SELECT * FROM CT_DATA_ATTACHMENT WHERE 1=1  AND ATTACHMENT_DEL='" + pzt + "' " + wherSql + " ORDER BY ATTACHMENT_TIME DESC";
                 return dbManager.ExecuteSqlReturnTType<ReportAttatchEntity>(sql);
             }
             catch (Exception ex)
@@ -129,7 +134,7 @@ namespace AuditService.ReportAttatchment
         {
             try
             {
-                string sql = "SELECT * FROM CT_DATA_ATTACHMENT WHERE ATTACHMENT_ID in ("+CreateIdsSql(ids)+")  ORDER BY ATTACHMENT_TIME DESC";
+                string sql = "SELECT * FROM CT_DATA_ATTACHMENT WHERE ATTACHMENT_ID in (" + CreateIdsSql(ids) + ")  ORDER BY ATTACHMENT_TIME DESC";
                 return dbManager.ExecuteSqlReturnTType<ReportAttatchEntity>(sql);
             }
             catch (Exception ex)
@@ -137,14 +142,15 @@ namespace AuditService.ReportAttatchment
                 throw ex;
             }
         }
-      
+
 
         public void DeleteReportAttatchments(string ids)
         {
             try
             {
-               
-                string sql = "delete from [CT_DATA_ATTACHMENT] WHERE ATTACHMENT_ID in ("+CreateIdsSql(ids)+")";
+
+                //  string sql = "delete from [CT_DATA_ATTACHMENT] WHERE ATTACHMENT_ID in (" + CreateIdsSql(ids) + ")";
+                string sql = " update [CT_DATA_ATTACHMENT] set ATTACHMENT_DEL='1'  WHERE ATTACHMENT_ID in (" + CreateIdsSql(ids) + ")";
                 dbManager.ExecuteSql(sql);
             }
             catch (Exception ex)
@@ -179,26 +185,26 @@ namespace AuditService.ReportAttatchment
         /// 获取报表的状态
         /// </summary>
         /// <param name="reports"></param>
-        public void GetReportAttatchments(List<AuditEntity.ReportFormatDicEntity> reports,ReportDataParameterStruct rdps)
+        public void GetReportAttatchments(List<AuditEntity.ReportFormatDicEntity> reports, ReportDataParameterStruct rdps)
         {
             try
             {
-                
+
                 string whereSql = BeanUtil.ConvertListObjectsToInSql<ReportFormatDicEntity>(reports, "ATTACHMENT_REPORTID");
                 if (reports.Count == 0) whereSql = " 1=1 ";
                 if (ReportGlobalConst.IsOrNotRelationTaskAndPaper)
                 {
-                    whereSql += " AND ATTACHMENT_TASKID='"+rdps.TaskId+"'";
+                    whereSql += " AND ATTACHMENT_TASKID='" + rdps.TaskId + "'";
                     whereSql += " AND ATTACHMENT_PAPERID='" + rdps.PaperId + "'";
                 }
                 whereSql += " AND ATTACHMENT_ND='" + rdps.Year + "'";
                 whereSql += " AND ATTACHMENT_ZQ='" + rdps.Cycle + "'";
-                whereSql += " AND ATTACHMENT_COMPANYID='"+rdps.CompanyId+"'";
+                whereSql += " AND ATTACHMENT_COMPANYID='" + rdps.CompanyId + "'";
                 string sql = "SELECT COUNT(*) AS ATTATCHNUM,ATTACHMENT_REPORTID FROM CT_DATA_ATTACHMENT WHERE  " + whereSql + " GROUP BY ATTACHMENT_REPORTID";
                 Dictionary<string, string> maps = new Dictionary<string, string>();
                 maps.Add("AttatchNum", "ATTATCHNUM");
                 maps.Add("ReportId", "ATTACHMENT_REPORTID");
-                List<ReportAttatchEntity> attatches = dbManager.ExecuteSqlReturnTType<ReportAttatchEntity>(sql,maps);
+                List<ReportAttatchEntity> attatches = dbManager.ExecuteSqlReturnTType<ReportAttatchEntity>(sql, maps);
                 foreach (ReportAttatchEntity a in attatches)
                 {
                     foreach (ReportFormatDicEntity rfde in reports)
@@ -221,7 +227,7 @@ namespace AuditService.ReportAttatchment
         /// 批量下载
         /// </summary>
         /// <param name="reportParameters"></param>
-        public string BatchDownload(ReportDataParameterStruct reportParameters,string fileDirectory,string relativePath)
+        public string BatchDownload(ReportDataParameterStruct reportParameters, string fileDirectory, string relativePath)
         {
             try
             {
@@ -237,13 +243,13 @@ namespace AuditService.ReportAttatchment
                 }
                 string destinationPath = fileDirectory + @"\" + "zipDirectory";
                 relativePath = relativePath + @"/" + "zipDirectory";
-                fileDirectory+=@"\"+DateUtil.GetDateShortString(DateTime.Now);
-                
+                fileDirectory += @"\" + DateUtil.GetDateShortString(DateTime.Now);
+
 
                 //创建文件夹
                 if (Directory.Exists(fileDirectory))
                 {
-                    Directory.Delete(fileDirectory,true);
+                    Directory.Delete(fileDirectory, true);
                     Directory.CreateDirectory(fileDirectory);
                 }
                 else
@@ -251,7 +257,7 @@ namespace AuditService.ReportAttatchment
                     Directory.CreateDirectory(fileDirectory);
                 }
 
-              
+
 
                 string[] reports = reportParameters.Reports.Split(',');
                 string[] companies = reportParameters.Companies.Split(',');
@@ -261,21 +267,21 @@ namespace AuditService.ReportAttatchment
                     //获取报表参数
                     ReportFormatDicEntity reportFormat = reportFormatService.GetReportFormatById(report);
 
-                   
+
 
                     foreach (string company in companies)
                     {
-                        CompanyEntity temp=new CompanyEntity();
-                        temp.Id=company;
+                        CompanyEntity temp = new CompanyEntity();
+                        temp.Id = company;
                         temp = companyService.get(temp);
                         string reportDirectory = fileDirectory + @"\" + reportFormat.bbName + "_" + temp.Name;
                         if (!Directory.Exists(reportDirectory))
                         {
                             Directory.CreateDirectory(reportDirectory);
-                        }                     
+                        }
                         //获取报表相关的附件
 
-                        List<ReportAttatchEntity> reportAttatchEnties = dbManager.ExecuteSqlReturnTType<ReportAttatchEntity>(CreateReportAttatchSql(reportParameters, report,company));
+                        List<ReportAttatchEntity> reportAttatchEnties = dbManager.ExecuteSqlReturnTType<ReportAttatchEntity>(CreateReportAttatchSql(reportParameters, report, company));
                         if (reportAttatchEnties.Count > 0)
                         {
                             //拷贝数据
@@ -300,7 +306,7 @@ namespace AuditService.ReportAttatchment
                 }
                 string destinationFile = destinationPath + @"\" + DateUtil.GetDateShortString(DateTime.Now) + ".zip";
                 FastZip fastZip = new FastZip();
-                fastZip.CreateZip(destinationFile, fileDirectory, true,null);
+                fastZip.CreateZip(destinationFile, fileDirectory, true, null);
 
                 relativePath += @"/" + DateUtil.GetDateShortString(DateTime.Now) + ".zip";
                 return relativePath;
@@ -311,7 +317,7 @@ namespace AuditService.ReportAttatchment
             }
         }
 
-        private string CreateReportAttatchSql(ReportDataParameterStruct reportParameters, string reportId,string companyId)
+        private string CreateReportAttatchSql(ReportDataParameterStruct reportParameters, string reportId, string companyId)
         {
             try
             {
@@ -319,7 +325,7 @@ namespace AuditService.ReportAttatchment
                 sql.Append("SELECT * FROM CT_DATA_ATTACHMENT WHERE 1=1 ");
                 if (!StringUtil.IsNullOrEmpty(reportParameters.TaskId))
                 {
-                    sql.Append(" AND ATTACHMENT_TASKID='"+reportParameters.TaskId+"' ");
+                    sql.Append(" AND ATTACHMENT_TASKID='" + reportParameters.TaskId + "' ");
                 }
                 if (!StringUtil.IsNullOrEmpty(reportParameters.PaperId))
                 {
@@ -341,6 +347,12 @@ namespace AuditService.ReportAttatchment
                 {
                     sql.Append(" AND ATTACHMENT_ZQ='" + reportParameters.Cycle + "' ");
                 }
+                if (!StringUtil.IsNullOrEmpty(reportParameters.Pk))
+                {
+                    sql.Append(" AND ATTACHMENT_COLPK='" + reportParameters.Pk + "' ");
+                }
+
+
                 return sql.ToString();
             }
             catch (Exception ex)

@@ -100,6 +100,23 @@ namespace AuditService.ReportState
                 throw ex;
             }
         }
+
+        public List<ReportStateEntity> GetReportsStateNew(ReportStateEntity rae)
+        {
+            try
+            {
+                Dictionary<string, string> excludes = new Dictionary<string, string>();
+
+
+                string sql = "SELECT * FROM CT_STATE_REPORTSTATE WHERE " + CreateWhereSql(rae);
+                return dbManager.ExecuteSqlReturnTType<ReportStateEntity>(sql);
+            }
+            catch (Exception ex)
+            {
+                throw ex;
+            }
+        }
+
         /// <summary>
         /// 保存报表状态
         /// </summary>

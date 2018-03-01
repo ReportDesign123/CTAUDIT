@@ -85,9 +85,9 @@ namespace Audit.handler
                 case "Authority":
                     action = new AuthorityAction();
                     break;
-                case "BackUpAction":
-                    action = new BackUpAction();
-                    break;
+                //case "BackUpAction":
+                //    action = new BackUpAction();
+                //    break;
                     
             }
             action.context = context;
