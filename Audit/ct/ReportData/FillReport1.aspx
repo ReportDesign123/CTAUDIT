@@ -51,6 +51,15 @@
         }
     </style>
     <script type="text/javascript">
+        function openDialog(modelID, opts) {
+            $('#' + modelID).dialog(opts);
+        }
+        function showDialog(modelID) {
+            $('#' + modelID).dialog('open');
+        }
+        function closeDialog(modelID) {
+            $('#' + modelID).dialog('close');
+        }
         function convertToIndex(n) {
             var str = "abcdefghijklmnopqrstuvwxyz";
             n = n.toLowerCase();

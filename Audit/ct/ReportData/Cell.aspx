@@ -28,7 +28,8 @@
 			<div id="ss"  style="height:600px; width:100%">
 		</div>
         <script type="text/javascript">
-            
+
+          
             top.loader && top.loader.close();
             var urls = {
                 HelpUrl: "../../handler/BasicHandler.ashx",
@@ -434,7 +435,7 @@
                                        ]];
                                        paras.sortName = "Code";
                                        paras.sortOrder = "ASC";
-                                       dialog.Open("ct/pub/HelpDialog.aspx", "帮助", paras, function (result) {
+                                       dialog.Open("../pub/HelpDialog.aspx", "帮助", paras, function (result) {
                                            if (result && result.Code) {
                                                sheet.suspendPaint(); 
                                                cellType.text(result.Name);
