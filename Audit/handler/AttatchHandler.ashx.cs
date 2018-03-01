@@ -25,29 +25,30 @@ namespace Audit.handler
             if (!StringUtil.IsNullOrEmpty(method))
             {
                 ReportAttatchmentService ras = new ReportAttatchmentService();
-               
+
                 //单个文件加载数据结构
                 ReportAttatchEntity rae = ActionTool.DeserializeParameters<ReportAttatchEntity>(context, "grid");
                 ReportAttatchEntity old = ras.Get(rae);
-               
+
 
                 //多个文件处理方法
-                List<ReportAttatchEntity>attatches=new List<ReportAttatchEntity>();
-                string ids=Convert.ToString(ActionTool.DeserializeParameter("ids", context));
-                if(!StringUtil.IsNullOrEmpty(ids)){
-                    attatches=ras.GetReportAttatchments(ids);
+                List<ReportAttatchEntity> attatches = new List<ReportAttatchEntity>();
+                string ids = Convert.ToString(ActionTool.DeserializeParameter("ids", context));
+                if (!StringUtil.IsNullOrEmpty(ids))
+                {
+                    attatches = ras.GetReportAttatchments(ids);
                 }
-               
+
                 if (method == "delete")
                 {
                     if (File.Exists(old.Route))
                     {
                         File.Delete(old.Route);
                     }
-                   
+
                     ras.DeleteReportAttatchment(rae);
                     rae.Id = "";
-                    attatches = ras.GetReportAttatchments(rae);
+                    attatches = ras.GetReportAttatchments(rae, "0");
                     JsonTool.WriteJson<List<ReportAttatchEntity>>(attatches, context);
                     return;
                 }
@@ -72,7 +73,7 @@ namespace Audit.handler
                         File.Delete(a.Route);
                     }
                     ras.DeleteReportAttatchments(ids);
-                    attatches = ras.GetReportAttatchments(rae);
+                    attatches = ras.GetReportAttatchments(rae, "0");
                     JsonTool.WriteJson<List<ReportAttatchEntity>>(attatches, context);
                 }
                 else if (method == "downAll")
@@ -88,14 +89,14 @@ namespace Audit.handler
                         Directory.CreateDirectory(zipDir);
                     }
                     string zipName = SessoinUtil.GetSystemDate() + ".zip";
-                    string zipFile = context.Server.MapPath("~/ct/attatchs/zipDir/"+zipName);
+                    string zipFile = context.Server.MapPath("~/ct/attatchs/zipDir/" + zipName);
                     foreach (ReportAttatchEntity a in attatches)
                     {
                         if (File.Exists(a.Route))
                         {
                             File.Copy(a.Route, zipDir + @"\" + a.Name, true);
                         }
-                       
+
                     }
                     //File.Create(zipFile);
                     FastZip fz = new FastZip();
@@ -105,7 +106,7 @@ namespace Audit.handler
                     context.Response.ClearContent();
                     context.Response.ClearHeaders();
                     context.Response.ContentType = "application/octet-stream";
-                    context.Response.AddHeader("Content-Disposition", "attachment;filename=" +context.Server.UrlPathEncode(zipName));
+                    context.Response.AddHeader("Content-Disposition", "attachment;filename=" + context.Server.UrlPathEncode(zipName));
                     context.Response.AddHeader("Content-Length", fi.Length.ToString());
                     context.Response.AddHeader("Content-Transfer-Encoding", "binary");
                     context.Response.ContentEncoding = System.Text.Encoding.GetEncoding("gb2312");
@@ -123,23 +124,23 @@ namespace Audit.handler
                         Directory.CreateDirectory(path);
                     }
 
-                                      
+
                     for (int i = 0; i < hfc.Count; i++)
                     {
                         HttpPostedFile hpf = hfc[i];
                         if (hpf.ContentLength > 0)
                         {
-                            
+
                             int index = hpf.FileName.LastIndexOf("\\");
                             rae.Name = hpf.FileName.Substring(index + 1);
-                            int point=rae.Name.LastIndexOf(".");
+                            int point = rae.Name.LastIndexOf(".");
 
                             rae.Extend = rae.Name.Substring(point);
                             rae.Id = Guid.NewGuid().ToString();
                             rae.Route = path + @"\" + rae.Id + rae.Extend;
                             ras.AddReportAttatchment(rae);
                             hpf.SaveAs(rae.Route);
-                           
+
                         }
                     }
                 }

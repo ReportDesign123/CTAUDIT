@@ -51,6 +51,19 @@
     <Prefer32Bit>false</Prefer32Bit>
   </PropertyGroup>
   <ItemGroup>
+    <Reference Include="Aspose.Cells">
+      <HintPath>..\..\..\BBS\Lib\Aspose.Cells.dll</HintPath>
+    </Reference>
+    <Reference Include="Aspose.Pdf">
+      <HintPath>..\..\..\BBS\Lib\Aspose.Pdf.dll</HintPath>
+    </Reference>
+    <Reference Include="Aspose.Slides">
+      <HintPath>..\..\..\BBS\Lib\Aspose.Slides.dll</HintPath>
+    </Reference>
+    <Reference Include="Aspose.Words, Version=14.1.0.0, Culture=neutral, PublicKeyToken=00725b1ceb58d0a9, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>..\..\..\BBS\Lib\Aspose.Words.dll</HintPath>
+    </Reference>
     <Reference Include="AuditExportImport, Version=1.0.0.0, Culture=neutral, processorArchitecture=MSIL">
       <SpecificVersion>False</SpecificVersion>
       <HintPath>..\DLL\AuditExportImport.dll</HintPath>
@@ -67,6 +80,9 @@
       <HintPath>..\DLL\ICSharpCode.SharpZipLib.dll</HintPath>
     </Reference>
     <Reference Include="Microsoft.CSharp" />
+    <Reference Include="Sys">
+      <HintPath>..\..\..\BBS\Lib\Sys.dll</HintPath>
+    </Reference>
     <Reference Include="System" />
     <Reference Include="System.Data" />
     <Reference Include="System.Data.DataSetExtensions" />
@@ -136,6 +152,16 @@
     <Content Include="ct\basic\StoreProcedureFormularDefinition.aspx" />
     <Content Include="ct\basic\UserManager.aspx" />
     <Content Include="ct\basic\WorkFlowManager.aspx" />
+    <Content Include="ct\DocViewer\bullet.gif" />
+    <Content Include="ct\DocViewer\expressInstall.swf" />
+    <Content Include="ct\DocViewer\FileDown.aspx" />
+    <Content Include="ct\DocViewer\FileToSWF.aspx" />
+    <Content Include="ct\DocViewer\FileViewer.aspx" />
+    <Content Include="ct\DocViewer\FileViewerGroup.aspx" />
+    <Content Include="ct\DocViewer\FileView_Pic.aspx" />
+    <Content Include="ct\DocViewer\FlexPaperViewer.swf" />
+    <Content Include="ct\DocViewer\pdf2swf.exe" />
+    <Content Include="ct\DocViewer\topbar.gif" />
     <Content Include="ct\ExportReport\AddBookmarkTemplate.aspx" />
     <Content Include="ct\ExportReport\BookmarkTemplateManager.aspx" />
     <Content Include="ct\ExportReport\CreateReport.aspx" />
@@ -3159,6 +3185,44 @@
     <Compile Include="ct\basic\WorkFlowManager.aspx.designer.cs">
       <DependentUpon>WorkFlowManager.aspx</DependentUpon>
     </Compile>
+    <Compile Include="ct\DocViewer\FileDown.aspx.cs">
+      <DependentUpon>FileDown.aspx</DependentUpon>
+      <SubType>ASPXCodeBehind</SubType>
+    </Compile>
+    <Compile Include="ct\DocViewer\FileDown.aspx.designer.cs">
+      <DependentUpon>FileDown.aspx</DependentUpon>
+    </Compile>
+    <Compile Include="ct\DocViewer\FileToSWF.aspx.cs">
+      <DependentUpon>FileToSWF.aspx</DependentUpon>
+      <SubType>ASPXCodeBehind</SubType>
+    </Compile>
+    <Compile Include="ct\DocViewer\FileToSWF.aspx.designer.cs">
+      <DependentUpon>FileToSWF.aspx</DependentUpon>
+    </Compile>
+    <Compile Include="ct\DocViewer\FileViewer.aspx.cs">
+      <DependentUpon>FileViewer.aspx</DependentUpon>
+      <SubType>ASPXCodeBehind</SubType>
+    </Compile>
+    <Compile Include="ct\DocViewer\FileViewer.aspx.designer.cs">
+      <DependentUpon>FileViewer.aspx</DependentUpon>
+    </Compile>
+    <Compile Include="ct\DocViewer\FileViewerGroup.aspx.cs">
+      <DependentUpon>FileViewerGroup.aspx</DependentUpon>
+      <SubType>ASPXCodeBehind</SubType>
+    </Compile>
+    <Compile Include="ct\DocViewer\FileViewerGroup.aspx.designer.cs">
+      <DependentUpon>FileViewerGroup.aspx</DependentUpon>
+    </Compile>
+    <Compile Include="ct\DocViewer\FileView_Pic.aspx.cs">
+      <DependentUpon>FileView_Pic.aspx</DependentUpon>
+      <SubType>ASPXCodeBehind</SubType>
+    </Compile>
+    <Compile Include="ct\DocViewer\FileView_Pic.aspx.designer.cs">
+      <DependentUpon>FileView_Pic.aspx</DependentUpon>
+    </Compile>
+    <Compile Include="ct\DocViewer\PDF2SWF.cs" />
+    <Compile Include="ct\DocViewer\T_Aduit_FileDate.cs" />
+    <Compile Include="ct\DocViewer\T_Aduit_FileInfor.cs" />
     <Compile Include="ct\ExportReport\AddBookmarkTemplate.aspx.cs">
       <DependentUpon>AddBookmarkTemplate.aspx</DependentUpon>
       <SubType>ASPXCodeBehind</SubType>
@@ -4016,7 +4080,6 @@
     <Folder Include="ct\attatchs\ReportData\Attatch\" />
     <Folder Include="ct\attatchs\zipDir\Zip\" />
     <Folder Include="ct\backUp\" />
-    <Folder Include="ct\DocViewer\" />
     <Folder Include="lib\easyUI\themes\images\" />
     <Folder Include="Scripts\ReportData\" />
   </ItemGroup>

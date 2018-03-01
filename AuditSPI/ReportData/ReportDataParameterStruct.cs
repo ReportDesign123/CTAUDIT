@@ -35,7 +35,7 @@ namespace AuditSPI.ReportData
         public string WeekReportName;
         public string WeekReportKsrq;
         public string WeekReportJsrq;
-
+        public string Pk; //luchg
         public string Where;
 
 

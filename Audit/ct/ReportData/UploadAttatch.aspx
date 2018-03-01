@@ -1,10 +1,8 @@
 ﻿<%@ Page Language="C#" AutoEventWireup="true" CodeBehind="UploadAttatch.aspx.cs" Inherits="Audit.ct.ReportData.UploadAttatch" %>
 
-<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
-
 <html xmlns="http://www.w3.org/1999/xhtml">
 
-<head runat="server">
+<head id="Head1" runat="server">
     <script src="../../lib/jquery/jquery-1.11.1.min.js" type="text/javascript"></script>
     <script src="../../Scripts/Ct_Upload.js" type="text/javascript"></script>
     <title>附件上传</title>
@@ -12,7 +10,7 @@
     #fileGrid td
     {
         border-bottom:1px solid #95B8E7;
-        line-height:25px;
+        line-height:35px;
         
     }
     #realTitle td
@@ -34,20 +32,35 @@
 
     <script type="text/javascript">
         var bbPara;
+        var BCount;
+        var State;
         $(function () {
-          
+
         });
-        function Download(obj) {
+
+        function Preview(obj) {
             var objid = $(obj).attr("objid");
-            window.location.href = "../../handler/AttatchHandler.ashx?method=download&Id=" + objid + "&TaskId=" 
+            window.open("../DocViewer/FileViewerGroup.aspx?fileId=" + objid, "_blank"); ;
+        }
+
+
+
+        function Download(obj) {
+           
+            var objid = $(obj).attr("objid");
+            window.location.href = "../../handler/AttatchHandler.ashx?method=download&Id=" + objid + "&TaskId="
             + $("input[name='TaskId']").val() + "&PaperId=" + $("input[name='PaperId']").val()
             + "&ReportId=" + $("input[name='ReportId']").val() + "&CompanyId=" + $("input[name='CompanyId']").val()
             + "&Nd=" + $("input[name='Nd']").val() + "&Zq=" + $("input[name='Zq']").val() + "&DataItem=" + $("input[name='DataItem']").val();
-           
+
         }
         function Delete(obj) {
+            if (State == "1") {
+                alert("状态为填报才可以进行删除操作");
+                return false;
+            }
             var objid = $(obj).attr("objid");
-            var para = { method: "delete", Id: objid, TaskId: "", PaperId: "", ReportId: "", CompanyId: "", Nd: "", Zq: "",DataItem:"" };
+            var para = { method: "delete", Id: objid, TaskId: "", PaperId: "", ReportId: "", CompanyId: "", Nd: "", Zq: "", DataItem: "", COLPK: "" };
 
             para.TaskId = $("input[name='TaskId']").val();
             para.PaperId = $("input[name='PaperId']").val();
@@ -55,6 +68,8 @@
             para.CompanyId = $("input[name='CompanyId']").val();
             para.Nd = $("input[name='Nd']").val();
             para.Zq = $("input[name='Zq']").val();
+            para.COLPK = $("input[name='COLPK']").val();
+           
             para.DataItem = $("input[name='DataItem']").val();
             $.post("../../handler/AttatchHandler.ashx", para, function (data) {
                 data = $.parseJSON(data);
@@ -64,6 +79,7 @@
                     htmlstr += "<tr>";
                     htmlstr += "   <td>   <input type='checkbox' objid='" + item.Id + "' id='check" + index + "' name='check' /></td>"
                     htmlstr += "   <td>" + item.Name + "</td>";
+                    htmlstr += "<td><input id='Pre" + index + "' objid='" + item.Id + "' type='button' value='预览' onclick='Preview(this)'/>";
                     htmlstr += "<td><input id='Dow" + index + "' objid='" + item.Id + "' type='button' value='下载' onclick='Download(this)'/>";
                     htmlstr += "   <input id='Del" + index + "' objid='" + item.Id + "' type='button' value='删除' onclick='Delete(this)'/></td>";
                     htmlstr += "   </tr>";
@@ -92,13 +108,17 @@
             + "&ReportId=" + $("input[name='ReportId']").val() + "&CompanyId=" + $("input[name='CompanyId']").val()
             + "&Nd=" + $("input[name='Nd']").val() + "&Zq=" + $("input[name='Zq']").val() + "&DataItem=" + $("input[name='DataItem']").val();
             } else {
-            alert("请选择下载项！");
+                alert("请选择下载项！");
             }
-         
+
         }
         function DeleteAll() {
+            if (State == "1") {
+                alert("状态为填报才可以进行删除操作");
+                return false;
+            }
             var ids = GetIds();
-            var para = { method: "deleteAll", ids: ids, TaskId: "", PaperId: "", ReportId: "", CompanyId: "", Nd: "", Zq: "" };
+            var para = { method: "deleteAll", ids: ids, TaskId: "", PaperId: "", ReportId: "", CompanyId: "", Nd: "", Zq: "", COLPK: "" };
 
             para.TaskId = $("input[name='TaskId']").val();
             para.PaperId = $("input[name='PaperId']").val();
@@ -115,6 +135,7 @@
                         htmlstr += "<tr>";
                         htmlstr += "   <td>   <input type='checkbox' objid='" + item.Id + "' id='check" + index + "' name='check' /></td>"
                         htmlstr += "   <td>" + item.Name + "</td>";
+                        htmlstr += "<td><input id='Pre" + index + "' objid='" + item.Id + "' type='button' value='预览' onclick='Preview(this)'/>";
                         htmlstr += "<td><input id='Dow" + index + "' objid='" + item.Id + "' type='button' value='下载' onclick='Download(this)'/>";
                         htmlstr += "   <input id='Del" + index + "' objid='" + item.Id + "' type='button' value='删除' onclick='Delete(this)'/></td>";
                         htmlstr += "   </tr>";
@@ -135,7 +156,7 @@
 
             });
             if (ids.length > 0) {
-                ids = ids.substr(0, ids.length - 1);                
+                ids = ids.substr(0, ids.length - 1);
             }
             return ids;
         }
@@ -149,13 +170,14 @@
                 $("input[name='CompanyId']").val(bbPara.CompanyId);
                 $("input[name='Nd']").val(bbPara.Year);
                 $("input[name='Zq']").val(bbPara.Cycle);
+                $("input[name='COLPK']").val(bbPara.Pk);
 
             }
         }
     </script>
 </head>
 <body  style=" padding-left:20px; padding-top:10px;margin:0px">
-  <form runat="server">
+  <form id="Form1" runat="server">
   <input name="TaskId" type="hidden" value="<%=para.TaskId%>" />
       <input name="PaperId" type="hidden" value="<%=para.PaperId %>" />
       <input name="ReportId" type="hidden" value="<%=para.ReportId %>" />
@@ -163,9 +185,10 @@
       <input name="Nd" type="hidden" value="<%=para.Nd %>" />
       <input name="Zq" type="hidden" value="<%=para.Zq %>" />
       <input name="DataItem" type="hidden" value="<%=para.DataItem %>" />
+      <input name="COLPK" type="hidden" value="<%=para.COLPK %>" />
       <table >
           <tr><td>  <asp:FileUpload ID="FileUpload1" runat="server" /></td><td>
-          <asp:Button ID="upLoadBtn" runat="server" Text="上传" onclick="upLoadBtn_Click" /></td></tr>
+             <asp:Button ID="upLoadBtn" runat="server" Text="上传"  onclick="upLoadBtn_Click" /></td></tr>
       </table>
       <table style="border-bottom:1px solid #95B8E7;" cellpadding="0" cellspacing="0">
           <tr id="realTitle" ><td style=" width:120px;">选择</td><td style=" width:300px;">描述</td><td style=" width:120px; " colspan="2">操作</td></tr>
@@ -180,13 +203,15 @@
               <%
                   for (int i = 0; i < attatches.Count; i++)
                   {
+                      
                       AuditEntity.ReportAttatch.ReportAttatchEntity rae = attatches[i];
           
 
              Response.Write(" <tr>");
              Response.Write("   <td>   <input type='checkbox' objid='" + rae.Id + "' id='check" + i.ToString() + "' name='check' /></td>");
              Response.Write("   <td>"+rae.Name+"</td>");
-             Response.Write("<td><input id='Dow" + i.ToString() + "' objid='"+rae.Id+"' type='button' value='下载' onclick='Download(this)'/>");
+       
+             Response.Write("<td><input id='Pre" + i.ToString() + "' objid='" + rae.Id + "' type='button' value='预览' onclick='Preview(this)'/><input id='Dow" + i.ToString() + "' objid='" + rae.Id + "' type='button' value='下载' onclick='Download(this)'/>");
              Response.Write("   <input id='Del" + i.ToString() + "' objid='" + rae.Id + "' type='button' value='删除' onclick='Delete(this)'/></td>");
              Response.Write("   </tr>");     
                   }%> 
