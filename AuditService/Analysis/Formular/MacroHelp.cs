@@ -121,7 +121,15 @@ namespace AuditService.Analysis.Formular
                     case "BBND":
                         middleStr = ReportParameter.Year;
                         break;
-
+                    case "TASKID":
+                        middleStr = ReportParameter.TaskId;//add by luch
+                        break;
+                    case "PAPERID":
+                        middleStr = ReportParameter.PaperId;//add by luch
+                        break;
+                    case "REPORTID":
+                        middleStr = ReportParameter.ReportId;//add by luch
+                        break;
                     case "ZBID":
                         middleStr = ReportParameter.WeekReportID;
                         break;
