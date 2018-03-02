@@ -17,7 +17,7 @@
     <link href="../../lib/easyUI/themes/icon.css" rel="stylesheet" type="text/css" />
     <script src="../../lib/easyUI/jquery.easyui.min.js" type="text/javascript"></script>
     <script src="../../lib/easyUI/locale/easyui-lang-zh_CN.js" type="text/javascript"></script>
-
+     <script src="../../Scripts/ct_dialog.js"></script>
      <script src="../../Scripts/Ct_Controls.js" type="text/javascript"></script>
     <link href="../../Styles/Ct_Controls.css" rel="stylesheet" type="text/css" /> 
  
