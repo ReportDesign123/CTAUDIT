@@ -220,7 +220,7 @@
 
             },
             InsertMultiRows: function () {
-                dialog.Open("ct/reportdata/NewRowCol.aspx", "插入行", null, function (result) {
+                dialog.Open("../reportdata/NewRowCol.aspx", "插入行", null, function (result) {
                     if (result && result.RowCol) {
                         var gridFrame = toolsManager.GetGridIframe();
                         // gridFrame.Grid1.addRows(row, result.RowCol);
