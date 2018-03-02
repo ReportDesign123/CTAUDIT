@@ -2292,7 +2292,7 @@
                     <div id="clearReportSearch"></div>
                 </div>
                 <div id="content" class="Content">
-                    <iframe id="gridFrame" src="Cell.aspx" height="100%" width="100%" frameborder="0"></iframe>
+                    <iframe id="gridFrame" src="Cell1.aspx" height="100%" width="100%" frameborder="0"></iframe>
                 </div>
             </div>
             <iframe id="catalog" src="Catalog.htm" height="100%" width="100%" frameborder="0" style="display: block"></iframe>

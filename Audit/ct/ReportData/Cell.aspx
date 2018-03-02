@@ -412,13 +412,13 @@
                                if (cellFormat["CellHelp"]) {
                                    if (cellFormat["CellType"] == "03") {
                                        var paras = { url: "", columns: [], sortName: "", sortOrder: "" };
-                                      // var para = { TaskId: "", PaperId: "", CompanyId: "", ReportId: "", Year: "", Cycle: "", AuditDate: "", bdqStr: "", Where: "", WeekReportID: "", WeekReportName: "", WeekReportKsrq: "", WeekReportJsrq: "" };
-                                        var vsTaskId =parent.currentState.ReportState.AuditTask.value;
-                                        var vsCompanyId = parent.currentState.CompanyId;
+                                       // var para = { TaskId: "", PaperId: "", CompanyId: "", ReportId: "", Year: "", Cycle: "", AuditDate: "", bdqStr: "", Where: "", WeekReportID: "", WeekReportName: "", WeekReportKsrq: "", WeekReportJsrq: "" };
+                                       var vsTaskId =parent.currentState.ReportState.AuditTask.value;
+                                       var vsCompanyId = parent.currentState.CompanyId;
                                        //para.Cycle = parent.currentState.ReportState.Zq;
-                                        var vsYear = parent.currentState.ReportState.Nd;
-                                        var vsPaperId = parent.currentState.ReportState.AuditPaper.value;
-                                        var vsReportId = parent.currentState.navigatorData.currentReportId;
+                                       var vsYear = parent.currentState.ReportState.Nd;
+                                       var vsPaperId = parent.currentState.ReportState.AuditPaper.value;
+                                       var vsReportId = parent.currentState.navigatorData.currentReportId;
                                        //para.bdqStr = null;
                                        //var bdqCode = parent.vsBDBH; // currentState.BdqBh;
                                        //para.Where = "&&";
@@ -426,16 +426,17 @@
                                        //para.WeekReportName = parent.currentState.ReportState.WeekReport.Name;
                                        //para.WeekReportKsrq = parent.currentState.ReportState.WeekReport.Ksrq;
                                        //para.WeekReportJsrq = parent.currentState.ReportState.WeekReport.Jsrq;
-                                      // paras.url = "../../handler/BasicHandler.ashx?ActionType=" + BasicAction.ActionType.Grid + "&MethodName=GetDictionaryDataGridByClassType&FunctionName=" + BasicAction.Functions.DictionaryManager + "&ClassType=" + cellFormat["CellHelp"];
-                                        paras.url = "../../handler/BasicHandler.ashx?ActionType=" + BasicAction.ActionType.Grid + "&MethodName=GetDictionaryDataGridByLsHelp&FunctionName=" + BasicAction.Functions.DictionaryManager + "&ClassType=" + cellFormat["CellHelp"] + "&TaskId=" + vsTaskId
-                                       + "&CompanyId=" + vsCompanyId + "&vsYear=" + vsYear + "&PaperId=" + vsPaperId + "&ReportId=" + vsReportId;
+                                       // paras.url = "../../handler/BasicHandler.ashx?ActionType=" + BasicAction.ActionType.Grid + "&MethodName=GetDictionaryDataGridByClassType&FunctionName=" + BasicAction.Functions.DictionaryManager + "&ClassType=" + cellFormat["CellHelp"];
+                                       paras.url = "../../handler/BasicHandler.ashx?ActionType=" + BasicAction.ActionType.Grid + "&MethodName=GetDictionaryDataGridByLsHelp&FunctionName=" + BasicAction.Functions.DictionaryManager + "&ClassType=" + cellFormat["CellHelp"] + "&TaskId=" + vsTaskId
+                                      + "&CompanyId=" + vsCompanyId + "&vsYear=" + vsYear + "&PaperId=" + vsPaperId + "&ReportId=" + vsReportId;
                                        paras.columns = [[
                         { field: "Code", title: "编号", width: 80 },
                          { field: "Name", title: "名称", width: 80 }
                                        ]];
                                        paras.sortName = "Code";
                                        paras.sortOrder = "ASC";
-                                       dialog.Open("../pub/HelpDialog.aspx", "帮助", paras, function (result) {
+                                       
+                                       dialog.Open("ct/pub/HelpDialog.aspx", "帮助", paras, function (result) {
                                            if (result && result.Code) {
                                                sheet.suspendPaint(); 
                                                cellType.text(result.Name);
@@ -446,13 +447,16 @@
                                                sheet.resumePaint();
                                            }
                                        }, { width: 300, height: 350 });
+                                   
+                                     
 
                                        
                                    }
                                }
                            }
                        }
-                           catch (err) {
+                       catch (err) {
+                          
                                alert(err.Message);
                            }
                        }
