@@ -52,13 +52,13 @@
   </PropertyGroup>
   <ItemGroup>
     <Reference Include="Aspose.Cells">
-      <HintPath>..\..\..\BBS\Lib\Aspose.Cells.dll</HintPath>
+      <HintPath>..\DLL\Aspose.Cells.dll</HintPath>
     </Reference>
     <Reference Include="Aspose.Pdf">
-      <HintPath>..\..\..\BBS\Lib\Aspose.Pdf.dll</HintPath>
+      <HintPath>..\DLL\Aspose.Pdf.dll</HintPath>
     </Reference>
     <Reference Include="Aspose.Slides">
-      <HintPath>..\..\..\BBS\Lib\Aspose.Slides.dll</HintPath>
+      <HintPath>..\DLL\Aspose.Slides.dll</HintPath>
     </Reference>
     <Reference Include="Aspose.Words, Version=14.1.0.0, Culture=neutral, PublicKeyToken=00725b1ceb58d0a9, processorArchitecture=MSIL">
       <SpecificVersion>False</SpecificVersion>
@@ -81,7 +81,7 @@
     </Reference>
     <Reference Include="Microsoft.CSharp" />
     <Reference Include="Sys">
-      <HintPath>..\..\..\BBS\Lib\Sys.dll</HintPath>
+      <HintPath>..\DLL\Sys.dll</HintPath>
     </Reference>
     <Reference Include="System" />
     <Reference Include="System.Data" />
