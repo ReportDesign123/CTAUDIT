@@ -230,7 +230,7 @@
 
                         gridFrame.Grid1.setRowCount(gridFrame.Grid1.getRowCount());
                     }
-                }, { width: 260, height: 130 });
+                }, { width: 300, height: 180 });
 
             },
             ///删除报表数据
