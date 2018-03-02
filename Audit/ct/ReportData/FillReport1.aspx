@@ -252,7 +252,7 @@
                 }
                 dialog.Open("ct/reportdata/UploadMiddle.aspx?TaskId=" + para.TaskId + "&PaperId=" + para.PaperId + "&ReportId=" + para.ReportId + "&CompanyId=" + para.CompanyId + "&Nd=" + para.Year + "&Zq=" + para.Cycle, "上传", para, function (result) {
 
-                }, { width: 700, height: 550 });
+                }, { width: 700, height: 550 }); 
 
             },
             InsertRowCol_Click: function () {
