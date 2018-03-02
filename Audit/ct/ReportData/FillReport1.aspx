@@ -2273,7 +2273,7 @@
        
         <div position="center">
             
-            <div id="ReportsTab" class="ReportsTab">
+            <div id="ReportsTab"  style="display: none" class="ReportsTab">
               
             </div>
             <div id="report" style="width: 100%; height: 100%;">
