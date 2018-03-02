@@ -52,13 +52,13 @@
   </PropertyGroup>
   <ItemGroup>
     <Reference Include="Aspose.Cells">
-      <HintPath>..\DLL\Aspose.Cells.dll</HintPath>
+      <HintPath>..\..\..\BBS\Lib\Aspose.Cells.dll</HintPath>
     </Reference>
     <Reference Include="Aspose.Pdf">
-      <HintPath>..\DLL\Aspose.Pdf.dll</HintPath>
+      <HintPath>..\..\..\BBS\Lib\Aspose.Pdf.dll</HintPath>
     </Reference>
     <Reference Include="Aspose.Slides">
-      <HintPath>..\DLL\Aspose.Slides.dll</HintPath>
+      <HintPath>..\..\..\BBS\Lib\Aspose.Slides.dll</HintPath>
     </Reference>
     <Reference Include="Aspose.Words, Version=14.1.0.0, Culture=neutral, PublicKeyToken=00725b1ceb58d0a9, processorArchitecture=MSIL">
       <SpecificVersion>False</SpecificVersion>
@@ -81,7 +81,7 @@
     </Reference>
     <Reference Include="Microsoft.CSharp" />
     <Reference Include="Sys">
-      <HintPath>..\DLL\Sys.dll</HintPath>
+      <HintPath>..\..\..\BBS\Lib\Sys.dll</HintPath>
     </Reference>
     <Reference Include="System" />
     <Reference Include="System.Data" />
@@ -305,6 +305,8 @@
     <Content Include="images\ReportData\search.gif" />
     <Content Include="images\ReportData\导出Excel-16.png" />
     <Content Include="Index.aspx" />
+    <Content Include="JumpCelLogin.aspx" />
+    <Content Include="JumpOaLogin.aspx" />
     <Content Include="JumpReportMang.aspx" />
     <Content Include="Layout\center.aspx" />
     <Content Include="Layout\News.aspx" />
@@ -4007,6 +4009,20 @@
     </Compile>
     <Compile Include="Index.aspx.designer.cs">
       <DependentUpon>Index.aspx</DependentUpon>
+    </Compile>
+    <Compile Include="JumpCelLogin.aspx.cs">
+      <DependentUpon>JumpCelLogin.aspx</DependentUpon>
+      <SubType>ASPXCodeBehind</SubType>
+    </Compile>
+    <Compile Include="JumpCelLogin.aspx.designer.cs">
+      <DependentUpon>JumpCelLogin.aspx</DependentUpon>
+    </Compile>
+    <Compile Include="JumpOaLogin.aspx.cs">
+      <DependentUpon>JumpOaLogin.aspx</DependentUpon>
+      <SubType>ASPXCodeBehind</SubType>
+    </Compile>
+    <Compile Include="JumpOaLogin.aspx.designer.cs">
+      <DependentUpon>JumpOaLogin.aspx</DependentUpon>
     </Compile>
     <Compile Include="JumpReportMang.aspx.cs">
       <DependentUpon>JumpReportMang.aspx</DependentUpon>
