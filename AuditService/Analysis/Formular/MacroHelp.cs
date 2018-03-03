@@ -130,6 +130,7 @@ namespace AuditService.Analysis.Formular
                     case "REPORTID":
                         middleStr = ReportParameter.ReportId;//add by luch
                         break;
+
                     case "ZBID":
                         middleStr = ReportParameter.WeekReportID;
                         break;
