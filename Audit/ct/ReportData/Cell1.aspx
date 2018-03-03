@@ -340,6 +340,15 @@
                    parent.mediatorManager.SetRowColInput(row, col, tag);
                    currentState.Row = row;
                    currentState.Col = col;
+                   var cellsType = Grid1.getCellType(row, col);
+                   if (cellsType instanceof GC.Spread.Sheets.CellTypes.HyperLink) {
+                       var vsValue = Grid1.getCell(row, col).cellType(cellsType).value();
+
+                       var vsUrlValue = GetRequest(vsValue, row, col);
+
+
+                       Grid1.getCell(parseInt(row), parseInt(col)).cellType(cellsType).value(vsUrlValue);
+                   }
                },
                CellChange_Event: function (e, data) {
 

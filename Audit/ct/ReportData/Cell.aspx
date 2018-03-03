@@ -175,12 +175,10 @@
                    var cellType = null;
                    cellType = Grid1.getCellType(row, col);
                    if (cellType instanceof GC.Spread.Sheets.CellTypes.HyperLink)
-                  // if (CellItem.cellDataType == "04")
                    {
                        var vsBBName;
-                       CellItem.UrlValue = GetRequest(CellItem.UrlValue, row, col);
+                     //  CellItem.UrlValue = GetRequest(CellItem.UrlValue, row, col);
                        var vsUrl;
-                       //  var cellType = new spreadNS.CellTypes.HyperLink();
                        if (CellItem.UrlValue.indexOf("BB$") >= 0) {
 
                            var vsBBArry = CellItem.UrlValue.split("$");
@@ -196,16 +194,10 @@
                            else
                                vsUrl += "&AuditDate=" + parent.currentState.ReportState.AuditDate.value;
                            vsUrl += "&Company=" + parent.currentState.CompanyId;
-                          
-                           //Grid1.setValue(row, col, vsUrl);
-                           //Grid1.getCellType(row, col)._text = vsBBName;
                        }
                        else
                        {
                            vsUrl = CellItem.UrlValue;
-                           //cellType.text(CellItem.ParaValue);
-                           //Grid1.getCell(row, col).cellType(cellType).value(CellItem.ParaValue);
-                           
                        }
                        Grid1.getCell(parseInt(row), parseInt(col)).cellType(cellType).value(vsUrl);
 
@@ -324,12 +316,6 @@
            },
                GetRowColTextByCellType: function (text, cellType) {
                    if (text == null) return "";
-                   //if (cellType["CellSmbol"] == "01" || cellType["CellSmbol"] == "02") {
-                   //    text = GridManager.GetSmboText(text);
-                   //}
-                   //if (cellType["CellThousand"] == "1") {
-                   //    text = Ct_Tool.RemoveDecimalPoint(text);
-                   //}
                    return text;
                },
                RowColChange_Event: function (e, data) {
@@ -340,6 +326,16 @@
                    parent.mediatorManager.SetRowColInput(row, col, tag);
                    currentState.Row = row;
                    currentState.Col = col;
+                   var cellsType = Grid1.getCellType(row, col);
+                   if (cellsType instanceof GC.Spread.Sheets.CellTypes.HyperLink) {
+                       var vsValue = Grid1.getCell(row, col).cellType(cellsType).value();
+
+                       var vsUrlValue = GetRequest(vsValue, row, col);
+
+
+                       Grid1.getCell(parseInt(row), parseInt(col)).cellType(cellsType).value(vsUrlValue);
+                   }
+                   
                },
                CellChange_Event: function (e, data) {
 
@@ -402,7 +398,8 @@
                        row = args.row,
                        col = args.col;
                    var cellsType = sheet.getCellType(row,col);
-                   if (cellsType instanceof GC.Spread.Sheets.CellTypes.Button) {
+                   if (cellsType instanceof GC.Spread.Sheets.CellTypes.Button)
+                   {
                        var cellType = sheet.getCellType(row, col);
                        try
                        {
@@ -440,8 +437,6 @@
                                            if (result && result.Code) {
                                                sheet.suspendPaint(); 
                                                cellType.text(result.Name);
-                                               //sheet.setCellType(parseInt(row), parseInt(col), cellType);
-                                               // sheet.setValue(row, col-1, result.Name);
                                                sheet.getCell(row, col).text(result.Name);
 
                                                sheet.resumePaint();
@@ -459,7 +454,8 @@
                           
                                alert(err.Message);
                            }
-                       }
+                   }
+               
                },
                DealCellLock:function ()
                {
@@ -580,7 +576,7 @@
                function CheckCellType(row, col)
                {
                   var  cellType = Grid1.getCellType(row, col);
-                  if (cellType instanceof GC.Spread.Sheets.CellTypes.Button)
+                  if (cellType instanceof GC.Spread.Sheets.CellTypes.Button )
                        return false;
                    else
                        return true;
