@@ -680,8 +680,10 @@ namespace AuditService.ReportData
                         {
                             ItemDataValueStruct idv = new ItemDataValueStruct();
                             idv.value = "";
+                            idv.UrlValue= bdqItems[columnName].UrlValue;
                             idv.cellDataType = bdqItems[columnName].CellDataType;
                             row.Add(columnName, idv);
+
                         }
                         ItemDataValueStruct temp = new ItemDataValueStruct();
                         temp.value = "";
