@@ -249,7 +249,7 @@
                             var cellCode = cell["CellCode"];
                             var bdCellInfo = toolsManager.GetCellTagBdqInfo(row - 1, colIndex);
                             CellTag = "0;" + JSON2.stringify({ CellCode: cellCode, bdCode: bdqCode, index: toolsManager.GetMaxCountArray(BBDataItems.BdqData[BBDataItems.bdMaps[bdqCode]]) + 1 }) + "|" + cell.CellDataType + "|" + JSON2.stringify(cell);
-                            //gridFrame.Grid1.Cell(row, colIndex).Tag = CellTag;
+                           
                             gridFrame.Grid1.setTag(row, colIndex, CellTag);
 
                             var item = toolsManager.CreateDataItem();
@@ -998,6 +998,7 @@
                 return bdInfo;
             },
             GetRowTagBdqInfo: function (row) {
+                var gridFrame = toolsManager.GetGridIframe();
                 var cols = gridFrame.Grid1.getColumnCount(); // gridFrame.Grid1.Cols;
                 var bdInfo;
                 for (var i = 0; i < cols; i++) {

@@ -972,6 +972,7 @@
                 return bdInfo;
             },
             GetRowTagBdqInfo: function (row) {
+                var gridFrame = toolsManager.GetGridIframe();
                 var cols = gridFrame.Grid1.getColumnCount(); // gridFrame.Grid1.Cols;
                 var bdInfo;
                 for (var i = 0; i < cols; i++) {
