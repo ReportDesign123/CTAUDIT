@@ -50,6 +50,7 @@ namespace AuditSPI.ReportData
         /// <param name="companies"></param>
         /// <returns></returns>
         List<CompanyItemStruct> GetAggregationReportCellConstituteData(ReportAuditCellConclusion reportAuditCellConclusion, List<CompanyItemStruct> companies);
+        ItemDataValueStruct GetReportDataItem(ReportDataParameterStruct rdps);
     }
     public class ReportFirstLoadStruct
     {
@@ -61,6 +62,7 @@ namespace AuditSPI.ReportData
       public   List<ReportFormatDicEntity> reports = new List<ReportFormatDicEntity>();
         //构建树形结构
       public List<TreeNode> companiesTree = new List<TreeNode>();
+    
 
     }
 }
