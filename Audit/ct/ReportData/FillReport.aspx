@@ -232,15 +232,20 @@
                     gridFrame.Grid1.suspendPaint();
                     gridFrame.Grid1.addRows(row, 1);
                     for (var i = 0; i <= columnCount; i++) {
-                        var vsCellType = gridFrame.Grid1.getStyle(row - 1, i);
-                        gridFrame.Grid1.setStyle(row, i, vsCellType);
+                        if (gridFrame.CheckCellType(row - 1, i))
+                        {
+                            var vsCellType = gridFrame.Grid1.getStyle(row - 1, i);
+                            gridFrame.Grid1.setStyle(row, i, vsCellType);
+                        }
+                        
                     }
 
                     for (var i = 0; i < columnCount; i++) {
                         gridFrame.Grid1.getCell(row, i).locked(false);
-                        if (gridFrame.Grid1.getCell(row - 1, i).formula()) {
-                            gridFrame.Grid1.setFormula(parseInt(row), i, gridFrame.Grid1.getCell(row - 1, i).formula().replace(/\d+/g, (row + 1).toString()));
-                        }
+                        //公式去掉
+                        //if (gridFrame.Grid1.getCell(row - 1, i).formula()) {
+                        //    gridFrame.Grid1.setFormula(parseInt(row), i, gridFrame.Grid1.getCell(row - 1, i).formula().replace(/\d+/g, (row + 1).toString()));
+                        //}
 
                     }
                     var rowData = { DATA_ID: { value: "", cellDataType: "01", isOrNotUpdate: "0" } };
@@ -252,10 +257,25 @@
                            
                             gridFrame.Grid1.setTag(row, colIndex, CellTag);
 
+                            //设置单元格类型
+                            gridFrame.GridManager.SetRowColCellType(cell, row, colIndex);
+                            var align;
+
+                            //设置单元格对齐方式
+                            if (cell.CellDataType == "01") {
+                                //align = gridFrame.spreadNS.HorizontalAlign["left"];
+                                gridFrame.Grid1.getCell(row, colIndex)["hAlign"](align);
+                            } else if (cell.CellDataType == "02") {
+                                align = gridFrame.spreadNS.HorizontalAlign["right"];
+                                gridFrame.Grid1.getCell(row, colIndex)["hAlign"](align);
+                            }
+
                             var item = toolsManager.CreateDataItem();
                             item.value = "";
                             item.cellDataType = cell.CellDataType;
                             item.isOrNotUpdate = "0";
+                            item.CellUrl = cell.CellUrl;
+                            item.CellValue = cell.CellValue;
                             rowData[cell.CellCode] = item;
                         }
                     }
@@ -429,7 +449,7 @@
                         callbackRun(function () {
                             mediatorManager.LoadBBFormat();
                             //mediatorManager.LoadBBCompFormat();
-                            mediatorManager.LoadBbData();
+                           mediatorManager.LoadBbData();
 
                         });
                     }
@@ -947,9 +967,10 @@
                 return code;
             },
             CreateDataItem: function () {
-                var item = { value: "", cellDataType: "", isOrNotUpdate: "0" };
+                var item = { value: "", cellDataType: "", isOrNotUpdate: "0", CellValue: "", CellUrl:""};
                 return item;
             },
+         
             GetReportParameter: function () {
                 var para = { TaskId: "", PaperId: "", CompanyId: "", ReportId: "", Year: "", Cycle: "", ReportCode: "" };
                 para.TaskId = currentState.ReportState.AuditTask.value;
@@ -1063,6 +1084,27 @@
                 var para = { auditPaperId: currentState.ReportState.AuditPaper.value };
                 para = CreateParameter(ReportDataAction.ActionType.Post, ReportDataAction.Functions.FillReport, ReportDataAction.Methods.FillReportMethods.GetReportsByAuditPaper, para);
                 DataManager.sendData(urls.fillReportUrl, para, resultManager.LoadAuditPaperAndReport_SuccessResult, resultManager.FailResult);
+            },
+            CreateReportDataItem: function (Row,Col) {
+                var obj = {  TaskId: "", PaperId: "", CompanyId: "", ReportId: "", Year: "", Cycle: "", AuditDate: "", bdqStr: "", Where: "", WeekReportID: "", WeekReportName: "", WeekReportKsrq: "", WeekReportJsrq: "" , Row: "", Col: "" };
+                obj.TaskId = currentState.ReportState.AuditTask.value;
+                obj.CompanyId = currentState.CompanyId;
+                obj.Cycle = currentState.ReportState.Zq;
+                obj.Year = currentState.ReportState.Nd;
+                obj.PaperId = currentState.ReportState.AuditPaper.value;
+                obj.ReportId = currentState.navigatorData.currentReportId;
+                obj.bdqStr = JSON2.stringify(currentState.BdqDataMaps);
+               
+                obj.WeekReportID = currentState.ReportState.WeekReport.ID;
+                obj.WeekReportName = currentState.ReportState.WeekReport.Name;
+                obj.WeekReportKsrq = currentState.ReportState.WeekReport.Ksrq;
+                obj.WeekReportJsrq = currentState.ReportState.WeekReport.Jsrq;
+                obj.Row = Row;
+                obj.Col = Col;
+
+              
+                obj = CreateParameter(ReportDataAction.ActionType.Post, ReportDataAction.Functions.FillReport, ReportDataAction.Methods.FillReportMethods.GetReportDataItem, obj);
+                DataManager.sendData(urls.fillReportUrl, obj, resultManager.CreateReportData_Success, resultManager.FailResult, false);
             },
             LoadBBFormat: function () {
                 var para = { Id: "" };
@@ -1393,7 +1435,7 @@
                             break;
                         case "05":
                             $("#zqDiv").empty();
-                            $("#zqDiv").html('<table  style=" width:210px;">' +
+                            $("#zqDiv").html('<table  style=" width:230px;height:58px">' +
                              '<tr  id="zqTr"><td style=" width:100px" id="zqLbl" >周期</td><td style=" width:50px"  id="zqTd"><input type="text" id="txtZq"/></td></tr>' +
             '<tr ><td id="ndLbl" >日期</td><td id="ndTd"><input type="text" id="txtKSRQ"/></td><td></td></tr>' +
              '<tr ><td id="ndLbl1" >至</td><td id="ndTd1"><input type="text" id="txtJSRQ"/></td><td></td></tr>' +
@@ -1476,6 +1518,18 @@
                     alert(data.sMeg);
                 }
             },
+            CreateReportData_Success:function(data)
+            {
+                if (data.success)
+                {
+
+                }
+                else
+                {
+                    alert(data.sMeg);
+                };
+            }
+            ,
             LoadRefreshHomeData_Success: function (data) {
                 if (data.success) {
                     tabManager.LoadCatalogDatas(data.obj.rows);
@@ -1783,6 +1837,11 @@
                                                     var row = bdFormat.Offset + bdRowIndex + addRowData;
                                                     if (bdRow && bdRow[cell.CellCode]) {
                                                         gridFrame.GridManager.SetRowColText(row, columnIndex, bdRow[cell.CellCode]);
+                                                        if(cell.CellUrl)
+                                                        {
+                                                            cell.CellUrl = bdRow[cell.CellCode].UrlValue;
+                                                           // cell.CellValue = bdRow[cell.CellCode].ParaValue;
+                                                        }
                                                     } else {
                                                         var cellItem = { value: "", cellDataType: cell.CellDataType, isOrNotUpdate: "0" };
                                                         gridFrame.GridManager.SetRowColTextByRowCol(row, columnIndex, cellItem);

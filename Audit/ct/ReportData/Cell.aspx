@@ -227,7 +227,7 @@
                        //帮助
                        var ButtonCellType = new spreadNS.CellTypes.Button();
                        ButtonCellType.buttonBackColor("#DCDCDC");
-                       ButtonCellType.text("...");
+                      // ButtonCellType.text("...");
                        Grid1.setCellType(rowIndex, colIndex, ButtonCellType, GC.Spread.Sheets.SheetArea.viewport);
                        //Grid1.getCell(parseInt(rowIndex), parseInt(colIndex)).cellType(ButtonCellType);
                    }

@@ -100,13 +100,17 @@ namespace Audit.Actions.ReportData
                     ActionTool.InvokeObjMethod<FillReportAction>(this, methodName, dataStr);
                     break;
                 case "SaveReportDatas":
-                     List<string> Sparas=new List<string>();
+                    List<string> Sparas=new List<string>();
                     Sparas.Add("dataStr");
                     Sparas.Add("BBID");
                     Sparas.Add("formulaStr");
                    // string dataStr = ActionTool.DeserializeParameter("dataStr", context).ToString();
                     object[] sparaobjs = ActionTool.DeserializeParameters(Sparas, context, actionType);
                     ActionTool.InvokeObjMethod<FillReportAction>(this, methodName, sparaobjs);
+                    break;
+                case "GetReportDataItem":
+                    rdps = ActionTool.DeserializeParametersByFields<ReportDataParameterStruct>(context, actionType);
+                    ActionTool.InvokeObjMethod<FillReportAction>(this, methodName, rdps);
                     break;
                 case "DeleteBdqData":
                     List<string> paras=new List<string>();
