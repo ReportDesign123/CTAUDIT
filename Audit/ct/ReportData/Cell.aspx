@@ -320,7 +320,8 @@
                },
                RowColChange_Event: function (e, data) {
                    var row =  data.newSelections[0].row;
-                   var col =  data.newSelections[0].col;
+                   var col = data.newSelections[0].col;
+                   if (col = -1) col = 0;
                    var tag = Grid1.getTag(row, col); // Grid1.Cell(Row, Col).Tag;
                    if (currentState.Row == row && currentState.Col == col && currentState.Tag == tag) { return; }
                    parent.mediatorManager.SetRowColInput(row, col, tag);

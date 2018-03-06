@@ -10,7 +10,7 @@
 namespace Audit.ct.ReportData {
     
     
-    public partial class Cell {
+    public partial class Cell1 {
         
         /// <summary>
         /// Head1 控件。

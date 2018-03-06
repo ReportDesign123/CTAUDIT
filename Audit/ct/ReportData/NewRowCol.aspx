@@ -45,7 +45,7 @@
             });
             $("#cancel").bind("click", function () {
                 var modalid = $(window.frameElement).attr("modalid");
-                
+                controls.RowCol = null;
                 dialog.close(modalid);
             });
         });
