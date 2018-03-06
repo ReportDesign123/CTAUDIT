@@ -382,7 +382,40 @@ namespace AuditService.ReportData
             }
             return MarcoName;
         }
+        /// <summary>
+        /// 获取宏函数及其他内容的数据字典
+        /// </summary>
+        /// <returns></returns>
+        public ItemDataValueStruct GetReportDataItem(ReportDataParameterStruct rdps)
+        {
+            string sql = "SELECT * FROM CT_FORMAT_DATAITEM WHERE DATAITEM_REPORTID='" + rdps.ReportId + "' and DATAITEM_ROW='"+ rdps.Row+ "' and DATAITEM_COL='"+ rdps.Col+ "'";
+            List<DataItemEntity> items = dbManager.ExecuteSqlReturnTType<DataItemEntity>(sql);
+            string tableName = "";
+            ReportDataStruct rds = new ReportDataStruct();
+            rds.rdps = rdps;
+            MacroHelp mh = new MacroHelp();
+            ItemDataValueStruct idvs = new ItemDataValueStruct();
+            if (items != null & items.Count == 1)
+            {
+                mh.ReportParameter = rdps;
+                ReplaceMarchPara(items[0], mh);
+                string itemType = FormatTool.GetDataItemType(items[0].TableName);
 
+                if (StringUtil.IsNullOrEmpty(items[0].Code)) return null;
+                tableName = items[0].TableName;
+                idvs.cellDataType = items[0].CellDataType;
+                idvs.row = items[0].Row;
+                idvs.col = items[0].Col;
+                idvs.ParaValue = items[0].ParaValue;
+                idvs.UrlValue = items[0].UrlValue;
+                //处理宏函数
+                if (!StringUtil.IsNullOrEmpty(items[0].Macro))
+                {
+                    idvs.value = mh.ReplaceMacroVariable(mh.ReplaceMacroVariable(items[0].Macro));
+                }
+            }
+            return idvs;
+        }
         /// <summary>
         /// 加载报表数据
         /// </summary>
