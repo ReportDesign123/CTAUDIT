@@ -216,100 +216,104 @@
                   
             },
             InsertRowCol_Click: function () {
-                var index = BBData.bdq.BdqMaps[currentState.BdqBh];
-                var bdqFormat = BBData.bdq.Bdqs[index];
-               var gridFrame = toolsManager.GetGridIframe();
-                var bdqCode = bdqFormat.Code;
-              //  var gridFrame = toolsManager.GetGridIframe();
-                if (bdqFormat.BdType == "1") {
-                    if (gridFrame.GridManager.GetCurrentRow() == gridFrame.Grid1.getRowCount()) { alert("表格行数需要比插入行数多一行！"); return; };
-                    var currentRow = gridFrame.GridManager.GetCurrentRow();
-                    var currentBdRows = CaculateArrayLengthFilterUndefined(BBDataItems.BdqData[BBDataItems.bdMaps[bdqCode]]);
-                    var bdRowInfo = toolsManager.GetRowTagBdqInfo(currentRow);
-                    var currentIndex = toolsManager.GetArrayCountBeforeCurrentIndex(BBDataItems.BdqData[BBDataItems.bdMaps[bdqCode]], bdRowInfo.index);
-                    var row = currentBdRows - currentIndex + currentRow;
-                    var columnCount = gridFrame.Grid1.getColumnCount();
-                    gridFrame.Grid1.suspendPaint();
-                    gridFrame.Grid1.addRows(row, 1);
-                    for (var i = 0; i <= columnCount; i++) {
-                        if (gridFrame.CheckCellType(row - 1, i))
-                        {
-                            var vsCellType = gridFrame.Grid1.getStyle(row - 1, i);
-                            gridFrame.Grid1.setStyle(row, i, vsCellType);
-                        }
-                        
-                    }
-
-                    for (var i = 0; i < columnCount; i++) {
-                        gridFrame.Grid1.getCell(row, i).locked(false);
-                        //公式去掉
-                        //if (gridFrame.Grid1.getCell(row - 1, i).formula()) {
-                        //    gridFrame.Grid1.setFormula(parseInt(row), i, gridFrame.Grid1.getCell(row - 1, i).formula().replace(/\d+/g, (row + 1).toString()));
-                        //}
-
-                    }
-                    var rowData = { DATA_ID: { value: "", cellDataType: "01", isOrNotUpdate: "0" } };
-                    $.each(BBData.bbData[bdqFormat.Offset], function (colIndex, cell) {
-                        if (cell["CellCode"]) {
-                            var cellCode = cell["CellCode"];
-                            var bdCellInfo = toolsManager.GetCellTagBdqInfo(row - 1, colIndex);
-                            CellTag = "0;" + JSON2.stringify({ CellCode: cellCode, bdCode: bdqCode, index: toolsManager.GetMaxCountArray(BBDataItems.BdqData[BBDataItems.bdMaps[bdqCode]]) + 1 }) + "|" + cell.CellDataType + "|" + JSON2.stringify(cell);
-                           
-                            gridFrame.Grid1.setTag(row, colIndex, CellTag);
-
-                            //设置单元格类型
-                            gridFrame.GridManager.SetRowColCellType(cell, row, colIndex);
-                            var align;
-
-                            //设置单元格对齐方式
-                            if (cell.CellDataType == "01") {
-                                //align = gridFrame.spreadNS.HorizontalAlign["left"];
-                                gridFrame.Grid1.getCell(row, colIndex)["hAlign"](align);
-                            } else if (cell.CellDataType == "02") {
-                                align = gridFrame.spreadNS.HorizontalAlign["right"];
-                                gridFrame.Grid1.getCell(row, colIndex)["hAlign"](align);
+               
+                    var index = BBData.bdq.BdqMaps[currentState.BdqBh];
+                    var bdqFormat = BBData.bdq.Bdqs[index];
+                    var gridFrame = toolsManager.GetGridIframe();
+                    var bdqCode = bdqFormat.Code;
+                    //  var gridFrame = toolsManager.GetGridIframe();
+                    if (bdqFormat.BdType == "1") {
+                        if (gridFrame.GridManager.GetCurrentRow() == gridFrame.Grid1.getRowCount()) { alert("表格行数需要比插入行数多一行！"); return; };
+                        var currentRow = gridFrame.GridManager.GetCurrentRow();
+                        var currentBdRows = CaculateArrayLengthFilterUndefined(BBDataItems.BdqData[BBDataItems.bdMaps[bdqCode]]);
+                        var bdRowInfo = toolsManager.GetRowTagBdqInfo(currentRow);
+                        var currentIndex = toolsManager.GetArrayCountBeforeCurrentIndex(BBDataItems.BdqData[BBDataItems.bdMaps[bdqCode]], bdRowInfo.index);
+                        var row = currentBdRows - currentIndex + currentRow;
+                        var columnCount = gridFrame.Grid1.getColumnCount();
+                        gridFrame.Grid1.suspendPaint();
+                        gridFrame.Grid1.addRows(row, 1);
+                        for (var i = 0; i <= columnCount; i++) {
+                            if (gridFrame.CheckCellType(row - 1, i)) {
+                                var vsCellType = gridFrame.Grid1.getStyle(row - 1, i);
+                                gridFrame.Grid1.setStyle(row, i, vsCellType);
                             }
 
-                            var item = toolsManager.CreateDataItem();
-                            item.value = "";
-                            item.cellDataType = cell.CellDataType;
-                            item.isOrNotUpdate = "0";
-                            item.CellUrl = cell.CellUrl;
-                            item.CellValue = cell.CellValue;
-                            rowData[cell.CellCode] = item;
                         }
-                    }
-                    );
-                    gridFrame.Grid1.resumePaint();
 
-                    BBDataItems.BdqData[BBDataItems.bdMaps[bdqCode]].push(rowData);
-                } else if (bdqFormat.BdType == "2") {
-                    if (gridFrame.GridManager.GetCurrentCol() == gridFrame.Grid1.Cols - 1) { alert("表格列数需要比插入列数多一列！"); return; }
-                    var col = gridFrame.GridManager.GetCurrentCol() + 1;
-                    gridFrame.Grid1.InsertCol(col, 1);
-                    gridFrame.Grid1.Range(1, col, gridIframe.Grid1.Rows - 1, col).BackColor = toolsManager.CovertColorStr("#FF99CC");
-                    var colData = { DATA_ID: { value: "", cellDataType: "01", isOrNotUpdate: "0" } };
-                    $.each(BBData.bbData, function (rowIndex, rowData) {
-                        if (rowData[bdqFormat.Offset]) {
-                            var cell = rowData[bdqFormat.Offset];
+                        for (var i = 0; i < columnCount; i++) {
+                            gridFrame.Grid1.getCell(row, i).locked(false);
+                            //公式去掉
+                            //if (gridFrame.Grid1.getCell(row - 1, i).formula()) {
+                            //    gridFrame.Grid1.setFormula(parseInt(row), i, gridFrame.Grid1.getCell(row - 1, i).formula().replace(/\d+/g, (row + 1).toString()));
+                            //}
+
+                        }
+                        var rowData = { DATA_ID: { value: "", cellDataType: "01", isOrNotUpdate: "0" } };
+                        $.each(BBData.bbData[bdqFormat.Offset], function (colIndex, cell) {
                             if (cell["CellCode"]) {
                                 var cellCode = cell["CellCode"];
-                                var bdCellTagInfo = toolsManager.GetCellTagBdqInfo(rowIndex, col - 1);
-                                CellTag = "0;" + JSON2.stringify({ CellCode: cellCode, bdCode: bdqCode, index: bdCellTagInfo.index + 1 }) + "|" + cell.CellDataType + "|" + JSON2.stringify(cell);
-                                gridFrame.Grid1.Cell(rowIndex, col).Tag = CellTag;
+                                var bdCellInfo = toolsManager.GetCellTagBdqInfo(row - 1, colIndex);
+                                CellTag = "0;" + JSON2.stringify({ CellCode: cellCode, bdCode: bdqCode, index: toolsManager.GetMaxCountArray(BBDataItems.BdqData[BBDataItems.bdMaps[bdqCode]]) + 1 }) + "|" + cell.CellDataType + "|" + JSON2.stringify(cell);
+
+                                gridFrame.Grid1.setTag(row, colIndex, CellTag);
+
+                                //设置单元格类型
+                                gridFrame.GridManager.SetRowColCellType(cell, row, colIndex);
+                                var align;
+
+                                //设置单元格对齐方式
+                                if (cell.CellDataType == "01") {
+                                    //align = gridFrame.spreadNS.HorizontalAlign["left"];
+                                    gridFrame.Grid1.getCell(row, colIndex)["hAlign"](align);
+                                } else if (cell.CellDataType == "02") {
+                                    align = gridFrame.spreadNS.HorizontalAlign["right"];
+                                    gridFrame.Grid1.getCell(row, colIndex)["hAlign"](align);
+                                }
 
                                 var item = toolsManager.CreateDataItem();
                                 item.value = "";
                                 item.cellDataType = cell.CellDataType;
                                 item.isOrNotUpdate = "0";
-                                colData[cell.CellCode] = item;
+                                item.CellUrl = cell.CellUrl;
+                                item.CellValue = cell.CellValue;
+                                rowData[cell.CellCode] = item;
                             }
                         }
-                    });
-                    BBDataItems.BdqData[BBDataItems.bdMaps[bdqCode]].push(colData);
-                }
+                        );
+                        gridFrame.Grid1.resumePaint();
+
+                        BBDataItems.BdqData[BBDataItems.bdMaps[bdqCode]].push(rowData);
+                    } else if (bdqFormat.BdType == "2") {
+                        if (gridFrame.GridManager.GetCurrentCol() == gridFrame.Grid1.Cols - 1) { alert("表格列数需要比插入列数多一列！"); return; }
+                        var col = gridFrame.GridManager.GetCurrentCol() + 1;
+                        gridFrame.Grid1.InsertCol(col, 1);
+                        gridFrame.Grid1.Range(1, col, gridIframe.Grid1.Rows - 1, col).BackColor = toolsManager.CovertColorStr("#FF99CC");
+                        var colData = { DATA_ID: { value: "", cellDataType: "01", isOrNotUpdate: "0" } };
+                        $.each(BBData.bbData, function (rowIndex, rowData) {
+                            if (rowData[bdqFormat.Offset]) {
+                                var cell = rowData[bdqFormat.Offset];
+                                if (cell["CellCode"]) {
+                                    var cellCode = cell["CellCode"];
+                                    var bdCellTagInfo = toolsManager.GetCellTagBdqInfo(rowIndex, col - 1);
+                                    CellTag = "0;" + JSON2.stringify({ CellCode: cellCode, bdCode: bdqCode, index: bdCellTagInfo.index + 1 }) + "|" + cell.CellDataType + "|" + JSON2.stringify(cell);
+                                    gridFrame.Grid1.Cell(rowIndex, col).Tag = CellTag;
+
+                                    var item = toolsManager.CreateDataItem();
+                                    item.value = "";
+                                    item.cellDataType = cell.CellDataType;
+                                    item.isOrNotUpdate = "0";
+                                    colData[cell.CellCode] = item;
+                                }
+                            }
+                        });
+                        BBDataItems.BdqData[BBDataItems.bdMaps[bdqCode]].push(colData);
+                    }
+                
             },
             DeleteRowCol_Click: function () {
+                var result = confirm("是否要删除行？");
+                if (result == false)
+                    return false;
                 var index = BBData.bdq.BdqMaps[currentState.BdqBh];
                 var bdqFormat = BBData.bdq.Bdqs[index];
                var gridFrame = toolsManager.GetGridIframe();

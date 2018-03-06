@@ -347,6 +347,9 @@
                 }
             },
             DeleteRowCol_Click: function () {
+                var result = confirm("是否要删除行？");
+                if (result == false)
+                    return false;
                 var index = BBData.bdq.BdqMaps[currentState.BdqBh];
                 var bdqFormat = BBData.bdq.Bdqs[index];
                 var gridFrame = toolsManager.GetGridIframe();
