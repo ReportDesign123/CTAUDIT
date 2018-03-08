@@ -19,6 +19,7 @@
     <script src="../../lib/easyUI/jquery.easyui.min.js" type="text/javascript"></script>
     <script src="../../lib/easyUI/locale/easyui-lang-zh_CN.js" type="text/javascript"></script>
     <script src="../../Scripts/ct/pub/PubHelp.js" type="text/javascript"></script>
+    <script src="../../Scripts/ct_dialog.js"></script>
     <style type="text/css">    
         body{ font-size:12px;}
         .l-table-edit {} 
