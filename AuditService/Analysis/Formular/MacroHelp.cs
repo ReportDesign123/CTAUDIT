@@ -138,7 +138,7 @@ namespace AuditService.Analysis.Formular
                         middleStr = ReportParameter.WeekReportName;
                         break;
                     case "ZBQJMC":
-                        middleStr = "期间:"+ReportParameter.WeekReportKsrq+"-"+ ReportParameter.WeekReportJsrq;
+                        middleStr = "期间:"+ReportParameter.WeekReportKsrq+"/"+ ReportParameter.WeekReportJsrq;
                         break;
                     case "ZBKSRQ":
                         middleStr = ReportParameter.WeekReportKsrq;
