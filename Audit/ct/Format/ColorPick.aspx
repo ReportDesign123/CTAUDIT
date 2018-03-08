@@ -7,6 +7,7 @@
     <title></title>
     <script src="../../lib/jquery/jquery-1.11.1.min.js" type="text/javascript"></script>
     <link href="../../Styles/default.css" rel="stylesheet" type="text/css" />
+    <script src="../../Scripts/ct_dialog.js"></script>
     <script type="text/javascript">
         $(function () {
             $.each($(".ke-colorpicker-cell"), function () {

@@ -50,8 +50,8 @@
 
         var urls = {
             functionsUrl: "../../handler/FormatHandler.ashx",
-            newFormularUrl: "NewFormular.aspx",
-            InfoContent: "../pub/ContentInfo.aspx"
+            newFormularUrl: "ct/format/NewFormular.aspx",
+            InfoContent: "ct/pub/ContentInfo.aspx"
         };
 
         var bdq = { Code: "", BdType: "", Offset: -1, SortRow: 2, DataCode: 2, DataName: 3, isOrNotMerge: false };
@@ -1158,7 +1158,7 @@
                         FormularData.currentFormular["FormularLevel"] = result.FormularLevel;
                         toolManager.SetBdq();
                     }
-                }, { width: 800, height:600});
+                }, { width: 830, height:630});
                
             },
             EditFormular: function () {
@@ -1371,11 +1371,11 @@
             content = EditManager.getNoEncryptCells(content);
             dialog.Open(urls.InfoContent, "帮助", content, function (result) {
                 if (result) {
-                    result = EditManager.getEncryptCells(result);
+                    result = EditManager.getEncryptCells(result.content);
                     $("#fxContent").val(result);
                     toolManager.Formular.AddEditFormular("edit");
                 }
-            }, { width:400, height: 300 });
+            }, { width:450, height: 350 });
 
              
         }

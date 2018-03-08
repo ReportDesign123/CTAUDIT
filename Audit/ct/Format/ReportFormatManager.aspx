@@ -381,7 +381,7 @@
                         if (result && !toolManager.IsNullOrEmpty(result.Edge)) {
                             cellManager.Border_Click(result.Edge, result.LineStyle);
                         }
-                    }, { width: 100, height: 100 });
+                    }, { width: 200, height: 200 });
                     
                 } else if ($(this).attr("id") == "LeftTor") {
                     cellManager.LeftTor_Click();
@@ -612,7 +612,7 @@
                     para.SortRow = bdq.SortRow;
                     para.isOrNotMerge = bdq.isOrNotMerge;
                 }
-                dialog.Open("ct/format/NewBd.aspx", "新建报表", null, function (result) {
+                dialog.Open("ct/format/NewBd.aspx", "新建报表", para, function (result) {
                     if (type == "1") {
                         GridManager.SetChangeRow(result, bdq);
                     } else if (type == "2") {

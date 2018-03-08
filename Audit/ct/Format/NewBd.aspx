@@ -12,7 +12,7 @@
 <script src="../../lib/jquery/jquery-1.5.2.min.js" type="text/javascript"></script> 
 <script src="../../lib/ligerUI/js/core/base.js" type="text/javascript"></script> 
 <script src="../../lib/ligerUI/js/ligerui.min.js" type="text/javascript"></script>
-     <script src="../../Scripts/ct_dialog.js"></script>
+<script src="../../Scripts/ct_dialog.js"></script>
 <style type="text/css"> 
 body{ font-size:12px;} 
 .l-table-edit {} 
