@@ -16,7 +16,7 @@ namespace Audit
             string Userid = "", Pass = "", _href = "";// 
             string Vloginkey = !string.IsNullOrEmpty(Request.QueryString["loginkey"]) ? Request.QueryString["loginkey"].ToString() : "";
             Vloginkey = CtTool.Security.Decrypt(Vloginkey, "kbtech");
-
+            //进行登录加密处理  "9D689EDA-81C1-44C9-A691-2A34F3569DB6";
             string VReturnUrl = !string.IsNullOrEmpty(Request.QueryString["ReturnUrl"]) ? Request.QueryString["ReturnUrl"] : "";
             if (Vloginkey != "")
             {
