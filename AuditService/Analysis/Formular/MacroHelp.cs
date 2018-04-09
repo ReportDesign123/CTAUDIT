@@ -137,6 +137,9 @@ namespace AuditService.Analysis.Formular
                     case "ZBZQMC":
                         middleStr = ReportParameter.WeekReportName;
                         break;
+                    case "ZBQJMC":
+                        middleStr = "期间:"+ReportParameter.WeekReportKsrq+"/"+ ReportParameter.WeekReportJsrq;
+                        break;
                     case "ZBKSRQ":
                         middleStr = ReportParameter.WeekReportKsrq;
                         break;
