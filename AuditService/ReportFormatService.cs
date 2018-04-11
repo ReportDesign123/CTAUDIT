@@ -591,7 +591,7 @@ namespace AuditService
                 }
             }
             createSql.Length--;
-            createSql.Append(")");
+            createSql.Append(")  ;  CREATE nonclustered  INDEX  data_index_1 ON  " + tableName + "(DATA_TASKID,DATA_MANUSCRIPT,DATA_COMPANYID,DATA_REPORTID,DATA_YEAR,DATA_CYCLE) ");
             command.CommandText = createSql.ToString();
             command.ExecuteNonQuery();
             }catch(Exception ex){
