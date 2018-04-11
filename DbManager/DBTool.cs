@@ -39,13 +39,13 @@
 
             string[] strFields = str3.Split(',');
             string strF = string.Empty;
-            if (str3.Contains("AS"))
+            if (str3.Contains("AS "))
             {
                 foreach (string word in strFields)
                 {
                     int WordIndex = word.IndexOf("AS");
                     string strWord = string.Empty;
-                    //int WordLength = word.Length;
+                    //int WordLength = word.Length; 
                     strWord = word.Substring(WordIndex + 3);
                     strF = strF + strWord + ",";
 
