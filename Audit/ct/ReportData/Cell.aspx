@@ -523,15 +523,31 @@
            function GetCellValue(value,row,col ) {
                var result = value;
                if (value) {
-                   var strValue = value.split('@');
-                   if (strValue.length < 2)
-                       return result;
-                   if (strValue[0] == "1") {
-                       result = Grid1.getCell(strValue[1].split(',')[0], strValue[1].split(',')[1]).value();
+                   var resultArrary = value.split(";");
+                   var resultValue = "";
+                   for (var i = 0; i < resultArrary.length; i++)
+                   {
+                       var strValue = resultArrary[i].split("@");
+                       if (strValue.length < 2)
+                           return result;
+                       if (strValue[0] == "1") {
+                           resultValue = resultValue+Grid1.getCell(strValue[1].split(',')[0], strValue[1].split(',')[1]).value();
+                       }
+                       else {
+                           resultValue =resultValue+ Grid1.getCell(row, parseInt(strValue[1])).value();
+                       }
                    }
-                   else {
-                       result = Grid1.getCell(row, parseInt(strValue[1]) ).value();
-                   }
+                   if (resultValue.length > 0)
+                       result = resultValue;
+                   //var strValue = value.split('@');
+                   //if (strValue.length < 2)
+                   //    return result;
+                   //if (strValue[0] == "1") {
+                   //    result = Grid1.getCell(strValue[1].split(',')[0], strValue[1].split(',')[1]).value();
+                   //}
+                   //else {
+                   //    result = Grid1.getCell(row, parseInt(strValue[1]) ).value();
+                   //}
 
                }
                if (!result)
