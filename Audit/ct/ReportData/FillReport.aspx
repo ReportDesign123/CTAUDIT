@@ -1862,7 +1862,7 @@
                                                         {
                                                             var vsURLValue = bdRow[cell.CellCode].value;
                                                             cell.CellUrl = bdRow[cell.CellCode].UrlValue;
-                                                            gridFrame.GridManager.setCellUrlValue(row, columnIndex, vsURLValue);
+                                                           gridFrame.GridManager.setCellUrlValue(row, columnIndex, vsURLValue);
                                                            // cell.CellValue = bdRow[cell.CellCode].ParaValue;
                                                         }
                                                     } else {

@@ -263,7 +263,7 @@
                },
                setCellUrlValue: function (row, col, CellValue)
                {
-                   if(CellValue!=undefined||undefined!="")
+                   if (CellValue != undefined &&CellValue != "")
                    {
                        var cellType = Grid1.getCellType(row, col);
                        cellType.text(CellValue);
