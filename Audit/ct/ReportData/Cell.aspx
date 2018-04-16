@@ -261,6 +261,15 @@
                    }
 
                },
+               setCellUrlValue: function (row, col, CellValue)
+               {
+                   if(CellValue!=undefined||undefined!="")
+                   {
+                       var cellType = Grid1.getCellType(row, col);
+                       cellType.text(CellValue);
+                   }
+               }
+               ,
                SetRowColTextByCellType: function (row, col, CellType) {
                    if (CellType["CellDataType"] == "01") return;
                    var text = Grid1.getCell(row, col).text();

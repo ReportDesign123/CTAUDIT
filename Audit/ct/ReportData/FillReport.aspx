@@ -271,7 +271,12 @@
                                 }
 
                                 var item = toolsManager.CreateDataItem();
-                                item.value = "";
+                                if (cell.CellMacro == "<!NGUID!>") {
+                                    item.value = EventManager.newGuid();
+                                    gridFrame.Grid1.getCell(row, colIndex).text(item.value);
+                                }
+                                else
+                                    item.value = "";
                                 item.cellDataType = cell.CellDataType;
                                 item.isOrNotUpdate = "0";
                                 item.CellUrl = cell.CellUrl;
@@ -299,6 +304,7 @@
                                     gridFrame.Grid1.Cell(rowIndex, col).Tag = CellTag;
 
                                     var item = toolsManager.CreateDataItem();
+                                   
                                     item.value = "";
                                     item.cellDataType = cell.CellDataType;
                                     item.isOrNotUpdate = "0";
@@ -309,6 +315,17 @@
                         BBDataItems.BdqData[BBDataItems.bdMaps[bdqCode]].push(colData);
                     }
                 
+            },
+            newGuid:function()
+            {
+                var guid = "";
+                for (var i = 1; i <= 32; i++){
+                    var n = Math.floor(Math.random()*16.0).toString(16);
+                    guid +=   n;
+                    if((i==8)||(i==12)||(i==16)||(i==20))
+                        guid += "-";
+                }
+                return guid;    
             },
             DeleteRowCol_Click: function () {
                 var result = confirm("是否要删除行？");
@@ -1843,7 +1860,9 @@
                                                         gridFrame.GridManager.SetRowColText(row, columnIndex, bdRow[cell.CellCode]);
                                                         if(cell.CellUrl)
                                                         {
+                                                            var vsURLValue = bdRow[cell.CellCode].value;
                                                             cell.CellUrl = bdRow[cell.CellCode].UrlValue;
+                                                            gridFrame.GridManager.setCellUrlValue(row, columnIndex, vsURLValue);
                                                            // cell.CellValue = bdRow[cell.CellCode].ParaValue;
                                                         }
                                                     } else {
