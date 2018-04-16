@@ -702,6 +702,8 @@ namespace AuditService.ReportData
                                   // idv.ParaValue = bdqItems[dc.ColumnName].ParaValue;
                                 idv.UrlValue = bdqItems[dc.ColumnName].UrlValue;
                             }
+                            if (string.IsNullOrEmpty(idv.value.ToString()) && bdqItems[dc.ColumnName].Macro == "<!NGUID!>")
+                                idv.value = Guid.NewGuid();
                             row.Add(dc.ColumnName, idv);
                         }
                         bdqData.Add(row);
@@ -715,12 +717,16 @@ namespace AuditService.ReportData
                             idv.value = "";
                             idv.UrlValue= bdqItems[columnName].UrlValue;
                             idv.cellDataType = bdqItems[columnName].CellDataType;
+                            if (bdqItems[columnName].Macro == "<!NGUID!>")
+                                idv.value = Guid.NewGuid();
                             row.Add(columnName, idv);
 
                         }
                         ItemDataValueStruct temp = new ItemDataValueStruct();
                         temp.value = "";
                         temp.cellDataType = "01";
+                        //if (bdqItems["Macro"].Macro == "<!NGUID!>")
+                        //    temp.value = Guid.NewGuid();
                         row.Add("DATA_ID", temp);
                         bdqData.Add(row);
                     }
