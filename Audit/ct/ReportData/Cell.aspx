@@ -108,8 +108,9 @@
                 if (Grid1.bind) {
                     Grid1.bind(spreadNS.Events.ColumnChanged, ClearFilter);
                     Grid1.bind(spreadNS.Events.ValueChanged, GridManager.CellChange_Event);
-                    Grid1.bind(spreadNS.Events.SelectionChanged, GridManager.RowColChange_Event);
+                   // Grid1.bind(spreadNS.Events.SelectionChanged, GridManager.RowColChange_Event);
                     Grid1.bind(spreadNS.Events.ClipboardPasted, GridManager.GridClipboardChanged);
+                    Grid1.bind(spreadNS.Events.EnterCell, GridManager.EnterCell);
                     spread.bind(GC.Spread.Sheets.Events.ButtonClicked, GridManager.GridButtonClick);
 
                 }
@@ -142,8 +143,9 @@
                     if (Grid1.bind) {
                         Grid1.bind(spreadNS.Events.ColumnChanged, ClearFilter);
                         Grid1.bind(spreadNS.Events.ValueChanged, GridManager.CellChange_Event);
-                        Grid1.bind(spreadNS.Events.SelectionChanged, GridManager.RowColChange_Event);
+                        //Grid1.bind(spreadNS.Events.SelectionChanged, GridManager.RowColChange_Event);
                         Grid1.bind(spreadNS.Events.ClipboardPasted, GridManager.GridClipboardChanged);
+                        Grid1.bind(spreadNS.Events.EnterCell, GridManager.EnterCell);
                        // spread.bind(GC.Spread.Sheets.Events.ButtonClicked, GridManager.GridButtonClick);
                     }
                     Grid1.resumePaint();
@@ -200,6 +202,10 @@
                            vsUrl = CellItem.UrlValue;
                        }
                        Grid1.getCell(parseInt(row), parseInt(col)).cellType(cellType).value(vsUrl);
+                       var vsUrlTag = {URL:""};
+                       if (vsUrl)
+                         vsUrlTag["URL"] = vsUrl;
+                       Grid1.setTag(row, col, JSON2.stringify(vsUrlTag));
 
                    }
                    else {
@@ -242,6 +248,11 @@
                             .text(cell.CellValue)
                             .linkToolTip(cell.CellValue);
                            Grid1.getCell(parseInt(rowIndex), parseInt(colIndex)).cellType(defaultHyperlink).value(cell.CellUrl);
+
+                
+                           var vsUrlTag = { URL: "" };
+                           vsUrlTag["URL"] = cell.CellUrl;
+                           Grid1.setTag(rowIndex, colIndex, JSON2.stringify(vsUrlTag));
                           
                        }
                    }
@@ -270,6 +281,36 @@
                    }
                }
                ,
+               EnterCell:function (e,data)
+               {
+                   var row = data.row;
+                   var col = data.col;
+                   if (col == -1) col = 0;
+                   var tag = Grid1.getTag(row, col); // Grid1.Cell(Row, Col).Tag;
+                   if (currentState.Row == row && currentState.Col == col && currentState.Tag == tag) { return; }
+                   parent.mediatorManager.SetRowColInput(row, col, tag);
+                   currentState.Row = row;
+                   currentState.Col = col;
+
+                   var cellsType = Grid1.getCellType(row, col);
+                   if (cellsType instanceof GC.Spread.Sheets.CellTypes.HyperLink) {
+
+                       var tag = Grid1.getTag(row, col);
+                       var vsValue;
+                       if (!tag || tag == "") { 
+                           vsValue = Grid1.getCell(row, col).cellType(cellsType).value();
+
+                       } else {
+                           tag = JSON2.parse(tag);
+                           vsValue = tag["URL"];
+                       }
+                       var vsUrlValue = GetRequest(vsValue, row, col);
+
+
+                       Grid1.getCell(parseInt(row), parseInt(col)).cellType(cellsType).value(vsUrlValue);
+                   }
+                   //alert("进入单元格");
+               },
                SetRowColTextByCellType: function (row, col, CellType) {
                    if (CellType["CellDataType"] == "01") return;
                    var text = Grid1.getCell(row, col).text();
@@ -328,24 +369,7 @@
                    return text;
                },
                RowColChange_Event: function (e, data) {
-                   var row =  data.newSelections[0].row;
-                   var col = data.newSelections[0].col;
-                   if (col == -1) col = 0;
-                   var tag = Grid1.getTag(row, col); // Grid1.Cell(Row, Col).Tag;
-                   if (currentState.Row == row && currentState.Col == col && currentState.Tag == tag) { return; }
-                   parent.mediatorManager.SetRowColInput(row, col, tag);
-                   currentState.Row = row;
-                   currentState.Col = col;
-                   var cellsType = Grid1.getCellType(row, col);
-                   if (cellsType instanceof GC.Spread.Sheets.CellTypes.HyperLink) {
-                       var vsValue = Grid1.getCell(row, col).cellType(cellsType).value();
-
-                       var vsUrlValue = GetRequest(vsValue, row, col);
-
-
-                       Grid1.getCell(parseInt(row), parseInt(col)).cellType(cellsType).value(vsUrlValue);
-                   }
-                   
+               
                },
                CellChange_Event: function (e, data) {
 
