@@ -701,9 +701,10 @@ namespace AuditService.ReportData
                                 if (bdqItems[dc.ColumnName].CellType == "04")
                                   // idv.ParaValue = bdqItems[dc.ColumnName].ParaValue;
                                 idv.UrlValue = bdqItems[dc.ColumnName].UrlValue;
+                                if (string.IsNullOrEmpty(idv.value.ToString()) && bdqItems[dc.ColumnName].Macro == "<!NGUID!>")
+                                    idv.value = Guid.NewGuid().ToString();
                             }
-                            if (string.IsNullOrEmpty(idv.value.ToString()) && bdqItems[dc.ColumnName].Macro == "<!NGUID!>")
-                                idv.value = Guid.NewGuid();
+                          
                             row.Add(dc.ColumnName, idv);
                         }
                         bdqData.Add(row);

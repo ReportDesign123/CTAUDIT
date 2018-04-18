@@ -569,7 +569,8 @@
                                     try {
                                         var cellValue = gridFrame.GridManager.GetRowColTextByCellType(Cell.value(), cellFormat);
 
-                                        if (BBDataItems.BdqData[bdDataIndex][bdTagInfo.index][cellCode].value != cellValue) {
+                                        if (BBDataItems.BdqData[bdDataIndex][bdTagInfo.index][cellCode].value != cellValue ||
+cellFormat.CellMacro == "<!NGUID!>") {
 
                                             para.BdqData[bdDataIndex][bdTagInfo.index][cellCode].value = cellValue;
                                             para.BdqData[bdDataIndex][bdTagInfo.index][cellCode].isOrNotUpdate = "1";
