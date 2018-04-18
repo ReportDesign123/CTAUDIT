@@ -202,10 +202,13 @@
                            vsUrl = CellItem.UrlValue;
                        }
                        Grid1.getCell(parseInt(row), parseInt(col)).cellType(cellType).value(vsUrl);
-                       var vsUrlTag = {URL:""};
+                       var tagStr = Grid1.getTag(row, col);
                        if (vsUrl)
-                         vsUrlTag["URL"] = vsUrl;
-                       Grid1.setTag(row, col, JSON2.stringify(vsUrlTag));
+                       {
+                           tagStr =tagStr+";"+ vsUrl;
+                         //  Grid1.setTag(row, col, tagStr);
+                       }
+                      
 
                    }
                    else {
@@ -250,9 +253,11 @@
                            Grid1.getCell(parseInt(rowIndex), parseInt(colIndex)).cellType(defaultHyperlink).value(cell.CellUrl);
 
                 
-                           var vsUrlTag = { URL: "" };
-                           vsUrlTag["URL"] = cell.CellUrl;
-                           Grid1.setTag(rowIndex, colIndex, JSON2.stringify(vsUrlTag));
+                           //  var vsUrlTag = { URL: "" };
+                           var tagStr = Grid1.getTag(rowIndex, colIndex); // Cell.Tag;
+                           tagStr = tagStr +";"+ cell.CellUrl;
+                           //vsUrlTag["URL"] = cell.CellUrl;
+                         //  Grid1.setTag(rowIndex, colIndex, tagStr);
                           
                        }
                    }
@@ -295,14 +300,14 @@
                    var cellsType = Grid1.getCellType(row, col);
                    if (cellsType instanceof GC.Spread.Sheets.CellTypes.HyperLink) {
 
-                       var tag = Grid1.getTag(row, col);
+                     
                        var vsValue;
-                       if (!tag || tag == "") { 
+                       if (!tag || tag == "" || tag.split("|").length<3) {
                            vsValue = Grid1.getCell(row, col).cellType(cellsType).value();
 
                        } else {
-                           tag = JSON2.parse(tag);
-                           vsValue = tag["URL"];
+                           var Celltag = JSON2.parse(tag.split("|")[2]);
+                           vsValue = Celltag.CellUrl;
                        }
                        var vsUrlValue = GetRequest(vsValue, row, col);
 
