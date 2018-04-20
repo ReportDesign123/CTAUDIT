@@ -124,7 +124,8 @@
                      { text: "文本框", id: "01" },
                    { text: "下拉框", id: "02" },
                     { text: "帮助按钮", id: "03" },
-                    { text: "超链接", id: "04" }
+                    { text: "超链接", id: "04" },
+                    { text: "关联", id: "05" }
                    ];
                    function _stopIt(e) {
                        if (e.returnValue) {

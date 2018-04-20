@@ -118,7 +118,8 @@
                 currentState.currentNum = 0;
 
             }
-            function InitializeFlexCell(row,col) {
+            function InitializeFlexCell(row, col) {
+             
                 if (Grid1) {
                     //initializeCell(0, 0);
                     Grid1.isPaintSuspended(true);
@@ -215,7 +216,17 @@
                        GridManager.SetRowColTextByRowCol(row, col, CellItem);
                    } 
                },
+               CheckCellLinkType: function(row,col)
+               {
+                   var cellType = null;
+                   cellType = Grid1.getCellType(row, col);
+                   if (cellType instanceof GC.Spread.Sheets.CellTypes.HyperLink)
+                       return true;
+                   else
+                       return false;
+               },
                SetRowColCellType: function (cell, rowIndex, colIndex) {
+                   
                    if (cell.CellType == "" || cell.CellType == undefined)
                        return;
                   
@@ -245,14 +256,25 @@
                       
                        if (cell.CellUrl && cell.CellUrl != "") {
 
-                           var defaultHyperlink = new spreadNS.CellTypes.HyperLink();
-                           defaultHyperlink.linkColor("blue")
-                           .visitedLinkColor("#FF8080")
-                            .text(cell.CellValue)
-                            .linkToolTip(cell.CellValue);
-                           Grid1.getCell(parseInt(rowIndex), parseInt(colIndex)).cellType(defaultHyperlink).value(cell.CellUrl);
+                           var cellText = "";
+                           var cellType;
+                           cellType = Grid1.getCellType(rowIndex, colIndex);
+                           //  cellText = Grid1.getCell(rowIndex, colIndex).text();
+                           var typeTex;
+                           if (cellType instanceof GC.Spread.Sheets.CellTypes.HyperLink) {
+                               cellType.text(cell.CellValue);
+                           }
 
-                
+                           else {
+                               
+                               var defaultHyperlink = new spreadNS.CellTypes.HyperLink();
+                               defaultHyperlink.linkColor("blue")
+                               .visitedLinkColor("#FF8080")
+                                .text(cell.CellValue)
+                                .linkToolTip(cell.CellValue);
+                               Grid1.getCell(parseInt(rowIndex), parseInt(colIndex)).cellType(defaultHyperlink).value(cell.CellUrl);
+                               Grid1.getCell(parseInt(rowIndex), parseInt(colIndex)).backColor("#FF99CC");
+                           }
                            //  var vsUrlTag = { URL: "" };
                            var tagStr = Grid1.getTag(rowIndex, colIndex); // Cell.Tag;
                            tagStr = tagStr +";"+ cell.CellUrl;
@@ -283,6 +305,7 @@
                    {
                        var cellType = Grid1.getCellType(row, col);
                        cellType.text(CellValue);
+                       Grid1.getCell(row, col).text(CellValue);
                    }
                }
                ,
@@ -631,7 +654,7 @@
                function CheckCellType(row, col)
                {
                   var  cellType = Grid1.getCellType(row, col);
-                  if (cellType instanceof GC.Spread.Sheets.CellTypes.Button )
+                  if (cellType instanceof GC.Spread.Sheets.CellTypes.Button || cellType instanceof GC.Spread.Sheets.CellTypes.HyperLink)
                        return false;
                    else
                        return true;

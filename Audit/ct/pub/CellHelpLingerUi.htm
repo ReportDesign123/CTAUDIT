@@ -124,7 +124,19 @@
 
           
         });
+        function InitializeGridCell(row, col) {
 
+            if (Grid1) {
+
+                Grid1.isPaintSuspended(true);
+                Grid1.setColumnCount(col);
+                Grid1.setRowCount(row);
+                Grid1.isPaintSuspended(false);
+
+                BBData = { bbCode: "", bbName: "", bbData: {}, bdq: { bdNum: 0, BdRowNum: 0, BdColNum: 0, BdqMaps: {}, Bdqs: [] } };
+            }
+
+        }
         function InitializeFlexCell(row, col) {
 
             if (Grid1) {
@@ -231,7 +243,7 @@
 
 
                     Grid1.fromJSON(JSON.parse(data.obj.formatStr));
-
+                    InitializeGridCell(Grid1.getRowCount(), Grid1.getColumnCount());
                     if (Grid1.bind) {
                         Grid1.bind(spreadNS.Events.SelectionChanged, GridManager.RowColChange_Event);
                     }  
@@ -256,7 +268,7 @@
 <body style=" overflow:hidden">
 <!--<div id="FileToolBar"   ></div>-->
 
-		<div id="ss"  style="height:600px; width:100%">
+		<div id="ss"  style="width:100%;height:440px">
 		</div>
 
 

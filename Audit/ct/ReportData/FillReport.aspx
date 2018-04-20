@@ -242,10 +242,7 @@
 
                         for (var i = 0; i < columnCount; i++) {
                             gridFrame.Grid1.getCell(row, i).locked(false);
-                            //公式去掉
-                            //if (gridFrame.Grid1.getCell(row - 1, i).formula()) {
-                            //    gridFrame.Grid1.setFormula(parseInt(row), i, gridFrame.Grid1.getCell(row - 1, i).formula().replace(/\d+/g, (row + 1).toString()));
-                            //}
+                        
 
                         }
                         var rowData = { DATA_ID: { value: "", cellDataType: "01", isOrNotUpdate: "0" } };
@@ -258,12 +255,12 @@
                                 gridFrame.Grid1.setTag(row, colIndex, CellTag);
 
                                 //设置单元格类型
-                                gridFrame.GridManager.SetRowColCellType(cell, row, colIndex);
+                               gridFrame.GridManager.SetRowColCellType(cell, row, colIndex);
                                 var align;
 
                                 //设置单元格对齐方式
                                 if (cell.CellDataType == "01") {
-                                    //align = gridFrame.spreadNS.HorizontalAlign["left"];
+                                  
                                     gridFrame.Grid1.getCell(row, colIndex)["hAlign"](align);
                                 } else if (cell.CellDataType == "02") {
                                     align = gridFrame.spreadNS.HorizontalAlign["right"];
@@ -577,6 +574,8 @@ cellFormat.CellMacro == "<!NGUID!>") {
                                         } else {
                                             delete para.BdqData[bdDataIndex][bdTagInfo.index][cellCode];
                                         }
+                                        if(cellFormat.CellType=="04")
+                                            delete para.BdqData[bdDataIndex][bdTagInfo.index][cellCode];
                                     } catch (e) {
                                         alert(bdDataIndex); alert(bdTagInfo.index); alert(cellCode);
                                     }
@@ -1336,7 +1335,7 @@ cellFormat.CellMacro == "<!NGUID!>") {
                     }
                     gridFrame.Grid1.resumePaint();
                     currentState.RowColChange = true;
-
+                    //mediatorManager.LoadBBFormat();
                     mediatorManager.LoadBbData();
                 });
 
