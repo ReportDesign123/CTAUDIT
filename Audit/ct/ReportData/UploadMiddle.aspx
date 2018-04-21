@@ -16,6 +16,6 @@
     </script>
 </head>
 <body>
-    <iframe id="upFrame" src="UploadAttatch.aspx?TaskId=<%=rae.TaskId%>&PaperId=<%=rae.PaperId %>&ReportId=<%=rae.ReportId %>&CompanyId=<%=rae.CompanyId %> &Nd=<%=rae.Nd %>&Zq=<%=rae.Zq %>&DataItem=<%=rae.DataItem %>" frameborder="0" width="100%" height="540px" ></iframe>
+    <iframe id="upFrame" src="UploadAttatch.aspx?TaskId=<%=rae.TaskId%>&PaperId=<%=rae.PaperId %>&ReportId=<%=rae.ReportId %>&CompanyId=<%=rae.CompanyId %> &Nd=<%=rae.Nd %>&Zq=<%=rae.Zq %>&DataItem=<%=rae.DataItem %>&COLPK=All"" frameborder="0" width="100%" height="540px" ></iframe>
 </body>
 </html>

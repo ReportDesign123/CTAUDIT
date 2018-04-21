@@ -349,6 +349,7 @@ namespace AuditService.ReportAttatchment
                 }
                 if (!StringUtil.IsNullOrEmpty(reportParameters.Pk))
                 {
+                    if (reportParameters.Pk!="All")
                     sql.Append(" AND ATTACHMENT_COLPK='" + reportParameters.Pk + "' ");
                 }
 
