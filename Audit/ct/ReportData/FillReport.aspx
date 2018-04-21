@@ -1861,8 +1861,9 @@ cellFormat.CellMacro == "<!NGUID!>") {
                                                         if(cell.CellUrl)
                                                         {
                                                             var vsURLValue = bdRow[cell.CellCode].value;
-                                                            cell.CellUrl = bdRow[cell.CellCode].UrlValue;
-                                                           gridFrame.GridManager.setCellUrlValue(row, columnIndex, vsURLValue);
+                                                            
+                                                          //  cell.CellUrl = bdRow[cell.CellCode].UrlValue;
+                                                            gridFrame.GridManager.setCellUrlValue(row, columnIndex, vsURLValue);
                                                            // cell.CellValue = bdRow[cell.CellCode].ParaValue;
                                                         }
                                                     } else {

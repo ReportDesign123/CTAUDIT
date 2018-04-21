@@ -34,7 +34,8 @@
             var urls = {
                 HelpUrl: "../../handler/BasicHandler.ashx",
                 ReportDataUrl: "JumpReportMang.aspx",
-                BBUrl: "../../handler/FormatHandler.ashx"
+                BBUrl: "../../handler/FormatHandler.ashx",
+                ReportUrl: "../../handler/ReportDataHandler.ashx"
             };
             var currentState = { Row: "", Col: "", Tag: "", CellsHelp: {},currentNum:0 };
             var grid1;
@@ -299,7 +300,7 @@
                    }
 
                },
-               setCellUrlValue: function (row, col, CellValue)
+               setCellUrlValue: function (row, col,CellValue)
                {
                    if (CellValue != undefined &&CellValue != "")
                    {
@@ -327,17 +328,38 @@
                        var vsValue;
                        if (!tag || tag == "" || tag.split("|").length<3) {
                            vsValue = Grid1.getCell(row, col).cellType(cellsType).value();
+                           var vsUrlValue = GetRequest(vsValue, row, col);
+                           Grid1.getCell(parseInt(row), parseInt(col)).cellType(cellsType).value(vsUrlValue);
 
                        } else {
+
                            var Celltag = JSON2.parse(tag.split("|")[2]);
                            vsValue = Celltag.CellUrl;
+                           var para = { CellRow: row, CellCol: col, UrlValue: Celltag.CellUrl };
+
+
+
+                           var obj = { TaskId: "", PaperId: "", CompanyId: "", ReportId: "", Year: "", Cycle: "", AuditDate: "", Where: "",  Row: "", Col: "" };
+                           obj.TaskId = parent.currentState.ReportState.AuditTask.value;
+                           obj.CompanyId = parent.currentState.CompanyId;
+                           obj.Cycle = parent.currentState.ReportState.Zq;
+                           obj.Year = parent.currentState.ReportState.Nd;
+                           obj.PaperId = parent.currentState.ReportState.AuditPaper.value;
+                           obj.ReportId = parent.currentState.navigatorData.currentReportId;
+                    
+                           obj.Row = row;
+                           obj.Col = col;
+                           obj.Where = Celltag.CellUrl;
+                           obj = CreateParameter(ReportDataAction.ActionType.Post, ReportDataAction.Functions.FillReport, ReportDataAction.Methods.FillReportMethods.GetReplaceMarchUrl, obj);
+                           DataManager.sendData(urls.ReportUrl, obj, resultManager.GetCellTagURL_Success, resultManager.Fail, false);
+
+                          
+
                        }
-                       var vsUrlValue = GetRequest(vsValue, row, col);
-
-
-                       Grid1.getCell(parseInt(row), parseInt(col)).cellType(cellsType).value(vsUrlValue);
+                       //var vsUrlValue = GetRequest(vsValue, row, col);
+                       //Grid1.getCell(parseInt(row), parseInt(col)).cellType(cellsType).value(vsUrlValue);
                    }
-                   //alert("进入单元格");
+                  
                },
                SetRowColTextByCellType: function (row, col, CellType) {
                    if (CellType["CellDataType"] == "01") return;
@@ -622,6 +644,23 @@
                      
                            GridManager.AddGridHelp(data);
                       
+                   } catch (err) {
+                       alert(err.Message);
+                   }
+               },
+               GetCellTagURL_Success: function (data) {
+                   try {
+                       if (data.obj)
+                       {
+                           var row = data.obj.CellRow;
+                           var col = data.obj.CellCol;
+                           var cellsType = Grid1.getCellType(row, col);
+                           
+                           var vsUrlValue = GetRequest(data.obj.UrlValue, row, col);
+                           Grid1.getCell(parseInt(row), parseInt(col)).cellType(cellsType).value(vsUrlValue);
+                       }
+                      
+
                    } catch (err) {
                        alert(err.Message);
                    }

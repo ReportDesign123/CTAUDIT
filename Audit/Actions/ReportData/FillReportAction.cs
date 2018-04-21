@@ -4,6 +4,7 @@ using System.Linq;
 using System.Web;
 using CtTool;
 using AuditSPI;
+using AuditSPI.Format;
 using AuditSPI.AuditTask;
 using AuditEntity.AuditTask;
 using AuditService.AuditTask;
@@ -196,9 +197,30 @@ namespace Audit.Actions.ReportData
                     rdps = ActionTool.DeserializeParametersByFields<ReportDataParameterStruct>(context, actionType);
                     ActionTool.InvokeObjMethod<FillReportAction>(this, methodName, rdps);
                     break;
+                case "GetReplaceMarchUrl":
+                    rdps = ActionTool.DeserializeParametersByFields<ReportDataParameterStruct>(context, actionType);
+                    ActionTool.InvokeObjMethod<FillReportAction>(this, methodName, rdps);
+
+                    break;
             }
         }
-
+        public void GetReplaceMarchUrl(ReportDataParameterStruct rdps)
+        {
+            JsonStruct js = new JsonStruct();
+            try
+            {
+                CellUrl CellObject = fillReportService.GetReplaceMarchUrl(rdps);
+                
+                js.obj = CellObject;
+                js.success = true;
+            }
+            catch (Exception ex)
+            {
+                LogManager.WriteLog(ex.StackTrace);
+                js.sMeg = ex.Message;
+            }
+            JsonTool.WriteJson<JsonStruct>(js, context);
+        }
         public void GetAuditTasksDataGrid(string AuditType, string AuditDate, DataGrid<AuditTaskEntity> dg)
         {
             try

@@ -8,7 +8,7 @@ using System.Data;
 using AuditEntity.ReportAudit;
 using AuditSPI.ReportAudit;
 using AuditSPI.ReportAggregation;
-
+using AuditSPI.Format;
 namespace AuditSPI.ReportData
 {
     public interface IFillReport
@@ -51,6 +51,8 @@ namespace AuditSPI.ReportData
         /// <returns></returns>
         List<CompanyItemStruct> GetAggregationReportCellConstituteData(ReportAuditCellConclusion reportAuditCellConclusion, List<CompanyItemStruct> companies);
         ItemDataValueStruct GetReportDataItem(ReportDataParameterStruct rdps);
+
+        CellUrl GetReplaceMarchUrl(ReportDataParameterStruct rdps);
     }
     public class ReportFirstLoadStruct
     {

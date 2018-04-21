@@ -31,4 +31,10 @@ namespace AuditSPI.Format
         public int DigitNumber;
         public string isOrUpdate = "0";
     }
+    public class CellUrl
+    {
+        public string CellRow;
+        public string CellCol;
+        public string UrlValue;
+    }
 }

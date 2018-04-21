@@ -19,6 +19,7 @@ using AuditSPI.ReportState;
 using AuditService.ReportState;
 using GlobalConst;
 using AuditSPI;
+using AuditSPI.Format;
 using AuditService.ReportAudit;
 using AuditEntity.ReportAudit;
 using AuditService.ReportAttatchment;
@@ -499,6 +500,38 @@ namespace AuditService.ReportData
                 throw ex;
             }
         }
+        public CellUrl  GetReplaceMarchUrl(ReportDataParameterStruct rdps)
+        {
+            MacroHelp mh = new MacroHelp();
+            mh.ReportParameter = rdps;
+            CellUrl Cell = new CellUrl();
+            Cell.CellRow = rdps.Row;
+            Cell.CellCol = rdps.Col;
+            string ReturnValue = rdps.Where;
+            if (rdps.Where == null || rdps.Where == "")
+                return Cell;
+            int QMarkIndex = rdps.Where.IndexOf('?');
+            if (QMarkIndex == -1)
+                return Cell;
+            if (QMarkIndex == rdps.Where.Length - 1)
+                return Cell;
+            string ps = rdps.Where.Substring(QMarkIndex + 1);
+            Regex re = new Regex(@"(^|&)?(\w+)=([^&]+)(&|$)?", RegexOptions.Compiled);
+
+            MatchCollection mc = re.Matches(ps);
+            Dictionary<string, string> DParas = new Dictionary<string, string>();
+            foreach (Match m in mc)
+            {
+                string strValue = m.Result("$3");
+                if (strValue.Split('@')[0] == "0")
+                {
+                    string strMarcro = mh.ReplaceMacroVariable(mh.ReplaceMacroVariable(strValue.Split('@')[1]));
+                    ReturnValue = ReturnValue.Replace(strValue, strMarcro);
+                }
+            }
+            Cell.UrlValue = ReturnValue;
+            return Cell;
+        }
         /// <summary>
         /// 替换超链接中的宏函数
         /// </summary>
@@ -716,6 +749,7 @@ namespace AuditService.ReportData
                         {
                             ItemDataValueStruct idv = new ItemDataValueStruct();
                             idv.value = "";
+                            idv.ParaValue = bdqItems[columnName].ParaValue;
                             idv.UrlValue= bdqItems[columnName].UrlValue;
                             idv.cellDataType = bdqItems[columnName].CellDataType;
                             if (bdqItems[columnName].Macro == "<!NGUID!>")
