@@ -115,7 +115,7 @@ namespace AuditService.ReportAttatchment
                 {
                     wherSql += " and  ISNULL(ATTACHMENT_DATAITEM,'')=''  ";
                 }
-                if (rae.COLPK == null || rae.COLPK == "")
+                if ((rae.COLPK == null || rae.COLPK == "" ) & rae.COLPK != "All")
                 {
                     wherSql += " and  ISNULL(ATTACHMENT_COLPK,'')=''  ";
                 }
