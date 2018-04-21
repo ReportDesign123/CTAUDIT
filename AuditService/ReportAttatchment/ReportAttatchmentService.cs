@@ -115,7 +115,7 @@ namespace AuditService.ReportAttatchment
                 {
                     wherSql += " and  ISNULL(ATTACHMENT_DATAITEM,'')=''  ";
                 }
-                if ((rae.COLPK == null || rae.COLPK == "" ) & rae.COLPK != "All")
+                if (rae.COLPK == null || rae.COLPK == "")
                 {
                     wherSql += " and  ISNULL(ATTACHMENT_COLPK,'')=''  ";
                 }
@@ -349,7 +349,6 @@ namespace AuditService.ReportAttatchment
                 }
                 if (!StringUtil.IsNullOrEmpty(reportParameters.Pk))
                 {
-                    if (reportParameters.Pk!="All")
                     sql.Append(" AND ATTACHMENT_COLPK='" + reportParameters.Pk + "' ");
                 }
 
