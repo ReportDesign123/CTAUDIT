@@ -12,14 +12,22 @@
         window.onload = function () {
             var content = dialog.para();// window.dialogArguments;
             $("#content").text(content);
+           
         }
         function getResult() {
             var result = $("#content").text();
             window.returnValue = result;
         }
+        function chageValue()
+        {
+            var result = $("#content").text();
+            var modalid = $(window.frameElement).attr("modalid");
+            dialog.setVal(result);
+            window.returnValue = result;
+        }
     </script>
 </head>
-<body onUnload="getResult()"  style=" font-size:12px;">
-   <textarea id="content" style=" width:390px; height:290px;line-height: 150%;  border:0px; padding:5px; color:#0000ff;"></textarea>
+<body  style=" font-size:12px;">
+   <textarea id="content" onchange="chageValue()" style=" width:390px; height:290px;line-height: 150%;  border:0px; padding:5px; color:#0000ff;"></textarea>
 </body>
 </html>

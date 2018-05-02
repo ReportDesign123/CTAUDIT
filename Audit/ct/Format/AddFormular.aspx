@@ -43,6 +43,7 @@
     
        <script src="../../Scripts/ct_dialog.js" type="text/javascript"></script>
     <script type="text/javascript">
+        top.loader && top.loader.close();
         var spreadNS;
         var spread;
         var Grid1;
@@ -1354,8 +1355,15 @@
             content = EditManager.getNoEncryptCells(content);
             dialog.Open(urls.InfoContent, "帮助", content, function (result) {
                 if (result) {
-                    result = EditManager.getEncryptCells(result.content);
-                    $("#fxContent").val(result);
+                    
+                    if (result.content) {
+                        result = EditManager.getEncryptCells(result.content);
+                        $("#fxContent").val(result.content);
+                    }
+                    else {
+                        result = EditManager.getEncryptCells(result);
+                        $("#fxContent").val(result);
+                    }
                     toolManager.Formular.AddEditFormular("edit");
                 }
             }, { width:450, height: 350 });
