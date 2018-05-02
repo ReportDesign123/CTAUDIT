@@ -123,10 +123,10 @@
              
                 if (Grid1) {
                     //initializeCell(0, 0);
-                    Grid1.isPaintSuspended(true);
+                   Grid1.suspendPaint();
                     Grid1.setColumnCount(col);
                     Grid1.setRowCount(row);
-                    Grid1.isPaintSuspended(false);
+                   Grid1.resumePaint();
                 }
 
 

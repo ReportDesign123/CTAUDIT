@@ -43,6 +43,7 @@
     
        <script src="../../Scripts/ct_dialog.js" type="text/javascript"></script>
     <script type="text/javascript">
+        top.loader && top.loader.close();
         var spreadNS;
         var spread;
         var Grid1;
@@ -1039,14 +1040,10 @@
             },
             LoadSuccess: function (data) {
                 if (data.success) {
-                    //Grid1.LoadFromXMLString(Base64.fromBase64(data.obj.formatStr));
-
                     Grid1.fromJSON(JSON.parse(data.obj.formatStr));
                     InitializeFlexCell(Grid1.getRowCount(), Grid1.getColumnCount());
                     if (Grid1.bind) {
                         Grid1.bind(spreadNS.Events.SelectionChanging, GridManager.RowColChange_Event);
-
-
                     }
 
                     BBData = JSON2.parse(data.obj.itemStr);
@@ -1059,27 +1056,13 @@
                             Grid1.getCell(i, j).locked(false);
                             var cell = toolManager.GetCellData(i, j);
                             if (cell && cell.CellLogicalType && cell.CellLogicalType == "02") {
-                                //Grid1.Cell(i, j).Text = "";
                                 Grid1.setValue(i, j, "");
 
                             } else {
-                                Grid1.getCell(i, j).locked(true);
-                                // Grid1.Cell(i, j).Locked = true;
-                            }
+                                Grid1.getCell(i, j).locked(true);                            }
 
                         }
                     }
-                    /*  for (var i = 0; i < Grid1.Rows; i++) {
-                    for (var j = 0; j < Grid1.Cols; j++) {
-                    var cell = toolManager.GetCellData(i, j);
-                    if (cell && cell.CellLogicalType && cell.CellLogicalType == "02") {
-                    Grid1.Cell(i, j).Text = "";
-                    } else {
-                    Grid1.Cell(i, j).Locked = true;
-                    }
-                    }
-                    }*/
-
                     var formularArr = data.obj.formularStr.split("|");
                     if (formularArr.length == 2) {
                         FormularData = JSON2.parse(formularArr[0]);
@@ -1088,6 +1071,7 @@
                             $.each(rowColFormular[row], function (col) {
                                 if (Grid1.getCell(row, col)) {
                                     Grid1.setValue(row, col, "公式");
+                                   // Grid1.getCell(row, col).value("公式");
                                    
                                 } else {
                                     var position = rowColFormular[row][col];
@@ -1371,8 +1355,15 @@
             content = EditManager.getNoEncryptCells(content);
             dialog.Open(urls.InfoContent, "帮助", content, function (result) {
                 if (result) {
-                    result = EditManager.getEncryptCells(result.content);
-                    $("#fxContent").val(result);
+                    
+                    if (result.content) {
+                        result = EditManager.getEncryptCells(result.content);
+                        $("#fxContent").val(result.content);
+                    }
+                    else {
+                        result = EditManager.getEncryptCells(result);
+                        $("#fxContent").val(result);
+                    }
                     toolManager.Formular.AddEditFormular("edit");
                 }
             }, { width:450, height: 350 });
