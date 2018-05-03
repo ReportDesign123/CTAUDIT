@@ -83,13 +83,7 @@ namespace AuditService
                     {
                         if (!fe.content.Contains("CCGC"))
                             fe.DeserializeContent = DeserializeFormular(fe, bbData);
-                        else
-                        {
-                            if (fe.content.Split('&').Length < 2)
-                                return;
-                            fe.DeserializeContent = fe.content.Split('&')[0];
-                            fe.content = fe.content.Split('&')[1]; 
-                        }
+                        
                     }
 
                     fe.content = Base64.Encode64(fe.content);
@@ -763,17 +757,28 @@ namespace AuditService
                 DataTable dt = null;//报表数据
                 string formularContent = "";//报表公式内容
                 //公式计算解析
-                if (!StringUtil.IsNullOrEmpty(fe.DeserializeContent))
+                if (!StringUtil.IsNullOrEmpty(fe.DeserializeContent)|| Base64.Decode64(fe.content).Contains("CCGC"))
                 {
                     //获取固定区或者变动区对象的内码字典
-                    string[] itemCodes = fe.DeserializeContent.Split(';');
                     nmFcode = GetNm(fe.firstRow, fe.firstCol, bbData);
                     string cellCoordinate = fe.firstRow.ToString() + "," + fe.firstCol.ToString();
+                    //存储过程处理
+                    if (Base64.Decode64(fe.content).Contains("CCGC"))
+                    {
+                        fe.content = Base64.Decode64(fe.content);
+                        formularFactory.SetReportParameters(rds.rdps);
+                        DataTable dtValue = formularFactory.DeserializeToSql(fe);
+                        if (dtValue != null && dtValue.Rows.Count > 0)
+                            rds.Gdq[nmFcode].value = dtValue.Rows[0][0];
+                        //保存计算结果
+                        fillReportService.SaveReportDatas(rds);
+                        return;
+                    }
+
+                    string[] itemCodes = fe.DeserializeContent.Split(';');
                     Cell cell = CreateCell(cellCoordinate, bbData);
                     Bdq bdq = GetBdq(bbData, cell);
-             
                     //构造对象字典
-
                     foreach (string itemCode in itemCodes)
                     {
                         GetGdqOrBdqItems(bbData, itemCode, gdItems, bdItems);
@@ -881,116 +886,106 @@ namespace AuditService
                     }
                     else
                     {
-                        //处理存储过程 
-                        if (Base64.Decode64(fe.content).Contains("CCGC"))
+
+                        //块公式解析
+                        formularContent = Base64.Decode64(fe.content);
+                        strFullformularConten = formularContent;
+                        Boolean isOrNotIf = formularContent.Substring(0, 2).ToUpper() == "IF" ? true : false;
+                        FormularDeserializeStruct fds = new FormularDeserializeStruct();
+                        //固定区单元格数据的计算
+                        foreach (string tableName in gdItems.Keys)
                         {
-                            fe.content = Base64.Decode64(fe.content);
-                            formularFactory.SetReportParameters(rds.rdps);
-                            DataTable dtValue = formularFactory.DeserializeToSql(fe);
-                            if(dtValue!=null && dtValue.Rows.Count>0)
-                              rds.Gdq[nmFcode].value = dtValue.Rows[0][0];
+                            //获取固定表单元格的信息
+                            itemsSql.Length = 0;
+                            foreach (string itemCode in gdItems[tableName].Keys)
+                            {
+                                itemsSql.Append("[");
+                                itemsSql.Append(itemCode);
+                                itemsSql.Append("]");
+                                itemsSql.Append(",");
+                            }
+                            if (itemsSql.Length > 0)
+                            {
+                                //获取固定单元格的数据
+                                itemsSql.Length--;
+                                dt = fillReportService.LoadReportItems(itemsSql.ToString(), tableName, rds.rdps, "");
+                            }
+                        }
+
+
+                        fds = cbfd.DeserializeCacularFormular(formularContent, dt, bbData);
+                        formularContent = fds.FormularCondent;
+                        foreach (string tableName in gdItems.Keys)
+                        {
+                            //固定区数据替换
+                            foreach (string itemCode in gdItems[tableName].Keys)
+                            {
+                                //如果固定区的数据为空则需要退出
+                                if (StringUtil.IsNullOrEmpty(formularContent)) break;
+                                //固定区公式的替换
+                                formularContent = ReplaceGdFormular(formularContent, dt, gdItems[tableName][itemCode], itemCode);
+                            }
+                        }
+
+                        //固定区公式中含有变动区数据的单元格 
+                        //区分取数单元格和条件单元格
+
+                        string GDCellNum = string.Empty;
+                        string BDCellNum = string.Empty;
+                        if (strFullformularConten.Split(';').Length > 0)
+                            GDCellNum = DeserializeCellFormular(strFullformularConten.Split(';')[0]);
+                        if (strFullformularConten.Split(';').Length > 1)
+                            BDCellNum = DeserializeCellFormular(strFullformularConten.Split(';')[1]);
+                        foreach (string tName in bdItems.Keys)
+                        {
+                            itemsSql.Length = 0;
+                            StringBuilder whereSql = new StringBuilder();
+                            //解析取数单元格
+                            foreach (string itemCode in bdItems[tName].Keys)
+                            {
+                                if (GDCellNum.Contains(bdItems[tName][itemCode]))
+                                {
+                                    itemsSql.Append(fds.BdHzType);
+                                    itemsSql.Append("([");
+                                    itemsSql.Append(itemCode);
+                                    itemsSql.Append("]) AS [");
+                                    itemsSql.Append(itemCode);
+                                    itemsSql.Append("],");
+                                }
+                                if (BDCellNum.Contains(bdItems[tName][itemCode]))
+                                {
+                                    if (fds.FormularCondition != "")
+                                    {
+                                        whereSql.Append(" AND ");
+                                        fds.FormularCondition = fds.FormularCondition.Replace("==", "=");
+                                        // whereSql.Append("[" + itemCode + "]" + fds.FormularCondition);
+                                        whereSql.Append(fds.FormularCondition.Replace("[" + bdItems[tName][itemCode] + "]", "[" + itemCode + "]"));
+                                    }
+                                }
+                            }
+                            //获取变动区数据，并替换相应的数据
+                            if (itemsSql.Length > 0) itemsSql.Length--;
+                            dt = fillReportService.LoadReportItems(itemsSql.ToString(), tName, rds.rdps, whereSql.ToString());
+
+
+                            foreach (string itemCode in bdItems[tName].Keys)
+                            {
+                                //固定区中变动单元格数据进行替换；
+                                formularContent = ReplaceGdFormular(formularContent, dt, bdItems[tName][itemCode], itemCode);
+                            }
+
+                        }
+                        if (isOrNotIf)
+                        {
+                            //If公式计算
+                            rds.Gdq[nmFcode].value = cifd.DeserializeIfFormular(formularContent, formularFactory);
                         }
                         else
                         {
-                            //块公式解析
-                            formularContent = Base64.Decode64(fe.content);
-                            strFullformularConten = formularContent;
-                            Boolean isOrNotIf = formularContent.Substring(0, 2).ToUpper() == "IF" ? true : false;
-                            FormularDeserializeStruct fds = new FormularDeserializeStruct();
-                            //固定区单元格数据的计算
-                            foreach (string tableName in gdItems.Keys)
-                            {
-                                //获取固定表单元格的信息
-                                itemsSql.Length = 0;
-                                foreach (string itemCode in gdItems[tableName].Keys)
-                                {
-                                    itemsSql.Append("[");
-                                    itemsSql.Append(itemCode);
-                                    itemsSql.Append("]");
-                                    itemsSql.Append(",");
-                                }
-                                if (itemsSql.Length > 0)
-                                {
-                                    //获取固定单元格的数据
-                                    itemsSql.Length--;
-                                    dt = fillReportService.LoadReportItems(itemsSql.ToString(), tableName, rds.rdps, "");
-                                }
-                            }
-
-
-                            fds = cbfd.DeserializeCacularFormular(formularContent, dt, bbData);
-                            formularContent = fds.FormularCondent;
-                            foreach (string tableName in gdItems.Keys)
-                            {
-                                //固定区数据替换
-                                foreach (string itemCode in gdItems[tableName].Keys)
-                                {
-                                    //如果固定区的数据为空则需要退出
-                                    if (StringUtil.IsNullOrEmpty(formularContent)) break;
-                                    //固定区公式的替换
-                                    formularContent = ReplaceGdFormular(formularContent, dt, gdItems[tableName][itemCode], itemCode);
-                                }
-                            }
-
-                            //固定区公式中含有变动区数据的单元格 
-                            //区分取数单元格和条件单元格
-
-                            string GDCellNum = string.Empty;
-                            string BDCellNum = string.Empty;
-                            if (strFullformularConten.Split(';').Length > 0)
-                                GDCellNum = DeserializeCellFormular(strFullformularConten.Split(';')[0]);
-                            if (strFullformularConten.Split(';').Length > 1)
-                                BDCellNum = DeserializeCellFormular(strFullformularConten.Split(';')[1]);
-                            foreach (string tName in bdItems.Keys)
-                            {
-                                itemsSql.Length = 0;
-                                StringBuilder whereSql = new StringBuilder();
-                                //解析取数单元格
-                                foreach (string itemCode in bdItems[tName].Keys)
-                                {
-                                    if (GDCellNum.Contains(bdItems[tName][itemCode]))
-                                    {
-                                        itemsSql.Append(fds.BdHzType);
-                                        itemsSql.Append("([");
-                                        itemsSql.Append(itemCode);
-                                        itemsSql.Append("]) AS [");
-                                        itemsSql.Append(itemCode);
-                                        itemsSql.Append("],");
-                                    }
-                                    if (BDCellNum.Contains(bdItems[tName][itemCode]))
-                                    {
-                                        if (fds.FormularCondition != "")
-                                        {
-                                            whereSql.Append(" AND ");
-                                            fds.FormularCondition = fds.FormularCondition.Replace("==", "=");
-                                            // whereSql.Append("[" + itemCode + "]" + fds.FormularCondition);
-                                            whereSql.Append(fds.FormularCondition.Replace("[" + bdItems[tName][itemCode] + "]", "[" + itemCode + "]"));
-                                        }
-                                    }
-                                }
-                                //获取变动区数据，并替换相应的数据
-                                if (itemsSql.Length > 0) itemsSql.Length--;
-                                dt = fillReportService.LoadReportItems(itemsSql.ToString(), tName, rds.rdps, whereSql.ToString());
-
-
-                                foreach (string itemCode in bdItems[tName].Keys)
-                                {
-                                    //固定区中变动单元格数据进行替换；
-                                    formularContent = ReplaceGdFormular(formularContent, dt, bdItems[tName][itemCode], itemCode);
-                                }
-
-                            }
-                            if (isOrNotIf)
-                            {
-                                //If公式计算
-                                rds.Gdq[nmFcode].value = cifd.DeserializeIfFormular(formularContent, formularFactory);
-                            }
-                            else
-                            {
-                                //普通公式计算
-                                rds.Gdq[nmFcode].value = formularFactory.ExpressParse(formularContent);
-                            }
+                            //普通公式计算
+                            rds.Gdq[nmFcode].value = formularFactory.ExpressParse(formularContent);
                         }
+
 
                         rds.Gdq[nmFcode].isOrNotUpdate = "1";
                     }
