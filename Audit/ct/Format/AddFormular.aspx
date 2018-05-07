@@ -1244,9 +1244,9 @@
                         }
                     }
                     if (objects.length > 0) {
-                        var selection = Grid1.Selection;
-                        for (var i = selection.FirstRow; i <= selection.LastRow; i++) {
-                            for (var j = selection.FirstCol; j <= selection.LastCol; j++) {
+                        var selection = Grid1.getSelections();
+                        for (var i = selection[0].row; i <= selection[0].row + selection[0].rowCount; i++) {
+                            for (var j = selection[0].col; j <= selection[0].col + selection[0].colCount; j++) {
                                 var formular = content;
                                 $.each(objects, function (index, item) {
                                     var temp = "";
