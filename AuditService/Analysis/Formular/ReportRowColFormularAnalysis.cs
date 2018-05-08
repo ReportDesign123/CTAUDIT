@@ -72,7 +72,16 @@ namespace AuditService.Analysis.Formular
                     }
                     if(int.Parse(parameters["zq"])<0)
                     {
-                        parameters["zq"] = (int.Parse(rdps.Cycle)+int.Parse(parameters["zq"])).ToString();
+                        try
+                        {
+                            parameters["zq"] = (int.Parse(rdps.Cycle) + int.Parse(parameters["zq"])).ToString();
+                        }
+                        catch
+                        {
+                           int intMonth= int.Parse(rdps.Cycle.Substring(5,2)) + int.Parse(parameters["zq"]);
+                           parameters["zq"] = rdps.Cycle.Substring(0, 5) + intMonth.ToString();
+                        }
+                        
                     }
                     if (StringUtil.IsNullOrEmpty(parameters["task"]))
                     {
