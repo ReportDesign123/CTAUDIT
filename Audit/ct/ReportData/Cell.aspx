@@ -492,7 +492,7 @@
                                var cellFormat = JSON2.parse(tag.split("|")[2]);
                                if (cellFormat["CellHelp"]) {
                                    if (cellFormat["CellType"] == "03") {
-                                       var paras = { url: "", columns: [], sortName: "", sortOrder: "" };
+                                       var paras = { url: "", columns: [], sortName: "", sortOrder: "", NameField: "Name", CodeField: "Code" };
                                        // var para = { TaskId: "", PaperId: "", CompanyId: "", ReportId: "", Year: "", Cycle: "", AuditDate: "", bdqStr: "", Where: "", WeekReportID: "", WeekReportName: "", WeekReportKsrq: "", WeekReportJsrq: "" };
                                        var vsTaskId =parent.currentState.ReportState.AuditTask.value;
                                        var vsCompanyId = parent.currentState.CompanyId;

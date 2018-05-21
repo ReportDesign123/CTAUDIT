@@ -24,7 +24,7 @@
         var para;
         var gridData;
         var urls = {
-            DicCGridUrl: "../../handler/BasicHandler.ashx?ActionType=" + BasicAction.ActionType.Grid + "&MethodName=" + BasicAction.Methods.DicManagerMethods.GetDictionaryListByClass + "&FunctionName=" + BasicAction.Functions.DictionaryManager + "&classId=HHS"
+           // DicCGridUrl: "../../handler/BasicHandler.ashx?ActionType=" + BasicAction.ActionType.Grid + "&MethodName=" + BasicAction.Methods.DicManagerMethods.GetDictionaryListByClass + "&FunctionName=" + BasicAction.Functions.DictionaryManager + "&classId=HHS"
         };
         $(function () {
             para = dialog.para();// window.dialogArguments;
@@ -98,7 +98,8 @@
                 }
             }
 
-            var data = helpGrid.datagrid('reload', obj);
+            var data = helpGrid.datagrid('reload',obj);
+           // var data = helpGrid.datagrid('loadData',{ "total":"30",rows:obj } );
         }
     </script>
 </head>

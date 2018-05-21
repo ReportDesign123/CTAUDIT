@@ -383,10 +383,17 @@ namespace AuditService
 
                 string csql = "SELECT * FROM CT_BASIC_DICTIONARY D INNER JOIN CT_BASIC_DICTIONARYCLASSIFICATION C ON D.DICTIONARY_CLASSID=C.DICTIONARYCLASSIFICATION_ID  AND C.DICTIONARYCLASSIFICATION_CODE='" + classType + "' ";
                 string whereSql = BeanUtil.ConvertObjectToFuzzyQueryWhereSqls<DictionaryEntity>(de);
-
+              
                 Dictionary<string, string> maps = BeanUtil.ConvertObjectToMaps<DictionaryEntity>();
                 maps["CName"] = "'"+ tableHelp+"' CName";
                 string countSql = "SELECT COUNT(*) FROM  "+ tableName + "  CT_BASIC_DICTIONARY where " + tableWhere; // CT_BASIC_DICTIONARY D INNER JOIN CT_BASIC_DICTIONARYCLASSIFICATION C ON D.DICTIONARY_CLASSID=C.DICTIONARYCLASSIFICATION_ID  AND C.DICTIONARYCLASSIFICATION_CODE='" + classType + "' ";
+                if (whereSql.Length > 0)
+                {
+                    whereSql = whereSql.Replace("DICTIONARY_CODE", "lsbzdw_dwbh");
+                    whereSql = whereSql.Replace("DICTIONARY_NAME", "lsbzdw_dwmc");
+                    sql = sql + " and " + whereSql;
+                    countSql= countSql+ " and " + whereSql;
+                }
                 string sortName = maps[dataGrid.sort];
                 dg.rows = dbManager.ExecuteSqlReturnTType<DictionaryEntity>(sql, dataGrid.page, dataGrid.pageNumber,  tableFCode+" ASC", maps);
                 dg.total = dbManager.Count(countSql);

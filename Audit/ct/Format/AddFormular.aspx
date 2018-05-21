@@ -1245,15 +1245,15 @@
                     }
                     if (objects.length > 0) {
                         var selection = Grid1.getSelections();
-                        for (var i = selection[0].row; i <= selection[0].row + selection[0].rowCount; i++) {
-                            for (var j = selection[0].col; j <= selection[0].col + selection[0].colCount; j++) {
+                        for (var i = selection[0].row; i <= selection[0].row + selection[0].rowCount-1; i++) {
+                            for (var j = selection[0].col; j <= selection[0].col + selection[0].colCount-1; j++) {
                                 var formular = content;
                                 $.each(objects, function (index, item) {
                                     var temp = "";
                                     var rowCols = item.split(":");
                                     var firstRow = parseInt(rowCols[0].split(",")[0]);
                                     var firstCol = parseInt(rowCols[0].split(",")[1]);
-                                    temp = (firstRow + i - selection.FirstRow) + "," + (firstCol + j - selection.FirstCol);
+                                    temp = (firstRow + i - selection[0].row) + "," + (firstCol + j - selection[0].col);
                                     var reg = new RegExp(item, "g");
                                     formular = formular.replace(reg, temp);
 
