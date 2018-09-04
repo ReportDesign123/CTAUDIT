@@ -30,5 +30,6 @@ namespace AuditSPI
         List<DictionaryEntity> GetDictionaryListByClassType(string classType);
         DataGrid<DictionaryEntity> GetDictionaryDataGridByClassType(string classType, DataGrid<DictionaryEntity> dataGrid,DictionaryEntity de);
         DataGrid<DictionaryEntity> GetDictionaryDataGridByLsHelp(string classType, DataGrid<DictionaryEntity> dataGrid, DictionaryEntity de, ReportDataParameterStruct rdps);
+        string GetValue(string sql);
     }
 }
