@@ -374,9 +374,16 @@ namespace AuditService
                 string tableFCode= table.Rows[0][1].ToString();
                 string tableFName= table.Rows[0][2].ToString();
                 string tableWhere= table.Rows[0][3].ToString();
+                
                 if (string.IsNullOrEmpty(tableWhere))
                     tableWhere = "1=1";
+
                 tableWhere= GetMarcoName(rdps,tableWhere);
+
+                if(!string.IsNullOrEmpty(rdps.Where))
+                {
+                    tableWhere = tableWhere + " and " + rdps.Where;
+                }
                 ReplaceMarchPara(tableWhere, mh);
                 string tableHelp = table.Rows[0][4].ToString();
                 sql = "select "+ tableFCode + " AS DICTIONARY_CODE ,"+ tableFName+ " AS DICTIONARY_NAME from "+ tableName+ "  CT_BASIC_DICTIONARY where "+ tableWhere;
@@ -435,11 +442,28 @@ namespace AuditService
             }
         }
 
+        public string GetValue(string sql)
+        {
+            string sqlValue = string.Empty;
+            string ReturValue = string.Empty;
+            sqlValue = sql.Split(',')[0];
+            if (sql.Split(',').Length>1)
+            {
+                sqlValue = sqlValue + " where 1=1 ";
+                for (int i=1;i< sql.Split(',').Length;i++)
+                {
+                    sqlValue = sqlValue+" and " + sql.Split(',')[i];
+                }
+            }
+            DataTable table=  dbManager.ExecuteSqlReturnDataTable(sqlValue);
+            if (table.Rows.Count > 0)
+                ReturValue = table.Rows[0][0].ToString();
+            return ReturValue;
+        }
 
 
 
-
-        DataGrid<DictionaryClassificationEntity> IDictionaryService.GetDicClasifyList(DataGrid<DictionaryClassificationEntity> dataGrid, DictionaryClassificationEntity dce)
+       DataGrid<DictionaryClassificationEntity> IDictionaryService.GetDicClasifyList(DataGrid<DictionaryClassificationEntity> dataGrid, DictionaryClassificationEntity dce)
         {
             try
             {
