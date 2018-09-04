@@ -114,6 +114,8 @@
                     Grid1.bind(spreadNS.Events.EnterCell, GridManager.EnterCell);
                     spread.bind(GC.Spread.Sheets.Events.ButtonClicked, GridManager.GridButtonClick);
 
+                    Grid1.bind(spreadNS.Events.EditChange, GridManager.EditValueChage);
+
                 }
                 Grid1.resumePaint();
                 currentState.currentNum = 0;
@@ -148,6 +150,8 @@
                         //Grid1.bind(spreadNS.Events.SelectionChanged, GridManager.RowColChange_Event);
                         Grid1.bind(spreadNS.Events.ClipboardPasted, GridManager.GridClipboardChanged);
                         Grid1.bind(spreadNS.Events.EnterCell, GridManager.EnterCell);
+
+                        Grid1.bind(spreadNS.Events.EditChange, GridManager.EditValueChage);
                        // spread.bind(GC.Spread.Sheets.Events.ButtonClicked, GridManager.GridButtonClick);
                     }
                     Grid1.resumePaint();
@@ -425,10 +429,15 @@
 
                    var tag = Grid1.getTag(data.row, data.col); // Grid1.Cell(Row, Col).Tag;
                    parent.mediatorManager.TextChange(data.row, data.col, tag);
+                   if (data.oldValue != data.newValue)
+                   {
+                       CellValueChange(data.row);
+                   }
                },
-
-
-
+               EditValueChage:function(sender, args)
+               {
+                   //CellValueChange(args.row);
+               },
                GetCurrentRow: function () {
                    return Grid1.getActiveRowIndex(); // selection.FirstRow;
 
@@ -500,16 +509,25 @@
                                        var vsYear = parent.currentState.ReportState.Nd;
                                        var vsPaperId = parent.currentState.ReportState.AuditPaper.value;
                                        var vsReportId = parent.currentState.navigatorData.currentReportId;
-                                       //para.bdqStr = null;
-                                       //var bdqCode = parent.vsBDBH; // currentState.BdqBh;
-                                       //para.Where = "&&";
-                                       //para.WeekReportID = parent.currentState.ReportState.WeekReport.ID;
-                                       //para.WeekReportName = parent.currentState.ReportState.WeekReport.Name;
-                                       //para.WeekReportKsrq = parent.currentState.ReportState.WeekReport.Ksrq;
-                                       //para.WeekReportJsrq = parent.currentState.ReportState.WeekReport.Jsrq;
-                                       // paras.url = "../../handler/BasicHandler.ashx?ActionType=" + BasicAction.ActionType.Grid + "&MethodName=GetDictionaryDataGridByClassType&FunctionName=" + BasicAction.Functions.DictionaryManager + "&ClassType=" + cellFormat["CellHelp"];
+                                       var vsWhere;
+                                       if (cellFormat.CellValue && cellFormat.CellValue != "")
+                                       {
+                                           vsWhere = cellFormat.CellValue;
+                                           var vsWhereWords = vsWhere.split(",");
+                                           for (var i = 0; i < vsWhereWords.length; i++)
+                                           {
+                                               var vsStr = vsWhereWords[i].split("=")[1];
+                                               var vsValue=sheet.getCell(row,vsStr.split("@")[1] ).value();
+                                               if(vsStr.split("@")[0]=="1")
+                                               {
+                                                   vsValue = "'" + vsValue + "'";
+                                               }
+                                               vsWhere=vsWhere.replace(vsStr, vsValue);
+                                           }
+                                           vsWhere = vsWhere.replace(",", " and ");
+                                       }
                                        paras.url = "../../handler/BasicHandler.ashx?ActionType=" + BasicAction.ActionType.Grid + "&MethodName=GetDictionaryDataGridByLsHelp&FunctionName=" + BasicAction.Functions.DictionaryManager + "&ClassType=" + cellFormat["CellHelp"] + "&TaskId=" + vsTaskId
-                                      + "&CompanyId=" + vsCompanyId + "&vsYear=" + vsYear + "&PaperId=" + vsPaperId + "&ReportId=" + vsReportId;
+                                      + "&CompanyId=" + vsCompanyId + "&vsYear=" + vsYear + "&PaperId=" + vsPaperId + "&ReportId=" + vsReportId + "&vsWhere=" + vsWhere;
                                        paras.columns = [[
                         { field: "Code", title: "编号", width: 80 },
                          { field: "Name", title: "名称", width: 80 }
@@ -519,20 +537,53 @@
                                        
                                        dialog.Open("ct/pub/HelpDialog.aspx", "帮助", paras, function (result) {
                                            if (result && result.Code) {
-                                               sheet.suspendPaint(); 
+                                              sheet.suspendPaint(); 
                                                cellType.text(result.Name);
                                                sheet.getCell(row, col).text(result.Name);
-
+                                               sheet.getCell(row, col).value(result.Name);
                                                sheet.resumePaint();
+                                              
+
+                                               for (var i = 0; i < Grid1.getColumnCount() ; i++) {
+                                                   var CellTage = Grid1.getTag(row, i);
+                                                   var vsSql;
+                                                   //获取单元格基本信息
+                                                   if (CellTage && CellTage.split("|")[2]) {
+                                                       var cellFormat = JSON2.parse(CellTage.split("|")[2]);
+                                                       if (cellFormat["CellType"] == "05") {
+
+                                                           vsSql = cellFormat.CellValue;
+                                                           if (vsSql.split(",").length > 1) {
+                                                               for (var j = 1; j < vsSql.split(",").length; j++) {
+                                                                   var vsStr = vsSql.split(",")[j];
+                                                                   var vsWhereWord = vsStr.split("=")[1];
+                                                                   var vsWordValue = Grid1.getCell(row, vsWhereWord.split("@")[1]).value();
+                                                                   if (vsWhereWord.split("@")[1] == "1")
+                                                                       vsWordValue = "'" + vsWordValue + "'";
+                                                                   vsSql = vsSql.replace(vsWhereWord, vsWordValue);
+
+                                                                   var para = { vsSqls: vsSql,CRow:row,CCol:i };
+                                                                   para = CreateParameter(BasicAction.ActionType.Post, BasicAction.Functions.DictionaryManager, BasicAction.Methods.DicManagerMethods.GetSqlCellValue, para);
+                                                                   para = DataManager.sendData(urls.HelpUrl, para, resultManager.LoadSql_Success, resultManager.Fail, false);
+                                                               }
+                                                           }
+
+                                                       }
+
+
+                                                   }
+
+                                               }
+                                               
+                                              
                                            }
                                        }, { width: 300, height: 350 });
-                                   
-                                     
-
-                                       
+                                    
+                                    
                                    }
                                }
                            }
+                           //CellValueChange(args.row);
                        }
                        catch (err) {
                           
@@ -540,6 +591,44 @@
                            }
                    }
                
+               },
+               WindwoBoxMeg :function()
+               {
+                   alert("ddd");
+               }
+               ,
+               CellValueChange: function (row) {
+
+                   for (var i = 0; i < Grid1.getColumnCount() ; i++) {
+                       var CellTage = Grid1.getTag(row, i);
+                       var vsSql;
+                       //获取单元格基本信息
+                       if (CellTage && CellTage.split("|")[2]) {
+                           var cellFormat = JSON2.parse(CellTage.split("|")[2]);
+                           if (cellFormat["CellType"] == "05") {
+
+                               vsSql = cellFormat.CellValue;
+                               if (vsSql.split(",").length > 1) {
+                                   for (var j = 1; j < vsSql.split(",").length; j++) {
+                                       var vsStr = vsSql.split(",")[j];
+                                       var vsWhereWord = vsStr.split("=")[1];
+                                       var vsWordValue = Grid1.getCell(row, vsWhereWord.split("@")[1]).value();
+                                       if (vsWhereWord.split("@")[1] == "1")
+                                           vsWordValue = "'" + vsWordValue + "'";
+                                       vsSql = vsSql.replace(vsWhereWord, vsWordValue);
+
+                                       var para = { vsSqls: vsSql, CRow: row, CCol: i };
+                                       para = CreateParameter(BasicAction.ActionType.Post, BasicAction.Functions.DictionaryManager, BasicAction.Methods.DicManagerMethods.GetSqlCellValue, para);
+                                       para = DataManager.sendData(urls.HelpUrl, para, resultManager.LoadSql_Success, resultManager.Fail, false);
+                                   }
+                               }
+
+                           }
+
+
+                       }
+
+                   }
                },
                DealCellLock:function ()
                {
@@ -644,6 +733,21 @@
                      
                            GridManager.AddGridHelp(data);
                       
+                   } catch (err) {
+                       alert(err.Message);
+                   }
+               },
+               LoadSql_Success: function (data) {
+                   try {
+                       if (data.obj)
+                       {
+                           var vsCellValue = data.obj.split(";")[0];
+                           var vsRow = parseInt(data.obj.split(";")[1].split(",")[0]);
+                           var vsCol = parseInt(data.obj.split(";")[1].split(",")[1]);
+                           Grid1.getCell(vsRow, vsCol).text(vsCellValue);
+                           Grid1.getCell(vsRow, vsCol).value(vsCellValue);
+
+                       }
                    } catch (err) {
                        alert(err.Message);
                    }

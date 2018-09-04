@@ -2,7 +2,7 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Web;
-
+using System.Data;
 using AuditSPI.ReportData;
 using AuditSPI;
 using AuditService;
@@ -101,13 +101,14 @@ namespace Audit.Actions
                     paras3.Add("vsYear");
                     paras3.Add("PaperId");
                     paras3.Add("ReportId");
+                    paras3.Add("vsWhere");
                     ReportDataParameterStruct rdps = new ReportDataParameterStruct();
                     rdps.TaskId= Convert.ToString(ActionTool.DeserializeParameters(paras3, context, actionType)[1]);
                     rdps.CompanyId = Convert.ToString(ActionTool.DeserializeParameters(paras3, context, actionType)[2]);
                     rdps.Year = Convert.ToString(ActionTool.DeserializeParameters(paras3, context, actionType)[3]);
                     rdps.PaperId = Convert.ToString(ActionTool.DeserializeParameters(paras3, context, actionType)[4]);
                     rdps.ReportId = Convert.ToString(ActionTool.DeserializeParameters(paras3, context, actionType)[5]);
-                  
+                    rdps.Where = Convert.ToString(ActionTool.DeserializeParameters(paras3, context, actionType)[6]);
                     string classType1 = Convert.ToString(ActionTool.DeserializeParameters(paras3, context, actionType)[0]);
                     de = ActionTool.DeserializeParameters<DictionaryEntity>(context, actionType);
                     GetDictionaryDataGridByLsHelp(classType1, dg6, de, rdps);
@@ -122,9 +123,17 @@ namespace Audit.Actions
                     dg5 = ActionTool.DeserializeParametersByFields<DataGrid<LSHELPDIC>>(context, actionType);
                     LSHELPDIC deg3 = ActionTool.DeserializeParameters<LSHELPDIC>(context, actionType);
                     GetLshelpList(dg5, deg3);
-
                     break;
-
+                case "GetSqlCellValue":
+                    List<string> paras4 = new List<string>();
+                    paras4.Add("vsSqls");
+                    paras4.Add("CRow");
+                    paras4.Add("CCol");
+                    string vsSql = Convert.ToString(ActionTool.DeserializeParameters(paras4, context, actionType)[0]);
+                    string sRow= Convert.ToString(ActionTool.DeserializeParameters(paras4, context, actionType)[1]);
+                    string sCol= Convert.ToString(ActionTool.DeserializeParameters(paras4, context, actionType)[2]);
+                    GetSqlCellValue(vsSql, sRow, sCol);
+                    break;
 
             }
         }
@@ -138,6 +147,22 @@ namespace Audit.Actions
             {
                 LogManager.WriteLog(ex.StackTrace);
             }
+        }
+        public void GetSqlCellValue(string sql,string row,string col)
+        {
+            JsonStruct js = new JsonStruct();
+            try
+            {
+               
+                js.obj=dicService.GetValue(sql)+";"+ row+","+ col;
+                js.success = true;
+            }
+            catch (Exception ex)
+            {
+                LogManager.WriteLog(ex.StackTrace);
+                js.sMeg = ex.Message;
+            }
+            JsonTool.WriteJson<JsonStruct>(js, context);
         }
         public void SaveDictionaryClassify(AuditEntity.DictionaryClassificationEntity dce)
         {
@@ -188,6 +213,7 @@ namespace Audit.Actions
             {
                 dicService.UpdateDictionaryClassify(dce);
                 js.success = true;
+                
                 js.sMeg = "保存成功";
             }
             catch (Exception ex)
@@ -391,6 +417,7 @@ namespace Audit.Actions
           try
           {
               DataGrid<DictionaryEntity> dgs = dicService.GetDictionaryDataGridByClassType(classType, dataGrid,de);
+             
               JsonTool.WriteJson<DataGrid<DictionaryEntity>>(dgs, context);
           }
           catch (Exception ex)
@@ -399,7 +426,7 @@ namespace Audit.Actions
           }
       }
 
-
+       
 
     }
 
