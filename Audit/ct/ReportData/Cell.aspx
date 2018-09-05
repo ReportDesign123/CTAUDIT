@@ -510,22 +510,21 @@
                                        var vsPaperId = parent.currentState.ReportState.AuditPaper.value;
                                        var vsReportId = parent.currentState.navigatorData.currentReportId;
                                        var vsWhere;
-                                       if (cellFormat.CellValue && cellFormat.CellValue != "")
-                                       {
+                                       if (cellFormat.CellValue && cellFormat.CellValue != " ") {
                                            vsWhere = cellFormat.CellValue;
                                            var vsWhereWords = vsWhere.split(",");
-                                           for (var i = 0; i < vsWhereWords.length; i++)
-                                           {
+                                           for (var i = 0; i < vsWhereWords.length; i++) {
                                                var vsStr = vsWhereWords[i].split("=")[1];
-                                               var vsValue=sheet.getCell(row,vsStr.split("@")[1] ).value();
-                                               if(vsStr.split("@")[0]=="1")
-                                               {
+                                               var vsValue = sheet.getCell(row, vsStr.split("@")[1]).value();
+                                               if (vsStr.split("@")[0] == "1") {
                                                    vsValue = "'" + vsValue + "'";
                                                }
-                                               vsWhere=vsWhere.replace(vsStr, vsValue);
+                                               vsWhere = vsWhere.replace(vsStr, vsValue);
                                            }
                                            vsWhere = vsWhere.replace(",", " and ");
                                        }
+                                       else
+                                           vsWhere = "1=1";
                                        paras.url = "../../handler/BasicHandler.ashx?ActionType=" + BasicAction.ActionType.Grid + "&MethodName=GetDictionaryDataGridByLsHelp&FunctionName=" + BasicAction.Functions.DictionaryManager + "&ClassType=" + cellFormat["CellHelp"] + "&TaskId=" + vsTaskId
                                       + "&CompanyId=" + vsCompanyId + "&vsYear=" + vsYear + "&PaperId=" + vsPaperId + "&ReportId=" + vsReportId + "&vsWhere=" + vsWhere;
                                        paras.columns = [[
