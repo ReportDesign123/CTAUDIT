@@ -529,8 +529,8 @@
                                        paras.url = "../../handler/BasicHandler.ashx?ActionType=" + BasicAction.ActionType.Grid + "&MethodName=GetDictionaryDataGridByLsHelp&FunctionName=" + BasicAction.Functions.DictionaryManager + "&ClassType=" + cellFormat["CellHelp"] + "&TaskId=" + vsTaskId
                                       + "&CompanyId=" + vsCompanyId + "&vsYear=" + vsYear + "&PaperId=" + vsPaperId + "&ReportId=" + vsReportId + "&vsWhere=" + vsWhere;
                                        paras.columns = [[
-                        { field: "Code", title: "编号", width: 80 },
-                         { field: "Name", title: "名称", width: 80 }
+                        { field: "Code", title: "编号", width: 120 },
+                         { field: "Name", title: "名称", width: 480 }
                                        ]];
                                        paras.sortName = "Code";
                                        paras.sortOrder = "ASC";
@@ -577,7 +577,7 @@
                                                
                                               
                                            }
-                                       }, { width: 300, height: 350 });
+                                       }, { width: 600, height: 550 });
                                     
                                     
                                    }
