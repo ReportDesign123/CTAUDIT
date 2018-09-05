@@ -431,7 +431,38 @@
                    parent.mediatorManager.TextChange(data.row, data.col, tag);
                    if (data.oldValue != data.newValue)
                    {
-                       CellValueChange(data.row);
+                      
+                       var row = data.row;
+                       for (var i = 0; i < Grid1.getColumnCount() ; i++) {
+                           var CellTage = Grid1.getTag(row, i);
+                           var vsSql;
+                           //获取单元格基本信息
+                           if (CellTage && CellTage.split("|")[2]) {
+                               var cellFormat = JSON2.parse(CellTage.split("|")[2]);
+                               if (cellFormat["CellType"] == "05") {
+
+                                   vsSql = cellFormat.CellValue;
+                                   if (vsSql.split(",").length > 1) {
+                                       for (var j = 1; j < vsSql.split(",").length; j++) {
+                                           var vsStr = vsSql.split(",")[j];
+                                           var vsWhereWord = vsStr.split("=")[1];
+                                           var vsWordValue = Grid1.getCell(row, vsWhereWord.split("@")[1]).value();
+                                           if (vsWhereWord.split("@")[0] == "1")
+                                               vsWordValue = "'" + vsWordValue + "'";
+                                           vsSql = vsSql.replace(vsWhereWord, vsWordValue);
+
+                                           var para = { vsSqls: vsSql, CRow: row, CCol: i };
+                                           para = CreateParameter(BasicAction.ActionType.Post, BasicAction.Functions.DictionaryManager, BasicAction.Methods.DicManagerMethods.GetSqlCellValue, para);
+                                           para = DataManager.sendData(urls.HelpUrl, para, resultManager.LoadSql_Success, resultManager.Fail, false);
+                                       }
+                                   }
+
+                               }
+
+
+                           }
+
+                       }
                    }
                },
                EditValueChage:function(sender, args)
