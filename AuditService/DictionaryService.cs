@@ -380,7 +380,7 @@ namespace AuditService
 
                 tableWhere= GetMarcoName(rdps,tableWhere);
 
-                if(!string.IsNullOrEmpty(rdps.Where))
+                if(!string.IsNullOrEmpty(rdps.Where)&& rdps.Where!="undefined")
                 {
                     tableWhere = tableWhere + " and " + rdps.Where;
                 }
