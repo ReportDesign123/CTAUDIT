@@ -588,7 +588,7 @@
                                                                    var vsStr = vsSql.split(",")[j];
                                                                    var vsWhereWord = vsStr.split("=")[1];
                                                                    var vsWordValue = Grid1.getCell(row, vsWhereWord.split("@")[1]).value();
-                                                                   if (vsWhereWord.split("@")[1] == "1")
+                                                                   if (vsWhereWord.split("@")[0] == "1")
                                                                        vsWordValue = "'" + vsWordValue + "'";
                                                                    vsSql = vsSql.replace(vsWhereWord, vsWordValue);
 
