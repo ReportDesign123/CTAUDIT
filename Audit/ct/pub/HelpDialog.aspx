@@ -98,8 +98,8 @@
                 }
             }
 
-            var data = helpGrid.datagrid('reload',obj);
-           // var data = helpGrid.datagrid('loadData',{ "total":"30",rows:obj } );
+           var data = helpGrid.datagrid("reload",obj);
+          // var data = helpGrid.datagrid('loadData',{ "total":"30",rows:obj } );
         }
     </script>
 </head>
