@@ -547,9 +547,11 @@
                                            for (var i = 0; i < vsWhereWords.length; i++) {
                                                var vsStr = vsWhereWords[i].split("=")[1];
                                                var vsValue = sheet.getCell(row, vsStr.split("@")[1]).value();
+                                             //  vsValue = escape(vsValue);
                                                if (vsStr.split("@")[0] == "1") {
                                                    vsValue = "'" + vsValue + "'";
                                                }
+
                                                vsWhere = vsWhere.replace(vsStr, vsValue);
                                            }
                                            vsWhere = vsWhere.replace(",", " and ");
