@@ -396,8 +396,10 @@ namespace AuditService
                 string countSql = "SELECT COUNT(*) FROM  "+ tableName + "  CT_BASIC_DICTIONARY where " + tableWhere; // CT_BASIC_DICTIONARY D INNER JOIN CT_BASIC_DICTIONARYCLASSIFICATION C ON D.DICTIONARY_CLASSID=C.DICTIONARYCLASSIFICATION_ID  AND C.DICTIONARYCLASSIFICATION_CODE='" + classType + "' ";
                 if (whereSql.Length > 0)
                 {
-                    whereSql = whereSql.Replace("DICTIONARY_CODE", "lsbzdw_dwbh");
-                    whereSql = whereSql.Replace("DICTIONARY_NAME", "lsbzdw_dwmc");
+                    //whereSql = whereSql.Replace("DICTIONARY_CODE", "lsbzdw_dwbh");
+                    //whereSql = whereSql.Replace("DICTIONARY_NAME", "lsbzdw_dwmc");
+                    whereSql = whereSql.Replace("DICTIONARY_CODE", tableFCode);
+                    whereSql = whereSql.Replace("DICTIONARY_NAME", tableFName);
                     sql = sql + " and " + whereSql;
                     countSql= countSql+ " and " + whereSql;
                 }
