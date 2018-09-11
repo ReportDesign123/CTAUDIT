@@ -1723,13 +1723,13 @@
                     toolManager.TagTool.SetDataValue(cellData, cellNameValue.CellHelp, cellHelp);
                     //数据内容
                     var cellValue = $("input[name='vValue']").val();
-                    if (cellValue != null && cellValue != "") {
+                    if (cellValue != null ) {
                         toolManager.TagTool.SetDataValue(cellData, cellNameValue.CellValue, cellValue);
 
                     }
                     //URL
                     var cellValue = $("input[name='vUrl']").val();
-                    if (cellValue != null && cellValue != "") {
+                    if (cellValue != null ) {
                         toolManager.TagTool.SetDataValue(cellData, cellNameValue.CellUrl, cellValue);
 
                     }
