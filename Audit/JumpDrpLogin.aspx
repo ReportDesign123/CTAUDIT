@@ -1,4 +1,4 @@
-﻿<%@ Page Language="C#" AutoEventWireup="true" CodeBehind="JumpDrpLogin.aspx.cs" Inherits="Audit.JumpDrpLogin" %>
+﻿<%@ Page Language="C#" validateRequest="false"  AutoEventWireup="true" CodeBehind="JumpDrpLogin.aspx.cs" Inherits="Audit.JumpDrpLogin" %>
 
 <!DOCTYPE html>
 <html>
