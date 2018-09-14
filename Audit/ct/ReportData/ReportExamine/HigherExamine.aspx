@@ -87,6 +87,8 @@
                     columns: [[
                      { field: 'ReportId', checkbox: true, width: 30 },
                       { field: 'CompanyId', title: 'CompanyId', width: 100, hidden: true },
+                       { field: 'Bbnd', title: '报表年度', width: 100, sortable: true },
+                       { field: 'Bbzq', title: '报表周期', width: 190, sortable: true },
                        { field: 'ReportCode', title: '报表编号', width: 100, sortable: true },
                        { field: 'ReportName', title: '报表名称', width: 190, sortable: true },
                        { field: 'CompanyName', title: '单位名称', width: 180, sortable: true },
