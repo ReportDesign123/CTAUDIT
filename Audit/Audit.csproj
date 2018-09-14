@@ -307,6 +307,7 @@
     <Content Include="images\ReportData\导出Excel-16.png" />
     <Content Include="Index.aspx" />
     <Content Include="JumpCelLogin.aspx" />
+    <Content Include="JumpDrpLogin.aspx" />
     <Content Include="JumpOaLogin.aspx" />
     <Content Include="JumpReportMang.aspx" />
     <Content Include="Layout\center.aspx" />
@@ -4017,6 +4018,13 @@
     </Compile>
     <Compile Include="JumpCelLogin.aspx.designer.cs">
       <DependentUpon>JumpCelLogin.aspx</DependentUpon>
+    </Compile>
+    <Compile Include="JumpDrpLogin.aspx.cs">
+      <DependentUpon>JumpDrpLogin.aspx</DependentUpon>
+      <SubType>ASPXCodeBehind</SubType>
+    </Compile>
+    <Compile Include="JumpDrpLogin.aspx.designer.cs">
+      <DependentUpon>JumpDrpLogin.aspx</DependentUpon>
     </Compile>
     <Compile Include="JumpOaLogin.aspx.cs">
       <DependentUpon>JumpOaLogin.aspx</DependentUpon>
