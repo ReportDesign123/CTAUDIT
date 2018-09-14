@@ -543,6 +543,8 @@ namespace AuditService.ReportState
                 maps.Add("CompanyName", "LSBZDW_DWMC");
                 maps.Add("ReportName", "REPORTDICTIONARY_NAME");
                 maps.Add("ReportCode", "REPORTDICTIONARY_CODE");
+                maps.Add("Bbnd", "REPORTSTATE_ZQ");
+                maps.Add("Bbzq", "REPORTSTATE_ND");
                 string sortName = maps[dataGrid.sort];
                 List<ReportStateEntity> states = dbManager.ExecuteSqlReturnTType<ReportStateEntity>(sql, dataGrid.page, dataGrid.pageNumber, sortName + " " + dataGrid.order, maps);
                 foreach (ReportStateEntity state in states)
@@ -760,6 +762,7 @@ namespace AuditService.ReportState
                 maps.Add("CompanyName", "LSBZDW_DWMC");
                 maps.Add("ReportName", "REPORTDICTIONARY_NAME");
                 maps.Add("ReportCode", "REPORTDICTIONARY_CODE");
+               
                 string sortName = maps[dataGrid.sort];
                 dg.rows = dbManager.ExecuteSqlReturnTType<ReportStateDetailEntity>(sql, dataGrid.page, dataGrid.pageNumber, sortName + " " + dataGrid.order, maps);
                 dg.total = dbManager.Count(countSql);
@@ -934,7 +937,7 @@ namespace AuditService.ReportState
             try
             {
                 DataGrid<ReportStateEntity> dg = new DataGrid<ReportStateEntity>();
-                string sql = "SELECT REPORTSTATE_ID,REPORTDICTIONARY_CODE, REPORTSTATE_REPORTID,REPORTSTATE_COMPANYID,LSBZDW_DWMC,REPORTSTATE_STATE,REPORTSTATE_STAGESTATE,REPORTDICTIONARY_NAME,REPORTSTATE_NEXTSTAGESTATE,REPORTSTATE_PR0STAGESTATE FROM CT_STATE_REPORTSTATE INNER JOIN LSBZDW ON REPORTSTATE_COMPANYID=LSBZDW_ID INNER JOIN CT_FORMAT_REPORTDICTIONARY ON REPORTSTATE_REPORTID=REPORTDICTIONARY_ID  ";
+                string sql = "SELECT REPORTSTATE_ZQ, REPORTSTATE_ND,REPORTSTATE_ID,REPORTDICTIONARY_CODE, REPORTSTATE_REPORTID,REPORTSTATE_COMPANYID,LSBZDW_DWMC,REPORTSTATE_STATE,REPORTSTATE_STAGESTATE,REPORTDICTIONARY_NAME,REPORTSTATE_NEXTSTAGESTATE,REPORTSTATE_PR0STAGESTATE FROM CT_STATE_REPORTSTATE INNER JOIN LSBZDW ON REPORTSTATE_COMPANYID=LSBZDW_ID INNER JOIN CT_FORMAT_REPORTDICTIONARY ON REPORTSTATE_REPORTID=REPORTDICTIONARY_ID  ";
                 string whereSql = CreateAllReportsWhereSql(rse);
 
                 sql += whereSql;
@@ -946,6 +949,8 @@ namespace AuditService.ReportState
                 maps.Add("CompanyName", "LSBZDW_DWMC");
                 maps.Add("ReportName", "REPORTDICTIONARY_NAME");
                 maps.Add("ReportCode", "REPORTDICTIONARY_CODE");
+                maps.Add("Bbnd", "REPORTSTATE_ZQ");
+                maps.Add("Bbzq", "REPORTSTATE_ND");
                 string sortName = maps[dataGrid.sort];
                 List<ReportStateEntity> states= dbManager.ExecuteSqlReturnTType<ReportStateEntity>(sql, dataGrid.page, dataGrid.pageNumber, sortName + " " + dataGrid.order, maps);
                 foreach (ReportStateEntity state in states)
@@ -1068,7 +1073,7 @@ namespace AuditService.ReportState
             try
             {
                 DataGrid<ReportStateEntity> dg = new DataGrid<ReportStateEntity>();
-                string sql = "SELECT REPORTSTATE_ID,REPORTDICTIONARY_CODE, REPORTSTATE_REPORTID,REPORTSTATE_COMPANYID,LSBZDW_DWMC,REPORTSTATE_STATE,REPORTSTATE_STAGESTATE,REPORTDICTIONARY_NAME,REPORTSTATE_NEXTSTAGESTATE,REPORTSTATE_PR0STAGESTATE,REPORTSTATE_CREATETIME FROM CT_STATE_REPORTSTATE INNER JOIN LSBZDW ON REPORTSTATE_COMPANYID=LSBZDW_ID INNER JOIN CT_FORMAT_REPORTDICTIONARY ON REPORTSTATE_REPORTID=REPORTDICTIONARY_ID  ";
+                string sql = "SELECT REPORTSTATE_ZQ, REPORTSTATE_ND,REPORTSTATE_ID,REPORTDICTIONARY_CODE, REPORTSTATE_REPORTID,REPORTSTATE_COMPANYID,LSBZDW_DWMC,REPORTSTATE_STATE,REPORTSTATE_STAGESTATE,REPORTDICTIONARY_NAME,REPORTSTATE_NEXTSTAGESTATE,REPORTSTATE_PR0STAGESTATE,REPORTSTATE_CREATETIME FROM CT_STATE_REPORTSTATE INNER JOIN LSBZDW ON REPORTSTATE_COMPANYID=LSBZDW_ID INNER JOIN CT_FORMAT_REPORTDICTIONARY ON REPORTSTATE_REPORTID=REPORTDICTIONARY_ID  ";
                 string whereSql = CreateHigherExamingReportStateSql(rse, flag);
 
                 sql += whereSql;
@@ -1077,6 +1082,8 @@ namespace AuditService.ReportState
                 maps.Add("CompanyName", "LSBZDW_DWMC");
                 maps.Add("ReportName", "REPORTDICTIONARY_NAME");
                 maps.Add("ReportCode", "REPORTDICTIONARY_CODE");
+                maps.Add("Bbnd", "REPORTSTATE_ZQ");
+                maps.Add("Bbzq", "REPORTSTATE_ND");
                 string sortName = maps[dataGrid.sort];
                 List<ReportStateEntity> states = dbManager.ExecuteSqlReturnTType<ReportStateEntity>(sql, dataGrid.page, dataGrid.pageNumber, sortName + " " + dataGrid.order, maps);
                 foreach (ReportStateEntity state in states)
