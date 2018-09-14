@@ -16,6 +16,7 @@ namespace AuditService.ReportState
     {
         CTDbManager dbManager;
         LinqDataManager linqDbManager;
+        CompanyService companyService;
         public ReportLockService()
         {
             if (dbManager == null)
@@ -238,6 +239,7 @@ namespace AuditService.ReportState
                 {
                     whereSql.Append(" AND LSBZDW_DWMC LIKE '%" + rle.CompanyName + "%' ");
                 }
+                whereSql.Append(" AND LOCK_COMPANYID IN (" + companyService.GetFillReportAuthorityCompaniesIdSql() + ")");
                 sql.Append(whereSql);
                 countSql.Append(whereSql);
                 Dictionary<string, string> maps = BeanUtil.ConvertObjectToMaps<ReportLockEntity>();
