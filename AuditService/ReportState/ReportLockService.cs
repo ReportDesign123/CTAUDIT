@@ -27,6 +27,10 @@ namespace AuditService.ReportState
             {
                 linqDbManager = new LinqDataManager();
             }
+            if (companyService == null)
+            {
+                companyService = new CompanyService();
+            }
         }
         /// <summary>
         /// 加锁
@@ -239,7 +243,10 @@ namespace AuditService.ReportState
                 {
                     whereSql.Append(" AND LSBZDW_DWMC LIKE '%" + rle.CompanyName + "%' ");
                 }
-                whereSql.Append(" AND LOCK_COMPANYID IN (" + companyService.GetFillReportAuthorityCompaniesIdSql() + ")");
+
+                whereSql.Append(" AND LOCK_COMPANYID " + companyService.GetFillReportAuthorityCompaniesIdSql() + " ");
+
+
                 sql.Append(whereSql);
                 countSql.Append(whereSql);
                 Dictionary<string, string> maps = BeanUtil.ConvertObjectToMaps<ReportLockEntity>();
