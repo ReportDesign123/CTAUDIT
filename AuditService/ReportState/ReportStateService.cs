@@ -543,8 +543,8 @@ namespace AuditService.ReportState
                 maps.Add("CompanyName", "LSBZDW_DWMC");
                 maps.Add("ReportName", "REPORTDICTIONARY_NAME");
                 maps.Add("ReportCode", "REPORTDICTIONARY_CODE");
-                maps.Add("Bbnd", "REPORTSTATE_ZQ");
-                maps.Add("Bbzq", "REPORTSTATE_ND");
+                maps.Add("Nd", "REPORTSTATE_ZQ");
+                maps.Add("Zq", "REPORTSTATE_ND");
                 string sortName = maps[dataGrid.sort];
                 List<ReportStateEntity> states = dbManager.ExecuteSqlReturnTType<ReportStateEntity>(sql, dataGrid.page, dataGrid.pageNumber, sortName + " " + dataGrid.order, maps);
                 foreach (ReportStateEntity state in states)
@@ -949,8 +949,8 @@ namespace AuditService.ReportState
                 maps.Add("CompanyName", "LSBZDW_DWMC");
                 maps.Add("ReportName", "REPORTDICTIONARY_NAME");
                 maps.Add("ReportCode", "REPORTDICTIONARY_CODE");
-                maps.Add("Bbnd", "REPORTSTATE_ZQ");
-                maps.Add("Bbzq", "REPORTSTATE_ND");
+                maps.Add("Nd", "REPORTSTATE_ZQ");
+                maps.Add("Zq", "REPORTSTATE_ND");
                 string sortName = maps[dataGrid.sort];
                 List<ReportStateEntity> states= dbManager.ExecuteSqlReturnTType<ReportStateEntity>(sql, dataGrid.page, dataGrid.pageNumber, sortName + " " + dataGrid.order, maps);
                 foreach (ReportStateEntity state in states)
@@ -1082,8 +1082,8 @@ namespace AuditService.ReportState
                 maps.Add("CompanyName", "LSBZDW_DWMC");
                 maps.Add("ReportName", "REPORTDICTIONARY_NAME");
                 maps.Add("ReportCode", "REPORTDICTIONARY_CODE");
-                maps.Add("Bbnd", "REPORTSTATE_ZQ");
-                maps.Add("Bbzq", "REPORTSTATE_ND");
+                maps.Add("Nd", "REPORTSTATE_ZQ");
+                maps.Add("Zq", "REPORTSTATE_ND");
                 string sortName = maps[dataGrid.sort];
                 List<ReportStateEntity> states = dbManager.ExecuteSqlReturnTType<ReportStateEntity>(sql, dataGrid.page, dataGrid.pageNumber, sortName + " " + dataGrid.order, maps);
                 foreach (ReportStateEntity state in states)
