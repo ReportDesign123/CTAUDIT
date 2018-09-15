@@ -1495,7 +1495,7 @@ cellFormat.CellMacro == "<!NGUID!>") {
             SetReportState: function (state) {
                 try {
                     if (state == "0") {
-                       var gridFrame = window.frames["gridFrame"];
+                        var gridFrame = toolsManager.GetGridIframe();// window.frames["gridFrame"];
                         gridFrame.Grid1.suspendPaint();
                         for (var i = 0; i < gridFrame.Grid1.getRowCount() ; i++) {
                             for (var j = 0; j < gridFrame.Grid1.getColumnCount() ; j++) {
@@ -1831,7 +1831,7 @@ cellFormat.CellMacro == "<!NGUID!>") {
 
                                                     //设置单元格对齐方式
                                                     if (cell.CellDataType == "01") {
-                                                        //align = gridFrame.spreadNS.HorizontalAlign["left"];
+                                                       
                                                         gridFrame.Grid1.getCell(i, columnIndex)["hAlign"](align);
                                                     } else if (cell.CellDataType == "02") {
                                                         align = gridFrame.spreadNS.HorizontalAlign["right"];
@@ -1981,38 +1981,40 @@ cellFormat.CellMacro == "<!NGUID!>") {
                             else {
                                 if (currentState.ReportFormat && currentState.ReportFormat != "") {
                                     var vCalcFormatData = JSON.parse(currentState.ReportFormat);
-                                    $.each(vCalcFormatData.data.dataTable, function (rowIndex, row) {
-                                        $.each(row, function (colIndex, cell) {
-                                            if (cell.formula) {
-                                                for (var i = vsKSRow; i <= vsRowNum; i++) {
-                                                    var newF = cell.formula;
-                                                    var reg = new RegExp("/\D+\d+", "g");
-                                                    var array = cell.formula.match(/[A-Za-z]+\d+/g);
-                                                    for (var j = 0; j < array.length; j++) {
-                                                        var one = array[j];
-                                                        var rowReg = /\d+/.exec(one);
-                                                        if (rowReg) {
-                                                            var rowIndex = parseInt(rowReg[0]) - 1;
-                                                            var colIndexStr = /[A-Za-z]+/.exec(one);
-                                                            if (colIndexStr) {
-                                                                colIndexStr = colIndexStr[0];
-                                                                var colIndexInt = convertToIndex(colIndexStr);
-                                                                var tag = gridFrame.Grid1.getTag(rowIndex, colIndexInt);
-                                                                if (tag && tag.indexOf("0;") == 0) {
-                                                                    //变动行
-                                                                    newF = newF.replace(one, colIndexStr + (i + 1));
+                                    if (vCalcFormatData) {
+                                        $.each(vCalcFormatData.data.dataTable, function (rowIndex, row) {
+                                            $.each(row, function (colIndex, cell) {
+                                                if (cell.formula) {
+                                                    for (var i = vsKSRow; i <= vsRowNum; i++) {
+                                                        var newF = cell.formula;
+                                                        var reg = new RegExp("/\D+\d+", "g");
+                                                        var array = cell.formula.match(/[A-Za-z]+\d+/g);
+                                                        for (var j = 0; j < array.length; j++) {
+                                                            var one = array[j];
+                                                            var rowReg = /\d+/.exec(one);
+                                                            if (rowReg) {
+                                                                var rowIndex = parseInt(rowReg[0]) - 1;
+                                                                var colIndexStr = /[A-Za-z]+/.exec(one);
+                                                                if (colIndexStr) {
+                                                                    colIndexStr = colIndexStr[0];
+                                                                    var colIndexInt = convertToIndex(colIndexStr);
+                                                                    var tag = gridFrame.Grid1.getTag(rowIndex, colIndexInt);
+                                                                    if (tag && tag.indexOf("0;") == 0) {
+                                                                        //变动行
+                                                                        newF = newF.replace(one, colIndexStr + (i + 1));
+                                                                    }
                                                                 }
+
                                                             }
 
                                                         }
-
+                                                        gridFrame.Grid1.setFormula(parseInt(i), parseInt(colIndex), newF); //cell.formula.replace(/\d+/g, i)
                                                     }
-                                                    gridFrame.Grid1.setFormula(parseInt(i), parseInt(colIndex), newF); //cell.formula.replace(/\d+/g, i)
-                                                }
 
-                                            }
+                                                }
+                                            });
                                         });
-                                    });
+                                    }
                                 }
                             }
 

@@ -386,7 +386,7 @@
                     }
                 },
                 SetRowColText: function (CellItem) {
-                    var tag = Grid1.Cell(CellItem.row, CellItem.col).Tag;
+                    var tag = Grid1.getTag(CellItem.row, CellItem.col);// Grid1.Cell(CellItem.row, CellItem.col).Tag;
                     if (tag != "" && tag.length > 0) {
                         var cellArr = tag.split("|");
                         var bdArr = cellArr[0].split(";");
