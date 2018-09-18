@@ -885,24 +885,6 @@ cellFormat.CellMacro == "<!NGUID!>") {
                     //初始树高度
                     LayoutManager.setTreeHeight();
                 });
-                //var result = window.showModalDialog("ChooseAuditTask.aspx", currentState.ReportState, "dialogHeight:500px;dialogWidth:450px;scroll:no");
-                //if (result && result != undefined) {
-                //    if (result.auditZqType == "05") {
-                //        if (result.WeekReport.ID == "") {
-                //            alert("请定义周报周期");
-                //            var curTabTitle = "资料填报";
-                //            var t = parent.centerTabs.tabs('getTab', curTabTitle);
-                //            if (t.panel('options').closable) {
-                //                return;
-                //                //  parent.centerTabs.tabs('close', curTabTitle);
-                //            }
-                //        }
-
-                //    }
-                //    toolsManager.SetAuditTask(result);
-                //}
-
-
             }
            
 
@@ -1445,8 +1427,12 @@ cellFormat.CellMacro == "<!NGUID!>") {
                            showTime: false,
                            onChangeDate: function (value) {
                                if (value == "") return;
-                               currentState.BbDataParameter.Cycle = value;
-                               currentState.BbDataParameter.Year = value.substr(0, 4);
+                               currentState.ReportState.Cycle = value;
+                               currentState.ReportState.Nd = value.substr(0, 4);
+                               currentState.ReportState.AuditDate = value;
+                               currentState.ReportState.Zq = value;
+                               $("#auditDateSpan").text(value+"日");
+                               //currentState.BbDataParameter.Year = value.substr(0, 4);
                                mediatorManager.RefreshReport();
                            }
                        }
@@ -1466,6 +1452,8 @@ cellFormat.CellMacro == "<!NGUID!>") {
                        {
                            showTime: false,
                            onChangeDate: function (value) {
+
+                              
 
                            }
                        }

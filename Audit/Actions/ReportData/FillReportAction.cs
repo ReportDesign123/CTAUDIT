@@ -544,7 +544,7 @@ namespace Audit.Actions.ReportData
             catch (Exception ex)
             {
                 LogManager.WriteLog(ex.StackTrace);
-                js.sMeg = ex.Message;
+                js.sMeg =ex.Source+"#"+ex.StackTrace+"#"+ ex.Message;
             }
             JsonTool.WriteJson<JsonStruct>(js, context);
         }
