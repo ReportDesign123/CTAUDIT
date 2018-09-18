@@ -147,9 +147,10 @@
                alert("密码长度应为6—16位");
                return;
            }
+           params["entity"] = JSON2.stringify(entity);
          
            params["ActionType"] = actionType;
-           params["FunctionName"] = BasicAction.Functions.CparasManager;
+           params["FunctionName"] = BasicAction.Functions.UserManager;
            params["MethodName"] = methodName;
            return params;
        }
