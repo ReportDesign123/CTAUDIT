@@ -2343,7 +2343,7 @@ cellFormat.CellMacro == "<!NGUID!>") {
         </div>
         <div position="center">
             <%--         <div id="AuditPaperTab" class="AuditPaperTab">
-                <div title="审计底稿" tabid="tab1"></div>  
+                <div title="直报底稿" tabid="tab1"></div>  
             </div>--%>
             <div id="ReportsTab" class="ReportsTab">
                 <div title="目录" tabid="home"></div>
@@ -2379,7 +2379,7 @@ cellFormat.CellMacro == "<!NGUID!>") {
             </div>
         </div>
         <div position="bottom" style="text-align: center;">
-            <a href="#" id="taskBtn">审计任务切换</a>&nbsp <span>审计类型:</span><span id="auditTaskTypeSpan"></span>&nbsp <span>审计任务:</span><span id="auditTaskSpan"></span>&nbsp <span>审计底稿:</span><span id="auditPaperSpan"></span>&nbsp <span>审计周期:</span><span id="auditDateSpan"></span>
+            <a href="#" id="taskBtn">直报任务切换</a>&nbsp <span>直报类型:</span><span id="auditTaskTypeSpan"></span>&nbsp <span>直报任务:</span><span id="auditTaskSpan"></span>&nbsp <span>直报底稿:</span><span id="auditPaperSpan"></span>&nbsp <span>直报周期:</span><span id="auditDateSpan"></span>
 
         </div>
     </div>
