@@ -5,16 +5,18 @@
 <head >
     <title>报表数据查看</title>
 
-     <link rel="stylesheet" href="../../../lib/SpreadCSS/gcspread.sheets.excel2013white.9.40.20153.0.css" title="spread-theme" />
+   
+      <link rel="stylesheet" href="../../../lib/SpreadCSS/gc.spread.sheets.excel2013white.10.2.0.css" title="spread-theme" />
       <script type="text/javascript" src="../../../lib/jquery/jquery-1.11.1.min.js"></script>
     <script src="../../../lib/jquery/jquery-ui-1.10.3.custom.min.js" type="text/javascript"></script>
-     <script type="text/javascript" src="../../../lib/SpreadJS/gcspread.sheets.all.9.40.20153.0.min.js"></script>
-     <script type="text/javascript" src="../../../lib/SpreadJS/gcspread.sheets.print.9.40.20153.0.min.js"></script>
+
+     <script type="text/javascript" src="../../../lib/SpreadJS/gc.spread.sheets.all.10.2.0.min.js"></script>
+     <script type="text/javascript" src="../../../lib/SpreadJS/gc.spread.sheets.print.10.2.0.min.js"></script>
+     <script type="text/javascript" src="../../../lib/SpreadJS/gc.spread.excelio.10.2.0.min.js"></script>
+       <script type="text/javascript" src="../../../lib/SpreadJS/gc.spread.sheets.resources.zh.10.2.0.min.js"></script>
       <script type="text/javascript" src="../../../lib/SpreadJS/FileSaver.min.js"></script>
     <script type="text/javascript" src="../../../lib/SpreadJS/resources.js"></script>
      <script type="text/javascript" src="../../../lib/SpreadJS/bootstrap.min.js"></script>
-
-
 
     <script src="../../../lib/jquery/jquery-1.5.2.min.js" type="text/javascript"></script>
          <link href="../../../Styles/default.css" rel="stylesheet" type="text/css" />
@@ -36,7 +38,7 @@
             var spreadNS;
             var spread;
             var Grid1;
-
+            var excelIO;
             var currentState = { currentWidth: 0, controlWidth: 0, paras: {}, bbFormat: {}, bbData: {}, reportAudit: {}, currentProblemId: "", currentCellInfo: "" };
             var urls = {
               reportAuditUrl:"../../../handler/ReportDataHandler.ashx"
@@ -46,31 +48,42 @@
               $("#toolBar").ligerToolBar({ items: [
                     {
                         text: '打印', click: function (item) {
-                            Grid1.DirectPrint();
+                            spread.print();;
                         }, icon: 'print'
                     },
                     { line: true },
                     { text: '打印预览', icon: 'prev', click: function (item) {
-                        Grid1.PrintPreview(100);
+                        spread.print();
                     }
+                    },
+                      { line: true },
+                    {
+                        text: '导出EXCEL', icon: 'prev', click: function (item) {
+                            var fileName = getFileName();
+                            var json = spread.toJSON({ includeBindingSource: true });
+                            excelIO.save(json, function (blob) {
+                                saveAs(blob, fileName + ".xlsx");
+                            }, function (e) {
+                                alert(e);
+                            });
+                        }
                     }
                 ]
             });
-
-
-            spreadNS = GcSpread.Sheets;
-            spread = new spreadNS.Spread($("#ss")[0]);
-            spread.setTabStripRatio(0.88);
-            Grid1 = new spreadNS.Sheet("Cell");
-            // Grid1.setIsProtected(true); //是否锁定
+            
+         
+            spreadNS = GC.Spread.Sheets;
+            spread = new spreadNS.Workbook($("#ss")[0], { tabStripRatio: 0.88 });
             spread.removeSheet(0);
+            Grid1 = new spreadNS.Worksheet("Cell");
             spread.addSheet(spread.getSheetCount(), Grid1);
-
-            Grid1.isPaintSuspended(true);
+            Grid1.options.isProtected = true;//是否锁定
+         
             Grid1.setColumnCount(1);
             Grid1.setRowCount(1);
-            Grid1.isPaintSuspended(false);
 
+            excelIO = new GC.Spread.Excel.IO();
+         
 
               var para = $("#parmeter").val();
               para = Base64.decode(para);
@@ -81,6 +94,18 @@
               }
 
           });
+          function getFileName() {
+              function to2DigitsString(num) {
+                  return ("0" + num).substr(-2);
+              }
+
+              var date = new Date();
+              return [
+                  "Export",
+                  date.getFullYear(), to2DigitsString(date.getMonth() + 1), to2DigitsString(date.getDate()),
+                  to2DigitsString(date.getHours()), to2DigitsString(date.getMinutes()), to2DigitsString(date.getSeconds())
+              ].join("");
+          }
             var CommunicationManager = {
                 LoadCellData: function (parameter) {
                     parameter = CreateParameter(ReportDataAction.ActionType.Post, ReportDataAction.Functions.ReportAggregation, ReportDataAction.Methods.ReportAggregationMethods.GetReportData, parameter);
@@ -110,7 +135,8 @@
                             if (data.obj.reportFormat == "") return;
                             var bbFormat = data.obj.reportFormat.formatStr;
                             Grid1.fromJSON(JSON.parse(bbFormat));
-                            Grid1.isPaintSuspended(true);
+                           
+                            Grid1.suspendPaint();
                             for (var i = 0; i < Grid1.getRowCount(); i++) {
                                 for (var j = 0; j < Grid1.getColumnCount(); j++) {
                                     Grid1.setTag(i, j, "");
@@ -302,9 +328,11 @@
                                     Grid1.getCell(i, j).locked(true);
                                 }
                             }
-                            Grid1.isPaintSuspended(false);
-                            Grid1.width = '100%';
-                            Grid1.height = '100%';
+                          
+                            Grid1.resumePaint();
+                            $("#ss").width("100%");
+                            $("#ss").height("100%");
+                         
                             //保存报表数据
                             ReportData = data.obj;
                             if (typeof (ExportManager) != "undefined" && ExportManager.ExportExcel) {
