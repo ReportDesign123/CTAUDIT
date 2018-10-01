@@ -15,7 +15,7 @@
     <script src="../../../Scripts/Ct_WorkFlow.js" type="text/javascript"></script>
     <script src="../../../Scripts/Ct_Tool.js" type="text/javascript"></script>
     <script src="../../../lib/json2.js" type="text/javascript"></script>
-       <script src="../../Scripts/ct_dialog.js" type="text/javascript"></script>
+       <script src="../../../Scripts/ct_dialog.js" type="text/javascript"></script>
     <script type="text/javascript">
         var controls = { selectedRow: { ReportId: "", CompanyId: "" }, ReportBox: {} };
         var currentState = { ReportState: { auditPaperVisible: "1", auditZqVisible: "1" }, AuditData: {} };

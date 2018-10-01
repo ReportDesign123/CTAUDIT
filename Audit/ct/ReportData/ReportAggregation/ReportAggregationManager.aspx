@@ -28,7 +28,7 @@
     <script src="../../../lib/Cookie/jquery.cookie.js" type="text/javascript"></script>
 
     
-       <script src="../../Scripts/ct_dialog.js" type="text/javascript"></script>
+       <script src="../../../Scripts/ct_dialog.js" type="text/javascript"></script>
     <script type="text/javascript">
         var controls = { companies: {}, selectCompanies: {}, ReportSearch: { ReportCode: "", ReportName: "" } };
         var dialogControls = { Name: "", Code: "", Wd: "", TemplateName: "", TemplateCode: "", TemplateClassify: {}, SearchDialog: {}, TemplateDialog: {}, ImportTemplate: {} };

@@ -15,7 +15,7 @@
     <script src="../../../Scripts/Ct_WorkFlow.js" type="text/javascript"></script>
     <link href="../../../Styles/Common.css" rel="stylesheet" type="text/css" />
     <script src="../../../lib/json2.js" type="text/javascript"></script>
-       <script src="../../Scripts/ct_dialog.js" type="text/javascript"></script>
+       <script src="../../../Scripts/ct_dialog.js" type="text/javascript"></script>
     <script type="text/javascript">
         var urls = {
             ReportDataUrl: "ct/ReportData/ReportAggregation/ReportDataCell.aspx",

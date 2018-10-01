@@ -29,7 +29,8 @@
      <script type="text/javascript">
          var urls = {
              ReportListUrl: "ct/ReportData/ReportStateAggregationCompanies.aspx",
-             functiontUrl:"../../handler/ReportDataHandler.ashx"
+             functiontUrl: "../../handler/ReportDataHandler.ashx",
+             ReportDataUrl: "ct/ReportData/ReportAggregation/ReportDataCell.aspx"
          };
          var currentState = { param: { TaskId: "", PaperId: "", ReportId: "",CompanyId:"", Nd: "", Zq: "", State: ""},ListData:[] };
          var reportList;
@@ -139,6 +140,16 @@
                  data.rows = (data.originalRows.slice(start, end));
                  return data;
              },
+             ReportData:function(){
+                 var row = reportList.datagrid("getSelected");
+                 if (!row || row == undefined) { alert("选择要查看的报表"); return; }
+
+                 var para = { ReportId: currentState.param.ReportId, CompanyId: row.CompanyId, Cycle: currentState.param.Zq, Year: currentState.param.Nd, PaperId: currentState.param.PaperId, TaskId: currentState.param.TaskId };
+                 para = JSON2.stringify(para);
+                 para = encodeURI(para);
+                 parent.NavigatorNode({ id: "060", text: row.CompanyName, attributes: { url: urls.ReportDataUrl + "?para=" + para } });
+
+             },
              Excel: function () {
                  var paramter = CreateParameter(ReportDataAction.ActionType.Grid, ReportDataAction.Functions.ReportStateAggregation, ReportDataAction.Methods.ReportStateAggregationMethods.ExportReportStateAggregationByCompanies, currentState.param);
                  var states = currentState.param.State.split(",");
@@ -154,7 +165,7 @@
                  }
                  var url = CreateGeneralUrl(urls.functiontUrl, paramter);
                  window.location = url;
-                 //DataManager.sendData(urls.functiontUrl, paramter, resultManager.successExcel, resultManager.fail);
+               
              }
          };
          var SearchManager = {
@@ -223,7 +234,7 @@
 </head>
 <body class="easyui-layout">
  <div data-options="region:'north'" style="height:32px; padding:2px; overflow:hidden;background-color:#E0ECFF ;">
-        <a href="#" class="easyui-linkbutton" data-options="iconCls:'icon-excel'" onclick="ControlManager.Excel()" style="width:120px; float:left "plain="true">导出Excel</a>
+        <a href="#" class="easyui-linkbutton" data-options="iconCls:'icon-excel'" onclick="ControlManager.ReportData()" style="width:120px; float:left "plain="true">查看报表数据</a>
         <div class="datagrid-btn-separator"></div>
  </div>
  <div data-options="region:'center'">

@@ -21,7 +21,7 @@
     <script src="../../../lib/ligerUI/js/core/inject.js" type="text/javascript"></script>
     <script src="../../../lib/ligerUI/js/ligerui.min.js" type="text/javascript"></script>
     <script src="../../../lib/json2.js" type="text/javascript"></script>
-        <script src="../../Scripts/ct_dialog.js" type="text/javascript"></script>
+        <script src="../../../Scripts/ct_dialog.js" type="text/javascript"></script>
     <script type="text/javascript">
         var controls = {ClassifyGrid:{},TemplatGrid:{}};
         var urls = {

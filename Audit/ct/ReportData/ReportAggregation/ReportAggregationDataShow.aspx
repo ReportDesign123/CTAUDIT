@@ -54,7 +54,8 @@
             };
             $(function () {
                 var height = $(window).height() - 360;
-                $("#layout1").ligerLayout({ allowRightCollapse: true, topHeight: 25, space: 2, rightWidth: 450 });
+                $("#layout1").ligerLayout({ allowRightCollapse: true, topHeight: 25, space: 2, rightWidth: 450, onEndResize: function () { if (Grid1) { spread.refresh(); } } });
+               // $("#layout1").ligerLayout({ allowRightCollapse: true, allowRightResize: true, isRightCollapse: false, rightWidth: 370, onEndResize: formularManager.BalanceIfManager.LoadFormularGrid });
                 $("#toolBar").ligerToolBar({ items: [
                     {
                         text: '打印', click: function (item) {
@@ -101,8 +102,8 @@
                 spread.addSheet(spread.getSheetCount(), Grid1);
 
                 Grid1.isPaintSuspended(true);
-                Grid1.setColumnCount(1);
-                Grid1.setRowCount(1);
+                Grid1.setColumnCount(8);
+                Grid1.setRowCount(9);
                 Grid1.isPaintSuspended(false);
               
 
@@ -119,6 +120,17 @@
 
 
             });
+            function InitializeFlexCell(row, col) {
+
+                if (Grid1) {
+                    Grid1.isPaintSuspended(true);
+                    Grid1.setColumnCount(col);
+                    Grid1.setRowCount(row);
+                    Grid1.isPaintSuspended(false);
+                    spread.refresh();
+                }
+
+            }
             var CommunicationManager = {
                 SetIndexTrend: function (TrendData) {
                     var data = { series: { XSeries: [], series: [{ seriesData: [null]}] }, Name: "指标名", Code: "单元格编号" };
@@ -359,8 +371,17 @@
                 }
             };
             window.onresize = function () {
+
+                if (document.documentElement.clientWidth > 800) {
+                    document.body.style.width = document.documentElement.clientWidth + "px";
+                } else {
+                    document.body.style.width = "800px";
+                }
+
                 var height = $(window).height() - 360;
                 controls.IndexGrid.set("height", height);
+
+
             }
 
             var ReportData = {};
@@ -379,6 +400,7 @@
                             if (data.obj.reportFormat == "") return;
                             var bbFormat = data.obj.reportFormat.formatStr;
                             Grid1.fromJSON(JSON.parse(bbFormat));
+                            InitializeFlexCell(Grid1.getRowCount(), Grid1.getColumnCount());
                             Grid1.isPaintSuspended(true);
                             for (var i = 0; i < Grid1.getRowCount(); i++) {
                                 for (var j = 0; j < Grid1.getColumnCount(); j++) {
