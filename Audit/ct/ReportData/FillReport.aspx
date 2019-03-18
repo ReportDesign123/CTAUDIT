@@ -926,33 +926,45 @@ cellFormat.CellMacro == "<!NGUID!>") {
             GetGridIframe: function () {
                 if (toolsManager.BrowserType())
                     return window.frames["gridFrame"];
+                   
                 else
+                   
                     return window.frames["gridFrame"].contentWindow;
-                //return document.frames["gridFrame"].contentWindow.document;
+               
             },
             GetReportIframe: function () {
                 //兼容处理
                 if (toolsManager.BrowserType())
-                    return window.frames["catalog"];
+                   return window.frames["catalog"];
+                
                 else
                     //document.getElementById('catalog').contentWindow;
                     return window.frames["catalog"].contentWindow;
-                // return document.frames["catalog"];
+             
             },
             GetInfoframe: function () {
                 //兼容处理
                 if (toolsManager.BrowserType())
                     return window.frames["CheckoutInfoIframe"];
+                
                 else
+                    
                     return window.frames["CheckoutInfoIframe"].contentWindow;
-                // return document.frames["CheckoutInfoIframe"];
+                
             },
             BrowserType: function()
             {
-                var userAgent = navigator.userAgent; //取得浏览器的userAgent字符串 
-                var isOpera = userAgent.indexOf("Opera") > -1; //判断是否Opera浏览器 
-                var isIE = userAgent.indexOf("compatible") > -1 && userAgent.indexOf("MSIE") > -1 && !isOpera; //判断是否IE浏览器
-                return isIE;
+                //var userAgent = navigator.userAgent; //取得浏览器的userAgent字符串 
+                //var isOpera = userAgent.indexOf("Opera") > -1; //判断是否Opera浏览器 
+                //var isIE = userAgent.indexOf("compatible") > -1 && userAgent.indexOf("MSIE") > -1 && !isOpera; //判断是否IE浏览器
+                //return isIE;
+                 if (!!window.ActiveXObject || "ActiveXObject" in window) {
+                    return true;
+                }
+                else
+                {
+                    return false;
+                }
             }
             ,
             IsOrNotBdq: function (Row, Col) {

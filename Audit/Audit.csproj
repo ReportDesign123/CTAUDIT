@@ -310,6 +310,7 @@
     <Content Include="Index.aspx" />
     <Content Include="JumpCelLogin.aspx" />
     <Content Include="JumpDrpLogin.aspx" />
+    <Content Include="JumpFunction.aspx" />
     <Content Include="JumpOaLogin.aspx" />
     <Content Include="JumpReportMang.aspx" />
     <Content Include="Layout\center.aspx" />
@@ -4027,6 +4028,13 @@
     </Compile>
     <Compile Include="JumpDrpLogin.aspx.designer.cs">
       <DependentUpon>JumpDrpLogin.aspx</DependentUpon>
+    </Compile>
+    <Compile Include="JumpFunction.aspx.cs">
+      <DependentUpon>JumpFunction.aspx</DependentUpon>
+      <SubType>ASPXCodeBehind</SubType>
+    </Compile>
+    <Compile Include="JumpFunction.aspx.designer.cs">
+      <DependentUpon>JumpFunction.aspx</DependentUpon>
     </Compile>
     <Compile Include="JumpOaLogin.aspx.cs">
       <DependentUpon>JumpOaLogin.aspx</DependentUpon>
